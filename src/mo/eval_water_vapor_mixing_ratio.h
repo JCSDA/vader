@@ -67,7 +67,7 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_ad(
         const atlas::FieldSet & stateFlds);
 
 /// \brief function to evaluate the water vapor mixing ratio wrt moist air
-///        and condensed water at 2m:
+///        and condensed water at 2m: (TO BE RETIRED)
 ///   q2m = rh * qsat
 /// where ...
 ///   q2m  = water vapor mixing ratio wrt moist air and condensed water at 2m above surface
@@ -85,6 +85,5 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_at_2m_tl(
 void eval_water_vapor_mixing_ratio_wrt_moist_air_at_2m_ad(
         atlas::FieldSet & hatFlds,
         const atlas::FieldSet & stateFlds);
-
 }  // namespace mo
 

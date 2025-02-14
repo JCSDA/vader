@@ -1,5 +1,5 @@
 /*
- * (C) Crown Copyright 2023-204 Met Office
+ * (C) Crown Copyright 2023-2025 Met Office
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -69,6 +69,106 @@ void eval_air_pressure_levels_tl(atlas::FieldSet & incFlds, const atlas::FieldSe
 
 void eval_air_pressure_levels_ad(atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds) {
   eckit::NotImplemented(Here());
+}
+
+void eval_air_pressure_levels_from_exner_tl(atlas::FieldSet & incFlds,
+                                            const atlas::FieldSet & stateFlds) {
+  oops::Log::trace() << "[eval_air_pressure_levels_from_exner_tl()] starting ..." << std::endl;
+
+  // State fields
+  const auto thetaView = make_view<double, 2>(stateFlds["air_potential_temperature"]);
+  const auto pView = make_view<double, 2>(stateFlds["air_pressure_levels"]);
+  const auto exnerView = make_view<double, 2>(
+    stateFlds["dimensionless_exner_function_levels_minus_one"]);
+  const auto hlView = make_view<double, 2>(stateFlds["height_above_mean_sea_level_levels"]);
+
+  // Increment fields
+  auto pIncView = make_view<double, 2>(incFlds["air_pressure_levels"]);
+  const auto thetaIncView = make_view<double, 2>(incFlds["air_potential_temperature"]);
+  const auto exnerIncView = make_view<double, 2>(
+    incFlds["dimensionless_exner_function_levels_minus_one"]);
+
+  double exnerTopVal;
+  double exnerTopIncVal;
+  atlas::idx_t lvls = incFlds["dimensionless_exner_function_levels_minus_one"].shape(1);
+
+  const idx_t lvlsm1 = lvls - 1;
+  const atlas::idx_t sizeOwned =
+    util::getSizeOwned(incFlds["dimensionless_exner_function_levels_minus_one"].functionspace());
+
+  for (idx_t jn = 0; jn < sizeOwned; ++jn) {
+    exnerTopVal = exnerView(jn, lvlsm1) -
+      (constants::grav * (hlView(jn, lvls) - hlView(jn, lvlsm1))) /
+      (constants::cp * thetaView(jn, lvlsm1));
+
+    for (idx_t jl = 0; jl < lvls - 1; ++jl) {
+      pIncView(jn, jl) = exnerIncView(jn, jl) *  pView(jn, jl) /
+        (constants::rd_over_cp * exnerView(jn, jl));
+    }
+
+    exnerTopIncVal = exnerIncView(jn, lvlsm1) +
+      thetaIncView(jn, lvlsm1) * (exnerView(jn, lvlsm1) - exnerTopVal) /
+      thetaView(jn, lvlsm1);
+
+    pIncView(jn, lvls) = exnerTopIncVal *  pView(jn, lvls) /
+      (constants::rd_over_cp * exnerTopVal);
+  }
+
+  incFlds["air_pressure_levels"].set_dirty();
+
+  oops::Log::trace() << "[eval_air_pressure_levels_from_exner_tl()] end ..." << std::endl;
+}
+
+void eval_air_pressure_levels_from_exner_ad(atlas::FieldSet & hatFlds,
+                                            const atlas::FieldSet & stateFlds) {
+  oops::Log::trace() << "[eval_air_pressure_levels_from_exner_ad()] starting ..." << std::endl;
+
+  // State fields
+  const auto thetaView = make_view<double, 2>(stateFlds["air_potential_temperature"]);
+  const auto pView = make_view<double, 2>(stateFlds["air_pressure_levels"]);
+  const auto exnerView = make_view<double, 2>(
+    stateFlds["dimensionless_exner_function_levels_minus_one"]);
+  const auto hlView = make_view<double, 2>(stateFlds["height_above_mean_sea_level_levels"]);
+
+  // Increment fields
+  auto pHatView = make_view<double, 2>(hatFlds["air_pressure_levels"]);
+  auto thetaHatView = make_view<double, 2>(hatFlds["air_potential_temperature"]);
+  auto exnerHatView = make_view<double, 2>(
+    hatFlds["dimensionless_exner_function_levels_minus_one"]);
+
+  const idx_t sizeOwned =
+    util::getSizeOwned(hatFlds["dimensionless_exner_function_levels_minus_one"].functionspace());
+  const idx_t lvls = hatFlds["dimensionless_exner_function_levels_minus_one"].shape(1);
+  const idx_t lvlsm1 = lvls -1;
+  double alpha_jl(0.0);
+  double exnerTopVal;
+  double exnerTopHatVal;
+
+  for (idx_t jn = 0; jn < sizeOwned; ++jn) {
+    exnerTopVal = exnerView(jn, lvlsm1) -
+      (constants::grav * (hlView(jn, lvls) - hlView(jn, lvlsm1))) /
+      (constants::cp * thetaView(jn, lvlsm1));
+
+    exnerTopHatVal = pHatView(jn, lvls) *  pView(jn, lvls) /
+      (constants::rd_over_cp * exnerTopVal);
+    pHatView(jn, lvls) = 0.0;
+
+    exnerHatView(jn, lvlsm1) += exnerTopHatVal;
+    thetaHatView(jn, lvlsm1) += exnerTopHatVal * (exnerView(jn, lvlsm1) - exnerTopVal) /
+      thetaView(jn, lvlsm1);
+    exnerTopHatVal = 0.0;
+
+    for (idx_t jl = 0; jl < lvls - 1; ++jl) {
+      exnerHatView(jn, jl) +=  pHatView(jn, jl) *  pView(jn, jl) /
+        (constants::rd_over_cp * exnerView(jn, jl));
+    }
+  }
+
+  hatFlds["air_potential_temperature"].set_dirty();
+  hatFlds["air_pressure_levels"].set_dirty();
+  hatFlds["dimensionless_exner_function_levels_minus_one"].set_dirty();
+
+  oops::Log::trace() << "[eval_air_pressure_levels_from_exner_ad()] end ..." << std::endl;
 }
 
 }  // namespace mo

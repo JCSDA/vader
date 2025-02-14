@@ -44,15 +44,18 @@ void eval_air_temperature_nl(atlas::FieldSet & stateFlds) {
 
 void eval_air_temperature_tl(atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds) {
   oops::Log::trace() << "[eval_air_temperature_tl()] starting ..." << std::endl;
-  const auto hlView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level_levels"]);
-  const auto hView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level"]);
+  // State Fields
+  const auto thetaView = make_view<const double, 2>(stateFlds["air_potential_temperature"]);
   const auto exnerLevelsView = make_view<const double, 2>(
     stateFlds["dimensionless_exner_function_levels_minus_one"]);
-  const auto thetaView = make_view<const double, 2>(stateFlds["air_potential_temperature"]);
+  const auto hView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level"]);
+  const auto hlView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level_levels"]);
+
+  // Increment Fields
+  auto tIncView = make_view<double, 2>(incFlds["air_temperature"]);
+  const auto thetaIncView = make_view<const double, 2>(incFlds["air_potential_temperature"]);
   const auto exnerLevelsIncView = make_view<const double, 2>(
     incFlds["dimensionless_exner_function_levels_minus_one"]);
-  const auto thetaIncView = make_view<const double, 2>(incFlds["air_potential_temperature"]);
-  auto tIncView = make_view<double, 2>(incFlds["air_temperature"]);
 
   idx_t lvls(incFlds["air_temperature"].shape(1));
   idx_t lvlsm1 = lvls - 1;
@@ -99,15 +102,19 @@ void eval_air_temperature_tl(atlas::FieldSet & incFlds, const atlas::FieldSet & 
 
 void eval_air_temperature_ad(atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds) {
   oops::Log::trace() << "[eval_air_temperature_ad()] starting ..." << std::endl;
-  const auto hlView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level_levels"]);
-  const auto hView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level"]);
-  const auto exnerLevelsView = make_view<const double, 2>(
-                               stateFlds["dimensionless_exner_function_levels_minus_one"]);
+  // State Fields
   const auto thetaView = make_view<const double, 2>(stateFlds["air_potential_temperature"]);
-  auto exnerLevelsHatView = make_view<double, 2>(
-                            hatFlds["dimensionless_exner_function_levels_minus_one"]);
-  auto thetaHatView = make_view<double, 2>(hatFlds["air_potential_temperature"]);
+  const auto exnerLevelsView = make_view<const double, 2>(
+    stateFlds["dimensionless_exner_function_levels_minus_one"]);
+  const auto hView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level"]);
+  const auto hlView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level_levels"]);
+
+  // Increment Fields
   auto tHatView = make_view<double, 2>(hatFlds["air_temperature"]);
+  auto thetaHatView = make_view<double, 2>(hatFlds["air_potential_temperature"]);
+  auto exnerLevelsHatView = make_view<double, 2>(
+    hatFlds["dimensionless_exner_function_levels_minus_one"]);
+
 
   idx_t lvls(hatFlds["air_temperature"].shape(1));
   idx_t lvlsm1 = lvls - 1;

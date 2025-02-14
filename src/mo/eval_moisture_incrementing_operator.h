@@ -11,13 +11,19 @@
 
 namespace mo {
 
+
+/// \details This is the inverse of the MIO, that determines the total water control
+///          variable from specific humidity, cloud ice water and cloud liquid water
+///          increments (KEEP)
+void eval_total_water_nl(atlas::FieldSet & augStateFlds);
+
 /// \details This is the moisture incrementing operator (MIO) that determines the
 ///          cloud ice water, cloud liquid water and specific humidity increments
-///          from increments in total water and temperature
+///          from increments in total water and temperature (GOING TO SABER)
 void eval_moisture_incrementing_operator_tl(atlas::FieldSet & incFlds,
                                             const atlas::FieldSet & augStateFlds);
 
-/// \details This is the adjoint of the MIO
+/// \details This is the adjoint of the MIO (GOING TO SABER)
 void eval_moisture_incrementing_operator_ad(atlas::FieldSet & hatFlds,
                                             const atlas::FieldSet & augStateFlds);
 

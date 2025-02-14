@@ -26,7 +26,8 @@ using atlas::util::Config;
 
 namespace mo {
 
-void eval_ratio_to_second(atlas::FieldSet & fields, const std::vector<std::string> & vars)
+void eval_ratio_to_second(atlas::FieldSet & fields,
+                          const std::vector<std::string> & vars)
 {
   oops::Log::trace() << "[eval_ratio_to_second()] starting ..." << std::endl;
 
@@ -76,7 +77,7 @@ void eval_ratio_to_second_tl(atlas::FieldSet & incFields,
 
   const idx_t sizeOwned = util::getSizeOwned(incFields[vars[2]].functionspace());
   atlas_omp_parallel_for(idx_t jn = 0; jn < sizeOwned; jn++) {
-    for (idx_t jl = 0; jl < m_t.shape(1); jl++) {
+    for (idx_t jl = 0; jl < inc_ratio.shape(1); jl++) {
       inc_ratio(jn, jl) = inc_m_x(jn, jl) / m_t(jn, jl)
                  - m_x(jn, jl) / (m_t(jn, jl) * m_t(jn, jl)) * inc_m_t(jn, jl);
     }
@@ -109,7 +110,7 @@ void eval_ratio_to_second_ad(atlas::FieldSet & hatFields,
 
   const idx_t sizeOwned = util::getSizeOwned(hatFields[vars[2]].functionspace());
   atlas_omp_parallel_for(idx_t jn = 0; jn < sizeOwned; jn++) {
-    for (idx_t jl = 0; jl < m_t.shape(1); jl++) {
+    for (idx_t jl = 0; jl < hat_ratio.shape(1); jl++) {
       hat_m_x(jn, jl) += hat_ratio(jn, jl) / m_t(jn, jl);
       hat_m_t(jn, jl) -= hat_ratio(jn, jl) * m_x(jn, jl)
                                 / (m_t(jn, jl) * m_t(jn, jl));

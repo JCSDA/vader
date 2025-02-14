@@ -18,4 +18,8 @@ void eval_air_pressure_tl(atlas::FieldSet & incFlds, const atlas::FieldSet & sta
 
 void eval_air_pressure_ad(atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds);
 
+void eval_air_pressure_from_exner_tl(atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds);
+
+void eval_air_pressure_from_exner_ad(atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds);
+
 }  // namespace mo

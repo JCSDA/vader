@@ -22,6 +22,31 @@ namespace {
 
 namespace mo {
 
+
+// ------------------------------------------------------------------------------------------------
+void eval_total_water_nl(atlas::FieldSet & augStateFlds) {
+  oops::Log::trace() << "[eval_total_water_tl()] starting ..." << std::endl;
+
+  auto qView = make_view<const double, 2>(augStateFlds[specific_humidity_mo]);
+  auto qclView = make_view<const double, 2>
+    (augStateFlds["cloud_liquid_water_mixing_ratio_wrt_moist_air_and_condensed_water"]);
+  auto qcfView = make_view<const double, 2>
+    (augStateFlds["cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water"]);
+
+  auto qtView = make_view<double, 2>(augStateFlds["qt"]);
+  const idx_t numLevels = augStateFlds["qt"].shape(1);
+  const idx_t sizeOwned =
+        util::getSizeOwned(augStateFlds["qt"].functionspace());
+
+  for (idx_t jnode = 0; jnode < sizeOwned; jnode++) {
+    for (idx_t jlev = 0; jlev < numLevels; jlev++) {
+      qtView(jnode, jlev) = qView(jnode, jlev) + qclView(jnode, jlev) + qcfView(jnode, jlev);
+    }
+  }
+  augStateFlds["qt"].set_dirty();
+
+  oops::Log::trace() << "[eval_total_water_tl()] ... done" << std::endl;
+}
 // ------------------------------------------------------------------------------------------------
 void eval_moisture_incrementing_operator_tl(atlas::FieldSet & incFlds,
                                             const atlas::FieldSet & augStateFlds) {

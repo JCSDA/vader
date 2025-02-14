@@ -14,8 +14,18 @@ namespace mo {
 /// \details Vertical extrapolation of air pressure above model top
 void eval_air_pressure_levels_nl(atlas::FieldSet & stateFlds);
 
+/// \details Vertical extrapolation of air pressure above model top (TO BE RETIRED)
 void eval_air_pressure_levels_tl(atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds);
 
+/// \details Vertical extrapolation of air pressure above model top (TO BE RETIRED)
 void eval_air_pressure_levels_ad(atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds);
+
+/// \details Vertical extrapolation of air pressure above model top
+void eval_air_pressure_levels_from_exner_tl(atlas::FieldSet & incFlds,
+                                            const atlas::FieldSet & stateFlds);
+
+/// \details Vertical extrapolation of air pressure above model top
+void eval_air_pressure_levels_from_exner_ad(atlas::FieldSet & incFlds,
+                                            const atlas::FieldSet & stateFlds);
 
 }  // namespace mo

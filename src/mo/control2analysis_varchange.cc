@@ -22,30 +22,6 @@ using atlas::idx_t;
 
 namespace mo {
 
-/// \details Calculate the hydrostatic exner pressure (on levels)
-///          using air_pressure_minus_one and virtual potential temperature.
-void evalHydrostaticExnerLevels(atlas::FieldSet & stateFlds) {
-  const auto rpView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level_levels"]);
-  const auto vthetaView = make_view<const double, 2>(stateFlds["virtual_potential_temperature"]);
-  const auto pView = make_view<const double, 2>(stateFlds["air_pressure_levels_minus_one"]);
-  auto hexnerView = make_view<double, 2>(stateFlds["hydrostatic_exner_levels"]);
-
-  const idx_t sizeOwned = util::getSizeOwned(stateFlds["hydrostatic_exner_levels"].functionspace());
-  const idx_t numLevels = stateFlds["hydrostatic_exner_levels"].shape(1);
-
-  for (idx_t jn = 0; jn < sizeOwned; ++jn) {
-    hexnerView(jn, 0) = pow(pView(jn, 0) / constants::p_zero,
-      constants::rd_over_cp);
-    for (idx_t jl = 1; jl < numLevels; ++jl) {
-      hexnerView(jn, jl) = hexnerView(jn, jl-1) -
-        (constants::grav * (rpView(jn, jl) - rpView(jn, jl-1))) /
-        (constants::cp * vthetaView(jn, jl-1));
-    }
-  }
-
-  stateFlds["hydrostatic_exner_levels"].set_dirty();
-}
-
 /// \details Calculate the hydrostatic pressure (on levels)
 ///           from hydrostatic exner
 void evalHydrostaticPressureLevels(atlas::FieldSet & stateFlds) {

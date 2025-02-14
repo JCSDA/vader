@@ -21,10 +21,12 @@ namespace mo {
 void eval_total_mixing_ratio_nl(
         atlas::FieldSet & stateFlds);
 
+// Dont think is actually used. (as has m_r increment) Maybe used in analysis 2 model
 void eval_total_mixing_ratio_tl(
         atlas::FieldSet & incFlds,
         const atlas::FieldSet & stateFlds);
 
+// Dont think that is actually used.
 void eval_total_mixing_ratio_ad(
         atlas::FieldSet & hatFlds,
         const atlas::FieldSet & stateFlds);

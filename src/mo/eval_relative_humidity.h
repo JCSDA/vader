@@ -35,11 +35,25 @@ void eval_relative_humidity_ad(atlas::FieldSet & hatFlds,
                                const atlas::FieldSet & stateFlds);
 
 /// \details This calculates the relative humidity increment at 2 m from the atmospheric
-///          relative humidity increment at the lowest level
+///          relative humidity increment at the lowest level (TO BE RETIRED)
 void eval_relative_humidity_at_2m_tl(atlas::FieldSet & incFlds);
 
-/// \details Adjoint of eval_relative_humidity_at_2m_tl
+/// \details Adjoint of eval_relative_humidity_at_2m_tl (TO BE RETIRED)
 void eval_relative_humidity_at_2m_ad(atlas::FieldSet & hatFlds);
+
+/// \details This calculates the relative humidity increment at 2 m from the atmospheric
+///          temperature increment at the lowest level (KEEP)
+void eval_relative_humidity_at_2m_nl(atlas::FieldSet & stateFlds);
+
+/// \details This calculates the relative humidity increment at 2 m from the atmospheric
+///          temperature increment at the lowest level (KEEP)
+void eval_relative_humidity_at_2m_from_temp_tl(atlas::FieldSet & incFlds,
+                                               const atlas::FieldSet & stateFlds);
+
+/// \details Adjoint of eval_relative_humidity_at_2m_tl (KEEP)
+void eval_relative_humidity_at_2m_from_temp_ad(atlas::FieldSet & hatFlds,
+                                               const atlas::FieldSet & stateFlds);
+
 
 }  // namespace mo
 
