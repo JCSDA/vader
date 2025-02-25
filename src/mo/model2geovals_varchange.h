@@ -26,6 +26,7 @@
 
 namespace mo {
 
+/// USED IN VARTRANSFORMS
 /// \brief function to evaluate 'surf_param_a' and 'surf_param_b';
 /// 'surf_param_a' and 'surf_param_b' are  two 'derived' fields used to evaluate
 /// the background pressure at the observation height

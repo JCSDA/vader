@@ -1,7 +1,0 @@
-recipe:
-  recipe name: AirDensityLevelsMinusOne_B
-trajectory grid:
-  type : regular_gaussian
-  N : 12
-trajectory filename: testdata/air_density_levels_minus_one_B.nc
-adjoint test tolerance: 1.e-12

@@ -63,14 +63,6 @@ void eval_air_pressure_levels_nl(atlas::FieldSet & stateFlds) {
   oops::Log::trace() << "[eval_air_pressure_levels_nl()] ... exit" << std::endl;
 }
 
-void eval_air_pressure_levels_tl(atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds) {
-  eckit::NotImplemented(Here());
-}
-
-void eval_air_pressure_levels_ad(atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds) {
-  eckit::NotImplemented(Here());
-}
-
 void eval_air_pressure_levels_from_exner_tl(atlas::FieldSet & incFlds,
                                             const atlas::FieldSet & stateFlds) {
   oops::Log::trace() << "[eval_air_pressure_levels_from_exner_tl()] starting ..." << std::endl;

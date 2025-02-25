@@ -75,22 +75,4 @@ void AirDensityLevelsMinusOne_A::executeNL(atlas::FieldSet & afieldset)
     oops::Log::trace() << "leaving AirDensityLevelsMinusOne_A::executeNL function" << std::endl;
 }
 
-void AirDensityLevelsMinusOne_A::executeTL(atlas::FieldSet & afieldsetTL,
-                                      const atlas::FieldSet & afieldsetTraj)
-{
-    oops::Log::trace() << "entering AirDensityLevelsMinusOne_A::executeTL function"
-        << std::endl;
-    mo::eval_air_density_from_pressure_levels_minus_one_tl(afieldsetTL, afieldsetTraj);
-    oops::Log::trace() << "leaving AirDensityLevelsMinusOne_A::executeTL function" << std::endl;
-}
-
-void AirDensityLevelsMinusOne_A::executeAD(atlas::FieldSet & afieldsetAD,
-                                      const atlas::FieldSet & afieldsetTraj)
-{
-    oops::Log::trace() << "entering AirDensityLevelsMinusOne::executeAD function"
-        << std::endl;
-    mo::eval_air_density_from_pressure_levels_minus_one_ad(afieldsetAD, afieldsetTraj);
-    oops::Log::trace() << "leaving AirDensityLevelsMinusOne_A::executeAD function" << std::endl;
-}
-
 }  // namespace vader

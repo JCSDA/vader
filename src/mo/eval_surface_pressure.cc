@@ -71,34 +71,4 @@ void eval_surface_pressure_from_exner_ad(atlas::FieldSet & hatFlds,
   oops::Log::trace() << "[eval_surface_pressure_from_exner_ad()] ... done" << std::endl;
 }
 
-void eval_surface_pressure_tl(atlas::FieldSet & incFlds) {
-  oops::Log::trace() << "[eval_surface_pressure_tl()] starting ..." << std::endl;
-  const auto pIncView = make_view<double, 2>(incFlds["air_pressure_levels"]);
-  auto pstarIncView = make_view<double, 2>(incFlds["air_pressure_at_surface"]);
-  const idx_t sizeOwned =
-    util::getSizeOwned(incFlds["air_pressure_at_surface"].functionspace());
-
-  atlas_omp_parallel_for(idx_t jn = 0; jn < sizeOwned; ++jn) {
-      pstarIncView(jn, 0) = pIncView(jn, 0);
-  }
-  incFlds["air_pressure_at_surface"].set_dirty();
-  oops::Log::trace() << "[eval_surface_pressure_tl()] ... done" << std::endl;
-}
-
-void eval_surface_pressure_ad(atlas::FieldSet & hatFlds) {
-  oops::Log::trace() << "[eval_surface_pressure_ad()] starting ..." << std::endl;
-  auto pHatView = make_view<double, 2>(hatFlds["air_pressure_levels"]);
-  auto pstarHatView = make_view<double, 2>(hatFlds["air_pressure_at_surface"]);
-  const idx_t sizeOwned =
-    util::getSizeOwned(hatFlds["air_pressure_at_surface"].functionspace());
-
-  atlas_omp_parallel_for(idx_t jn = 0; jn < sizeOwned; ++jn) {
-    pHatView(jn, 0) += pstarHatView(jn, 0);
-    pstarHatView(jn, 0) = 0.0;
-  }
-  hatFlds["air_pressure_levels"].set_dirty();
-  hatFlds["air_pressure_at_surface"].set_dirty();
-  oops::Log::trace() << "[eval_surface_pressure_ad()] ... done" << std::endl;
-}
-
 }  // namespace mo

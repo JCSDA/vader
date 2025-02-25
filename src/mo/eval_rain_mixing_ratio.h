@@ -11,19 +11,21 @@
 
 namespace mo {
 
+/// USED IN VARTRANSFORMS
+/// USED IN RECONFIGURESTATEGAUSS
+/// USED IN RECIPE RainMixingRatio_A
 /// \brief function to evaluate the rain mixing ratio
 ///        wrt moist air and condensed water:
 ///   qrain = rain_mixing_ratio_wrt_dry_air/total_water_mixing_ratio_wrt_dry_air
-///
 void eval_rain_mixing_ratio_wrt_moist_air_and_condensed_water_nl(
         atlas::FieldSet & stateFlds);
 
-
+/// USED IN RECIPE RainMixingRatio_A.cc
 void eval_rain_mixing_ratio_wrt_moist_air_and_condensed_water_tl(
         atlas::FieldSet & incFlds,
         const atlas::FieldSet & stateFlds);
 
-
+/// USED IN RECIPE RainMixingRatio_A.cc
 void eval_rain_mixing_ratio_wrt_moist_air_and_condensed_water_ad(
         atlas::FieldSet & hatFlds,
         const atlas::FieldSet & stateFlds);

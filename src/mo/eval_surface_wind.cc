@@ -1,5 +1,5 @@
 /*
- * (C) Crown Copyright 2023-2024 Met Office
+ * (C) Crown Copyright 2023-2025 Met Office
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,25 +19,6 @@ using atlas::array::make_view;
 using atlas::idx_t;
 
 namespace mo {
-
-void eval_surface_wind_nl(atlas::FieldSet & stateFlds) {
-  oops::Log::trace() << "[eval_surface_wind_nl()] starting ..." << std::endl;
-  const auto uView = make_view<double, 2>(stateFlds["eastward_wind"]);
-  const auto vView = make_view<double, 2>(stateFlds["northward_wind"]);
-  auto u10mView = make_view<double, 2>(stateFlds["eastward_wind_at_10m"]);
-  auto v10mView = make_view<double, 2>(stateFlds["northward_wind_at_10m"]);
-  const idx_t sizeOwned =
-    util::getSizeOwned(stateFlds["northward_wind"].functionspace());
-
-  atlas_omp_parallel_for(idx_t jn = 0; jn < sizeOwned; ++jn) {
-    u10mView(jn, 0) = uView(jn, 0);
-    v10mView(jn, 0) = vView(jn, 0);
-  }
-  stateFlds["eastward_wind_at_10m"].set_dirty();
-  stateFlds["northward_wind_at_10m"].set_dirty();
-
-  oops::Log::trace() << "[eval_surface_wind_nl()] ... done" << std::endl;
-}
 
 void eval_surface_wind_tl(atlas::FieldSet & incFlds) {
   oops::Log::trace() << "[eval_surface_wind_tl()] starting ..." << std::endl;

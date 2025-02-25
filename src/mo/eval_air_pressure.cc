@@ -1,5 +1,5 @@
 /*
- * (C) Crown Copyright 2023-2024 Met Office
+ * (C) Crown Copyright 2023-2025 Met Office
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -18,83 +18,6 @@ using atlas::array::make_view;
 using atlas::idx_t;
 
 namespace mo {
-
-/// \details Calculate the hydrostatic pressure (on levels)
-///          from hydrostatic exner.
-void eval_air_pressure_nl(atlas::FieldSet & stateFlds) {
-  // Note - this is a copy of the tl algorithms
-  //      - it is currently not used as field already exists in file.
-
-  // height at pressure levels
-  auto hlView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level_levels"]);
-  // height at theta levels
-  auto hView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level"]);
-  auto pView = make_view<const double, 2>(stateFlds["air_pressure_levels"]);
-  auto pbarView = make_view<double, 2>(stateFlds["air_pressure"]);
-
-  double alpha_jl(0.0);
-  const idx_t sizeOwned = util::getSizeOwned(stateFlds["air_pressure"].functionspace());
-
-  const idx_t lvls(stateFlds["air_pressure"].shape(1));
-  for (idx_t jn = 0; jn < sizeOwned; ++jn) {
-    for (idx_t jl = 0; jl < lvls; ++jl) {
-      alpha_jl = (hView(jn, jl) - hlView(jn, jl)) / (hlView(jn, jl+1) - hlView(jn, jl));
-      pbarView(jn, jl) = (1.0 - alpha_jl) * pView(jn, jl) +
-                            alpha_jl * pView(jn, jl+1);
-    }
-  }
-
-  stateFlds["air_pressure"].set_dirty();
-}
-
-void eval_air_pressure_tl(atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds) {
-  // height at pressure levels
-  auto hlView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level_levels"]);
-  // height at theta levels
-  auto hView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level"]);
-  auto pIncView = make_view<const double, 2>(incFlds["air_pressure_levels"]);
-  auto pbarIncView = make_view<double, 2>(incFlds["air_pressure"]);
-
-  double alpha_jl(0.0);
-  const idx_t sizeOwned = util::getSizeOwned(incFlds["air_pressure"].functionspace());
-
-  idx_t lvls(incFlds["air_pressure"].shape(1));
-  for (idx_t jn = 0; jn < sizeOwned; ++jn) {
-    for (idx_t jl = 0; jl < lvls; ++jl) {
-      alpha_jl = (hView(jn, jl) - hlView(jn, jl)) / (hlView(jn, jl+1) - hlView(jn, jl));
-      pbarIncView(jn, jl) = (1.0 - alpha_jl) * pIncView(jn, jl) +
-                            alpha_jl * pIncView(jn, jl+1);
-    }
-  }
-
-  incFlds["air_pressure"].set_dirty();
-}
-
-void eval_air_pressure_ad(atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds) {
-  // height at pressure levels
-  const auto hlView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level_levels"]);
-  // height at theta levels
-  const auto hView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level"]);
-
-  auto pbarHatView = make_view<double, 2>(hatFlds["air_pressure"]);
-  auto pHatView = make_view<double, 2>(hatFlds["air_pressure_levels"]);
-
-  double alpha_jl(0.0);
-  const idx_t sizeOwned = util::getSizeOwned(hatFlds["air_pressure"].functionspace());
-
-  idx_t lvls(hatFlds["air_pressure"].shape(1));
-  for (idx_t jn = 0; jn < sizeOwned; ++jn) {
-    for (idx_t jl = 0; jl < lvls; ++jl) {
-      alpha_jl = (hView(jn, jl) - hlView(jn, jl)) / (hlView(jn, jl+1) - hlView(jn, jl));
-      pHatView(jn, jl) += (1.0 - alpha_jl) * pbarHatView(jn, jl);
-      pHatView(jn, jl+1) += alpha_jl * pbarHatView(jn, jl);
-      pbarHatView(jn, jl) = 0.0;
-    }
-  }
-
-  hatFlds["air_pressure"].set_dirty();
-  hatFlds["air_pressure_levels"].set_dirty();
-}
 
 void eval_air_pressure_from_exner_tl(atlas::FieldSet & incFlds,
                                      const atlas::FieldSet & stateFlds) {

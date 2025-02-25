@@ -1,5 +1,5 @@
 /*
- * (C) Crown Copyright 2023-2024 Met Office
+ * (C) Crown Copyright 2023-2025 Met Office
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,9 +21,15 @@
 
 namespace mo {
 
+namespace {
 
-void eval_sat_vapour_pressure_variant_nl(const std::string field_out,
-                                         atlas::FieldSet & stateFlds)
+/// \brief function to evaluate the several types of 'saturation water pressure'
+///
+///  input: Atlas data structure (FieldSet) containing 'air temperature'
+/// output: 'svp' or 'dlsvpdT'
+///
+void eval_sat_vapour_pressure_variant(const std::string field_out,
+                                      atlas::FieldSet & stateFlds)
 {
   // normalised T lambda function
   // which enforces upper and lower bounds on T
@@ -82,12 +88,13 @@ void eval_sat_vapour_pressure_variant_nl(const std::string field_out,
   stateFlds[field_out].set_dirty();
 }
 
+}  // namespace
 
 void eval_sat_vapour_pressure_nl(atlas::FieldSet & stateFlds)
 {
   oops::Log::trace() << "[eval_sat_vapour_pressure_svp_nl()] starting ..." << std::endl;
 
-  eval_sat_vapour_pressure_variant_nl("svp", stateFlds);
+  eval_sat_vapour_pressure_variant("svp", stateFlds);
 
   oops::Log::trace() << "[eval_sat_vapour_pressure_svp_nl()] ... done" << std::endl;
 }
@@ -97,11 +104,10 @@ void eval_derivative_ln_svp_wrt_temperature_nl(atlas::FieldSet & stateFlds)
 {
   oops::Log::trace() << "[eval_sat_vapour_pressure_dlsvpdT_nl()] starting ..." << std::endl;
 
-  eval_sat_vapour_pressure_variant_nl("dlsvpdT", stateFlds);
+  eval_sat_vapour_pressure_variant("dlsvpdT", stateFlds);
 
   oops::Log::trace() << "[eval_sat_vapour_pressure_dlsvpdT_nl()] ... done" << std::endl;
 }
-
 
 }  // namespace mo
 

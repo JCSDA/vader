@@ -37,7 +37,6 @@ vader/recipes/CloudLiquidMixingRatio.h
 vader/recipes/CloudLiquidMixingRatio_A.cc
 vader/recipes/AirDensityLevelsMinusOne.h
 vader/recipes/AirDensityLevelsMinusOne_A.cc
-vader/recipes/AirDensityLevelsMinusOne_B.cc
 vader/recipes/DryAirDensity.h
 vader/recipes/DryAirDensity_A.cc
 vader/recipes/DryAirDensityLevelsMinusOne.h
@@ -109,16 +108,12 @@ mo/eval_exner.h
 mo/eval_exner.cc
 mo/eval_geostrophic_to_hydrostatic_pressure.h
 mo/eval_geostrophic_to_hydrostatic_pressure.cc
-mo/eval_geostrophic_to_hydrostatic_pressure_levels_minus_one.h
-mo/eval_geostrophic_to_hydrostatic_pressure_levels_minus_one.cc
 mo/eval_hydrostatic_balance.h
 mo/eval_hydrostatic_balance.cc
 mo/eval_mio_fields.h
 mo/eval_mio_fields.cc
 mo/eval_moisture_incrementing_operator.h
 mo/eval_moisture_incrementing_operator.cc
-mo/eval_moisture_control.h
-mo/eval_moisture_control.cc
 mo/eval_rain_mixing_ratio.h
 mo/eval_rain_mixing_ratio.cc
 mo/eval_ratio.h

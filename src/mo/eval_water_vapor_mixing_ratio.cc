@@ -66,8 +66,8 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_tl(
   eval_ratio_to_second_tl(incFlds, stateFlds, fnames);
 
   oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_tl()] ... exit"
-          << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_tl()] ... exit"
+    << std::endl;
 }
 
 // --------------------------------------------------------------------------------------
@@ -86,8 +86,8 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_ad(
   eval_ratio_to_second_ad(hatFlds, stateFlds, fnames);
 
   oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_ad()] ... exit"
-          << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_ad()] ... exit"
+    << std::endl;
 }
 
 // --------------------------------------------------------------------------------------
@@ -110,8 +110,8 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_nl(
   stateFlds[q2m_moist_condensed_mo].set_dirty();
 
   oops::Log::trace()
-         << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_nl()] ... exit"
-         << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_nl()] ... exit"
+    << std::endl;
 }
 
 // --------------------------------------------------------------------------------------
@@ -135,8 +135,8 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_tl(
   incFlds[q2m_moist_condensed_mo].set_dirty();
 
   oops::Log::trace()
-         << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_tl()] ... exit"
-         << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_tl()] ... exit"
+    << std::endl;
 }
 
 // --------------------------------------------------------------------------------------
@@ -145,8 +145,8 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_ad(
         atlas::FieldSet & hatFlds,
         const atlas::FieldSet & stateFlds) {
   oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_ad()]"
-          << " starting ..." << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_ad()]"
+    << " starting ..." << std::endl;
 
   auto q2m_hat = make_view<double, 2>(hatFlds[q2m_moist_condensed_mo]);
   auto q_hat = make_view<double, 2>(hatFlds[q_moist_condensed_mo]);
@@ -162,160 +162,8 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_ad(
   hatFlds[q_moist_condensed_mo].set_dirty();
 
   oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_ad()] ... exit"
-          << std::endl;
-}
-
-// --------------------------------------------------------------------------------------
-
-void eval_water_vapor_mixing_ratio_wrt_moist_air_nl(
-        atlas::FieldSet & stateFlds) {
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_nl()] starting ..."
-          << std::endl;
-
-  const auto qconView = make_view<double, 2>(stateFlds[q_moist_condensed_mo]);
-  auto qmoistView = make_view<double, 2>(stateFlds[q_moist_mo]);
-  const idx_t sizeOwned =
-    util::getSizeOwned(stateFlds[q_moist_mo].functionspace());
-
-  atlas_omp_parallel_for(idx_t jn = 0; jn < sizeOwned; jn++) {
-    for (idx_t jl = 0; jl < qconView.shape(1); jl++) {
-      qmoistView(jn, jl) = qconView(jn, jl);
-    }
-  }
-  stateFlds[q_moist_mo].set_dirty();
-
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_nl()] ... exit"
-          << std::endl;
-}
-
-// --------------------------------------------------------------------------------------
-
-void eval_water_vapor_mixing_ratio_wrt_moist_air_tl(
-        atlas::FieldSet & incFlds,
-        const atlas::FieldSet & stateFlds) {
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_tl()] starting ..."
-          << std::endl;
-
-  const auto qconIncView = make_view<double, 2>(incFlds[q_moist_condensed_mo]);
-  auto qmoistIncView = make_view<double, 2>(incFlds[q_moist_mo]);
-  const idx_t sizeOwned =
-    util::getSizeOwned(incFlds[q_moist_mo].functionspace());
-
-  atlas_omp_parallel_for(idx_t jn = 0; jn < sizeOwned; jn++) {
-    for (idx_t jl = 0; jl < qconIncView.shape(1); jl++) {
-      qmoistIncView(jn, jl) = qconIncView(jn, jl);
-    }
-  }
-  incFlds[q_moist_mo].set_dirty();
-
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_tl()] ... exit"
-          << std::endl;
-}
-
-// --------------------------------------------------------------------------------------
-
-void eval_water_vapor_mixing_ratio_wrt_moist_air_ad(
-        atlas::FieldSet & hatFlds,
-        const atlas::FieldSet & stateFlds) {
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_ad()] starting ..."
-          << std::endl;
-
-  auto qconHatView = make_view<double, 2>(hatFlds[q_moist_condensed_mo]);
-  auto qmoistHatView = make_view<double, 2>(hatFlds[q_moist_mo]);
-  const idx_t sizeOwned =
-    util::getSizeOwned(hatFlds[q_moist_mo].functionspace());
-
-  atlas_omp_parallel_for(idx_t jn = 0; jn < sizeOwned; jn++) {
-    for (idx_t jl = 0; jl < qmoistHatView.shape(1); jl++) {
-      qconHatView(jn, jl) += qmoistHatView(jn, jl);
-      qmoistHatView(jn, jl) = 0.0;
-    }
-  }
-  hatFlds[q_moist_condensed_mo].set_dirty();
-  hatFlds[q_moist_mo].set_dirty();
-
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_ad()] ... exit"
-          << std::endl;
-}
-
-// --------------------------------------------------------------------------------------
-
-void eval_water_vapor_mixing_ratio_wrt_moist_air_at_2m_nl(
-        atlas::FieldSet & stateFlds) {
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_at_2m_nl()] starting ..."
-          << std::endl;
-
-  const auto q2mconView = make_view<double, 2>(stateFlds[q2m_moist_condensed_mo]);
-  auto q2mmoistView = make_view<double, 2>(stateFlds[q2m_moist_mo]);
-  const idx_t sizeOwned =
-    util::getSizeOwned(stateFlds[q2m_moist_mo].functionspace());
-
-  atlas_omp_parallel_for(idx_t jn = 0; jn < sizeOwned; jn++) {
-    q2mmoistView(jn, 0) = q2mconView(jn, 0);
-  }
-  stateFlds[q_moist_mo].set_dirty();
-
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_at_2m_nl()] ... exit"
-          << std::endl;
-}
-
-// --------------------------------------------------------------------------------------
-
-void eval_water_vapor_mixing_ratio_wrt_moist_air_at_2m_tl(
-        atlas::FieldSet & incFlds,
-        const atlas::FieldSet & stateFlds) {
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_at_2m_tl()] starting ..."
-          << std::endl;
-
-  const auto qconIncView = make_view<double, 2>(incFlds[q2m_moist_condensed_mo]);
-  auto qmoistIncView = make_view<double, 2>(incFlds[q2m_moist_mo]);
-  const idx_t sizeOwned =
-    util::getSizeOwned(incFlds[q2m_moist_mo].functionspace());
-
-  atlas_omp_parallel_for(idx_t jn = 0; jn < sizeOwned; ++jn) {
-      qmoistIncView(jn, 0) = qconIncView(jn, 0);
-  }
-  incFlds[q2m_moist_mo].set_dirty();
-
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_at_2m_air_tl()] ... exit"
-          << std::endl;
-}
-
-// --------------------------------------------------------------------------------------
-
-void eval_water_vapor_mixing_ratio_wrt_moist_air_at_2m_ad(
-        atlas::FieldSet & hatFlds,
-        const atlas::FieldSet & stateFlds) {
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_at_2m_ad()] starting ..."
-          << std::endl;
-
-  auto qconHatView = make_view<double, 2>(hatFlds[q2m_moist_condensed_mo]);
-  auto qmoistHatView = make_view<double, 2>(hatFlds[q2m_moist_mo]);
-  const idx_t sizeOwned =
-    util::getSizeOwned(hatFlds[q2m_moist_mo].functionspace());
-
-  atlas_omp_parallel_for(idx_t jn = 0; jn < sizeOwned; ++jn) {
-      qconHatView(jn, 0) += qmoistHatView(jn, 0);
-      qmoistHatView(jn, 0) = 0.0;
-  }
-  hatFlds[q2m_moist_condensed_mo].set_dirty();
-  hatFlds[q2m_moist_mo].set_dirty();
-
-  oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_at_2m_ad()] ... exit"
-          << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_ad()] ... exit"
+    << std::endl;
 }
 
 }  // namespace mo

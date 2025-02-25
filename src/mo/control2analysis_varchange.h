@@ -11,6 +11,8 @@
 
 namespace mo {
 
+/// USED IN RECONFIGURESTATEGAUSS
+/// USED IN RECIPE HydrostaticPressureLevels_A
 /// \details Calculate the hydrostatic pressure (on levels)
 ///          from hydrostatic exner.
 void evalHydrostaticPressureLevels(atlas::FieldSet & stateFlds);

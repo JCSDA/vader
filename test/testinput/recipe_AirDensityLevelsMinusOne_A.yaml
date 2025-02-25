@@ -4,4 +4,4 @@ trajectory grid:
   type : regular_gaussian
   N : 12
 trajectory filename: testdata/air_density_levels_minus_one_A.nc
-adjoint test tolerance: 1.e-12
+run adjoint test: false
