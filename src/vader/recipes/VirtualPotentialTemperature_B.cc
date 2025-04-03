@@ -53,6 +53,12 @@ oops::Variables VirtualPotentialTemperature_B::ingredients() const
     return VirtualPotentialTemperature_B::Ingredients;
 }
 
+oops::Variables VirtualPotentialTemperature_B::trajectoryVars() const
+{
+    return oops::Variables{std::vector<std::string>{
+        "water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water", "air_potential_temperature"}};
+}
+
 size_t VirtualPotentialTemperature_B::productLevels(const atlas::FieldSet & afieldset) const
 {
     return afieldset["air_potential_temperature"].shape(1);

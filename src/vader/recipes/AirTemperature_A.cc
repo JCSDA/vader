@@ -58,6 +58,11 @@ oops::Variables AirTemperature_A::ingredients() const
     return AirTemperature_A::Ingredients;
 }
 
+oops::Variables AirTemperature_A::trajectoryVars() const
+{
+    return oops::Variables(std::vector<std::string>{APT, DEF});
+}
+
 size_t AirTemperature_A::productLevels(const atlas::FieldSet & fields) const
 {
     return fields[APT].shape(1);
@@ -88,7 +93,7 @@ void AirTemperature_A::executeNL(atlas::FieldSet & fields)
 void AirTemperature_A::executeTL(atlas::FieldSet & fields,
                                 const atlas::FieldSet & trajFields)
 {
-    oops::Log::trace() << "entering AirTemperature_A::executeNL function" << std::endl;
+    oops::Log::trace() << "entering AirTemperature_A::executeTL function" << std::endl;
 
     auto exner_traj_view = make_view<const double, 2>(trajFields[DEF]);
     auto potential_temperature_traj_view = make_view<const double, 2>(trajFields[APT]);
@@ -104,14 +109,14 @@ void AirTemperature_A::executeTL(atlas::FieldSet & fields,
                             exner_traj_view(jn, jl);
       }
     }
-    oops::Log::trace() << "leaving AirTemperature_A::executeNL function" << std::endl;
+    oops::Log::trace() << "leaving AirTemperature_A::executeTL function" << std::endl;
 }
 
 
 void AirTemperature_A::executeAD(atlas::FieldSet & fields,
                                  const atlas::FieldSet & trajFields)
 {
-    oops::Log::trace() << "entering AirTemperature_A::executeNL function" << std::endl;
+    oops::Log::trace() << "entering AirTemperature_A::executeAD function" << std::endl;
 
     auto exner_traj_view = make_view<const double, 2>(trajFields[DEF]);
     auto potential_temperature_traj_view = make_view<const double, 2>(trajFields[APT]);
@@ -128,7 +133,7 @@ void AirTemperature_A::executeAD(atlas::FieldSet & fields,
         temp_view(jn, jl) = 0.0;
       }
     }
-    oops::Log::trace() << "leaving AirTemperature_A::executeNL function" << std::endl;
+    oops::Log::trace() << "leaving AirTemperature_A::executeAD function" << std::endl;
 }
 
 }  // namespace vader

@@ -56,6 +56,15 @@ oops::Variables AirDensityLevelsMinusOne_A::ingredients() const
     return AirDensityLevelsMinusOne_A::Ingredients;
 }
 
+oops::Variables AirDensityLevelsMinusOne_A::trajectoryVars() const
+{
+    return oops::Variables{std::vector<std::string>{"height_above_mean_sea_level",
+                                          "height_above_mean_sea_level_levels",
+                                          "virtual_potential_temperature",
+                                          "air_pressure_levels_minus_one",
+                                          "air_density_levels_minus_one"}};
+}
+
 size_t AirDensityLevelsMinusOne_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return afieldset["air_pressure_levels_minus_one"].shape(1);

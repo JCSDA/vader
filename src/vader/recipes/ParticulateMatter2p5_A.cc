@@ -131,6 +131,15 @@ oops::Variables ParticulateMatter2p5_A::ingredients() const
     return ParticulateMatter2p5_A::Ingredients;
 }
 
+oops::Variables ParticulateMatter2p5_A::trajectoryVars() const
+{
+    return oops::Variables{std::vector<std::string>{"pm2p5_fraction_of_aitken_mode",
+           "pm2p5_fraction_of_accumulation_mode",
+           "pm2p5_fraction_of_coarse_mode",
+           "dry_air_density"
+    }};
+}
+
 size_t ParticulateMatter2p5_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return afieldset.field(AERO6_INGREDIENTS[4]).shape(1);

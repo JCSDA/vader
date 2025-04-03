@@ -49,6 +49,7 @@ class CloudIceMixingRatio_A : public RecipeBase {
     std::string name() const override;
     oops::Variable product() const override;
     oops::Variables ingredients() const override;
+    oops::Variables trajectoryVars() const override;
     size_t productLevels(const atlas::FieldSet &) const override;
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
     bool hasTLAD() const override { return true; }

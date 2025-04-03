@@ -48,6 +48,12 @@ oops::Variables CloudIceMixingRatio_A::ingredients() const
     return CloudIceMixingRatio_A::Ingredients;
 }
 
+oops::Variables CloudIceMixingRatio_A::trajectoryVars() const
+{
+    return oops::Variables{std::vector<std::string>{"cloud_ice_mixing_ratio_wrt_dry_air",
+                                                    "total_water_mixing_ratio_wrt_dry_air"}};
+}
+
 size_t CloudIceMixingRatio_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return (afieldset["total_water_mixing_ratio_wrt_dry_air"].shape(1));

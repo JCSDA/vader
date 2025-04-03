@@ -18,6 +18,7 @@ namespace vader
 // Static attribute initializations
 const char Test_VarA_from_B::Name[] = "Test_VarA_from_B";
 const char Test_VarA_from_C_D::Name[] = "Test_VarA_from_C_D";
+const char Test_VarA_from_G::Name[] = "Test_VarA_from_G";
 const char Test_VarB_from_E::Name[] = "Test_VarB_from_E";
 const char Test_VarB_from_A::Name[] = "Test_VarB_from_A";
 const char Test_VarC_from_F::Name[] = "Test_VarC_from_F";
@@ -25,6 +26,7 @@ const char Test_VarC_from_F::Name[] = "Test_VarC_from_F";
 // Register the makers
 static RecipeMaker<Test_VarA_from_B> makerTestVarA_A_(Test_VarA_from_B::Name);
 static RecipeMaker<Test_VarA_from_C_D> makerTestVarA_B_(Test_VarA_from_C_D::Name);
+static RecipeMaker<Test_VarA_from_G> makerTestVarA_C_(Test_VarA_from_G::Name);
 static RecipeMaker<Test_VarB_from_E> makerTestVarB_A_(Test_VarB_from_E::Name);
 static RecipeMaker<Test_VarB_from_A> makerTestVarB_B_(Test_VarB_from_A::Name);
 static RecipeMaker<Test_VarC_from_F> makerTestVarC_A_(Test_VarC_from_F::Name);
@@ -38,6 +40,11 @@ Test_VarA_from_C_D::Test_VarA_from_C_D(const Parameters_ & params,
                                        const VaderConfigVars & configVariables)
 {
     oops::Log::trace() << "Test_VarA_from_C_D::Test_VarA_from_C_D(params)" << std::endl;
+}
+Test_VarA_from_G::Test_VarA_from_G(const Parameters_ & params,
+                                   const VaderConfigVars & configVariables)
+{
+    oops::Log::trace() << "Test_VarA_from_G::Test_VarA_from_(params)" << std::endl;
 }
 Test_VarB_from_E::Test_VarB_from_E(const Parameters_ & params,
                                    const VaderConfigVars & configVariables)
@@ -63,6 +70,10 @@ std::string Test_VarA_from_C_D::name() const
 {
     return Test_VarA_from_C_D::Name;
 }
+std::string Test_VarA_from_G::name() const
+{
+    return Test_VarA_from_G::Name;
+}
 std::string Test_VarB_from_E::name() const
 {
     return Test_VarB_from_E::Name;
@@ -86,6 +97,21 @@ void Test_VarA_from_C_D::executeNL(atlas::FieldSet & afieldset)
     oops::Log::trace() << "entering/leaving empty Test_VarA_from_C_D::executeNL function"
         << std::endl;
 }
+void Test_VarA_from_G::executeNL(atlas::FieldSet & afieldset)
+{
+    oops::Log::trace() << "entering/leaving empty Test_VarA_from_G::executeNL function"
+        << std::endl;
+}
+void Test_VarA_from_G::executeTL(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
+{
+    oops::Log::trace() << "entering/leaving empty Test_VarA_from_G::executeTL function"
+        << std::endl;
+}
+void Test_VarA_from_G::executeAD(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
+{
+    oops::Log::trace() << "entering/leaving empty Test_VarA_from_G::executeAD function"
+        << std::endl;
+}
 void Test_VarB_from_E::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarB_from_E::executeNL function"
@@ -94,6 +120,16 @@ void Test_VarB_from_E::executeNL(atlas::FieldSet & afieldset)
 void Test_VarB_from_A::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarB_from_A::executeNL function"
+        << std::endl;
+}
+void Test_VarB_from_A::executeTL(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
+{
+    oops::Log::trace() << "entering/leaving empty Test_VarB_from_A::executeTL function"
+        << std::endl;
+}
+void Test_VarB_from_A::executeAD(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
+{
+    oops::Log::trace() << "entering/leaving empty Test_VarB_from_A::executeAD function"
         << std::endl;
 }
 void Test_VarC_from_F::executeNL(atlas::FieldSet & afieldset)

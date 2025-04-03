@@ -6,6 +6,11 @@ trajectory filename: testdata/gauss_state_F12.nc
 # CCPP Names for (hopefully near) future:
 # ingredients: [air_potential_temperature_at_interface, dimensionless_exner_function_at_interface]
 # products: [air_temperature_at_interface]
-ingredients: [air_potential_temperature, dimensionless_exner_function]
+trajectory variables:
+  - air_potential_temperature
+  - dimensionless_exner_function
+ingredients:
+  - air_potential_temperature
+  - dimensionless_exner_function
 products: [air_temperature]
 adjoint test tolerance: 1.e-12

@@ -3,6 +3,7 @@ trajectory grid:
   type : regular_gaussian
   N : 12
 trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables: []
 ingredients:
   - cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water
   - cloud_liquid_water_mixing_ratio_wrt_moist_air_and_condensed_water

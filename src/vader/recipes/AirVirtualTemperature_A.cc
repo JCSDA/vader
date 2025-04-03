@@ -51,6 +51,12 @@ oops::Variables AirVirtualTemperature_A::ingredients() const
     return AirVirtualTemperature_A::Ingredients;
 }
 
+oops::Variables AirVirtualTemperature_A::trajectoryVars() const
+{
+    return oops::Variables{std::vector<std::string>{"air_temperature",
+                                                    "water_vapor_mixing_ratio_wrt_moist_air"}};
+}
+
 size_t AirVirtualTemperature_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return afieldset.field("air_temperature").shape(1);

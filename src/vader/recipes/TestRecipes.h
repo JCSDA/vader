@@ -50,7 +50,10 @@ class Test_VarA_from_B : public RecipeBase {
     oops::Variables ingredients() const override {
       return oops::Variables{std::vector<std::string>{"TestVarB"}};
     }
-    size_t productLevels(const atlas::FieldSet &) const override {return 0;}
+    oops::Variables trajectoryVars() const override {
+      return oops::Variables{std::vector<std::string>{"TestVarB"}};
+    }
+    size_t productLevels(const atlas::FieldSet &) const override {return 1;}
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override
                                 {return atlas::functionspace::PointCloud({
                                     atlas::PointXY(0.0, 0.0)});}
@@ -83,7 +86,7 @@ class Test_VarA_from_C_D : public RecipeBase {
     oops::Variables ingredients() const override {
       return oops::Variables{std::vector<std::string>{"TestVarC", "TestVarD"}};
     }
-    size_t productLevels(const atlas::FieldSet &) const override {return 0;}
+    size_t productLevels(const atlas::FieldSet &) const override {return 1;}
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override
                                 {return atlas::functionspace::PointCloud({
                                     atlas::PointXY(0.0, 0.0)});}
@@ -116,7 +119,7 @@ class Test_VarB_from_E : public RecipeBase {
     oops::Variables ingredients() const override {
       return oops::Variables{std::vector<std::string>{"TestVarE"}};
     }
-    size_t productLevels(const atlas::FieldSet &) const override {return 0;}
+    size_t productLevels(const atlas::FieldSet &) const override {return 1;}
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override
                                 {return atlas::functionspace::PointCloud({
                                     atlas::PointXY(0.0, 0.0)});}
@@ -151,14 +154,17 @@ class Test_VarB_from_A : public RecipeBase {
     oops::Variables ingredients() const override {
       return oops::Variables{std::vector<std::string>{"TestVarA"}};
     }
-    size_t productLevels(const atlas::FieldSet &) const override {return 0;}
+    oops::Variables trajectoryVars() const override {
+      return oops::Variables{std::vector<std::string>{"TestVarA"}};
+    }
+    size_t productLevels(const atlas::FieldSet &) const override {return 1;}
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override
                                 {return atlas::functionspace::PointCloud({
                                     atlas::PointXY(0.0, 0.0)});}
-    // bool hasTLAD() const override { return true; }
+    bool hasTLAD() const override { return true; }
     void executeNL(atlas::FieldSet &) override;
-    // void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
-    // void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 
  private:
 };
@@ -183,7 +189,7 @@ class Test_VarC_from_F : public RecipeBase {
     oops::Variables ingredients() const override {
       return oops::Variables{std::vector<std::string>{"TestVarF"}};
     }
-    size_t productLevels(const atlas::FieldSet &) const override {return 0;}
+    size_t productLevels(const atlas::FieldSet &) const override {return 1;}
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override
                                 {return atlas::functionspace::PointCloud({
                                     atlas::PointXY(0.0, 0.0)});}
@@ -191,6 +197,42 @@ class Test_VarC_from_F : public RecipeBase {
     void executeNL(atlas::FieldSet &) override;
     // void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
     // void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+
+ private:
+};
+// ------------------------------------------------------------------------------------------------
+/*! \brief Test_VarA_from_G class defines a recipe for TestVarC
+ *
+ *  \details This instantiation of RecipeBase produces TestVarA
+ *           using TestVarG as input. Linear recipe only.
+ */
+class Test_VarA_from_G : public RecipeBase {
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+
+    typedef TestRecipeParameters Parameters_;
+
+    Test_VarA_from_G(const Parameters_ &, const VaderConfigVars &);
+
+    // Recipe base class overrides
+    std::string name() const override;
+    oops::Variable product() const override {return oops::Variable{"TestVarA"};}
+    oops::Variables ingredients() const override {
+      return oops::Variables{std::vector<std::string>{"TestVarG"}};
+    }
+    oops::Variables trajectoryVars() const override {
+      return oops::Variables{std::vector<std::string>{"TestVarG"}};
+    }
+    size_t productLevels(const atlas::FieldSet &) const override {return 1;}
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override
+                                {return atlas::functionspace::PointCloud({
+                                    atlas::PointXY(0.0, 0.0)});}
+    bool hasTLAD() const override { return true; }
+    bool hasNL() const override { return false; }
+    void executeNL(atlas::FieldSet &) override;
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 
  private:
 };

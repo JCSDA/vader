@@ -10,6 +10,7 @@ plan variable tests:
   plan for TLAD: true
   expected planned products: []
   expected recipe plan: []
+  expected traj recipe plan: []
 # One ingredient which is available
 - cookbook:
     TestVarA: [Test_VarA_from_B,Test_VarA_from_C_D]
@@ -70,3 +71,73 @@ plan variable tests:
   plan for TLAD: false
   expected planned products: [TestVarA,TestVarC]
   expected recipe plan: [Test_VarA_from_C_D]
+# Can't use first recipe due to missing TL/AD algorithm
+- cookbook:
+    TestVarA: [Test_VarA_from_B,Test_VarA_from_G]
+    TestVarB: [Test_VarB_from_E,Test_VarB_from_A]
+    TestVarC: [Test_VarC_from_F]
+  ingredients: [TestVarA,TestVarE]
+  products: [TestVarB]
+  trajectory variables: [TestVarA]
+  plan for TLAD: true
+  expected planned products: [TestVarB]
+  expected recipe plan: [Test_VarB_from_A]
+  expected traj recipe plan: []
+# Can't use recipe due to missing trajectory variable
+- cookbook:
+    TestVarA: [Test_VarA_from_B,Test_VarA_from_G]
+    TestVarB: [Test_VarB_from_E,Test_VarB_from_A]
+    TestVarC: [Test_VarC_from_F]
+  ingredients: [TestVarA,TestVarE]
+  products: [TestVarB]
+  trajectory variables: []
+  plan for TLAD: true
+  expected planned products: []
+  expected recipe plan: []
+  expected traj recipe plan: []
+# Need to produce missing trajectory variable
+- cookbook:
+    TestVarA: [Test_VarA_from_B,Test_VarA_from_G]
+    TestVarB: [Test_VarB_from_E,Test_VarB_from_A]
+    TestVarC: [Test_VarC_from_F]
+  ingredients: [TestVarA,TestVarE]
+  products: [TestVarB]
+  trajectory variables: [TestVarE]
+  plan for TLAD: true
+  expected planned products: [TestVarB]
+  expected recipe plan: [Test_VarB_from_A]
+  expected traj recipe plan: [Test_VarB_from_E,Test_VarA_from_B]
+# Can't use first recipe due to missing NL algorithm
+- cookbook:
+    TestVarA: [Test_VarA_from_G,Test_VarA_from_B]
+    TestVarB: [Test_VarB_from_E,Test_VarB_from_A]
+    TestVarC: [Test_VarC_from_F]
+  ingredients: [TestVarB,TestVarG]
+  products: [TestVarA]
+  plan for TLAD: false
+  expected planned products: [TestVarA]
+  expected recipe plan: [Test_VarA_from_B]
+  expected traj recipe plan: []
+# First req'd ingredient can be produced, but not second, so remove first recipe
+- cookbook:
+    TestVarA: [Test_VarA_from_C_D]
+    TestVarB: [Test_VarB_from_E,Test_VarB_from_A]
+    TestVarC: [Test_VarC_from_F]
+  ingredients: [TestVarF]
+  products: [TestVarA]
+  plan for TLAD: false
+  expected planned products: []
+  expected recipe plan: []
+# First req'd traj var can be produced, but not second, so remove first recipe
+- cookbook:
+    TestVarA: [Test_VarA_from_C_D]
+    TestVarB: [Test_VarB_from_E,Test_VarB_from_A]
+    TestVarC: [Test_VarC_from_F]
+  ingredients: [TestVarA]
+  products: [TestVarB]
+  trajectory variables: [TestVarC]
+  plan for TLAD: true
+  expected planned products: []
+  expected recipe plan: []
+  expected traj recipe plan: []
+

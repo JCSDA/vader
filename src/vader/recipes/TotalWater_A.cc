@@ -53,6 +53,11 @@ oops::Variables TotalWater_A::ingredients() const
   return TotalWater_A::Ingredients;
 }
 
+oops::Variables TotalWater_A::trajectoryVars() const
+{
+    return oops::Variables{};
+}
+
 size_t TotalWater_A::productLevels(const atlas::FieldSet & afieldset) const
 {
   return (afieldset[specific_humidity_mo].shape(1));

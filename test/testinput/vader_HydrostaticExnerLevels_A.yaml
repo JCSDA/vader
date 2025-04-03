@@ -3,6 +3,14 @@ trajectory grid:
   type : regular_gaussian
   N : 12
 trajectory filename: testdata/gauss_state_F12.nc
-ingredients: [height_above_mean_sea_level_levels, virtual_potential_temperature, air_pressure_levels]
+trajectory variables:
+  - hydrostatic_exner_levels
+  - height_above_mean_sea_level_levels
+  - virtual_potential_temperature
+  - air_pressure_levels
+ingredients:
+  - height_above_mean_sea_level_levels
+  - virtual_potential_temperature
+  - air_pressure_levels
 products: [hydrostatic_exner_levels]
 adjoint test tolerance: 1.e-12

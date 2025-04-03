@@ -47,6 +47,11 @@ oops::Variables uwind_at_10m_A::ingredients() const
     return uwind_at_10m_A::Ingredients;
 }
 
+oops::Variables uwind_at_10m_A::trajectoryVars() const
+{
+    return oops::Variables{};
+}
+
 size_t uwind_at_10m_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return 1;

@@ -70,6 +70,7 @@ class AirTemperature_A : public RecipeBase {
     void executeNL(atlas::FieldSet &) override;
     void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
     void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+    oops::Variables trajectoryVars() const override;
 
  private:
 };

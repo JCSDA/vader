@@ -3,8 +3,22 @@ trajectory grid:
   type : regular_gaussian
   N : 12
 trajectory filename: testdata/dry_air_density_levels_minus_one_A.nc
-ingredients: [air_pressure_levels_minus_one, height_above_mean_sea_level, height_above_mean_sea_level_levels,
-              air_potential_temperature, cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water,
-              cloud_liquid_water_mixing_ratio_wrt_moist_air_and_condensed_water, water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water]
+trajectory variables:
+  - air_pressure_levels_minus_one
+  - height_above_mean_sea_level
+  - height_above_mean_sea_level_levels
+  - air_potential_temperature
+  - cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water
+  - cloud_liquid_water_mixing_ratio_wrt_moist_air_and_condensed_water
+  - water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water
+  - dry_air_density_levels_minus_one
+ingredients:
+  - air_pressure_levels_minus_one
+  - height_above_mean_sea_level
+  - height_above_mean_sea_level_levels
+  - air_potential_temperature
+  - cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water
+  - cloud_liquid_water_mixing_ratio_wrt_moist_air_and_condensed_water
+  - water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water
 products: [dry_air_density_levels_minus_one]
 adjoint test tolerance: 1.e-12

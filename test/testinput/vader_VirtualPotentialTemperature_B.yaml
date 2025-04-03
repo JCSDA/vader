@@ -3,6 +3,11 @@ trajectory grid:
   type : regular_gaussian
   N : 12
 trajectory filename: testdata/gauss_state_F12.nc
-ingredients: [water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water, air_potential_temperature]
+trajectory variables:
+  - water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water
+  - air_potential_temperature
+ingredients:
+  - water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water
+  - air_potential_temperature
 products: [virtual_potential_temperature]
 adjoint test tolerance: 1.e-12

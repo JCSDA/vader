@@ -52,6 +52,12 @@ oops::Variables WaterVaporMixingRatioWrtMoistAirAndCondensedWater_A::ingredients
     return WaterVaporMixingRatioWrtMoistAirAndCondensedWater_A::Ingredients;
 }
 
+oops::Variables WaterVaporMixingRatioWrtMoistAirAndCondensedWater_A::trajectoryVars() const
+{
+    return oops::Variables{std::vector<std::string>{"water_vapor_mixing_ratio_wrt_dry_air",
+                                                    "total_water_mixing_ratio_wrt_dry_air"}};
+}
+
 size_t WaterVaporMixingRatioWrtMoistAirAndCondensedWater_A::productLevels(
                                            const atlas::FieldSet & afieldset) const
 {

@@ -3,6 +3,11 @@ trajectory grid:
   type : regular_gaussian
   N : 12
 trajectory filename: testdata/aero6_gauss_state_F12.nc
+trajectory variables:
+  - pm2p5_fraction_of_aitken_mode
+  - pm2p5_fraction_of_accumulation_mode
+  - pm2p5_fraction_of_coarse_mode
+  - dry_air_density
 ingredients: [pm2p5_fraction_of_aitken_mode,pm2p5_fraction_of_accumulation_mode,pm2p5_fraction_of_coarse_mode,
                      dry_air_density,
                      mixing_ratio_of_aso4i_wrt_dry_air,

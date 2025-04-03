@@ -52,6 +52,12 @@ oops::Variables VirtualPotentialTemperature_A::ingredients() const
     return VirtualPotentialTemperature_A::Ingredients;
 }
 
+oops::Variables VirtualPotentialTemperature_A::trajectoryVars() const
+{
+    return oops::Variables{std::vector<std::string>{"height_above_mean_sea_level_levels",
+                                                    "virtual_potential_temperature"}};
+}
+
 size_t VirtualPotentialTemperature_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return (afieldset["height_above_mean_sea_level_levels"].shape(1) -1);

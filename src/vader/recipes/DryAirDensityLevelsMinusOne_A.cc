@@ -68,6 +68,18 @@ oops::Variables DryAirDensityLevelsMinusOne_A::ingredients() const
     return DryAirDensityLevelsMinusOne_A::Ingredients;
 }
 
+oops::Variables DryAirDensityLevelsMinusOne_A::trajectoryVars() const
+{
+    return oops::Variables{std::vector<std::string>{"height_above_mean_sea_level",
+                   "height_above_mean_sea_level_levels",
+                   "air_potential_temperature",
+                   "cloud_liquid_water_mixing_ratio_wrt_moist_air_and_condensed_water",
+                   "cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water",
+                   "water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water",
+                   "air_pressure_levels_minus_one",
+                   "dry_air_density_levels_minus_one"}};
+}
+
 size_t DryAirDensityLevelsMinusOne_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return afieldset["air_pressure_levels_minus_one"].shape(1);

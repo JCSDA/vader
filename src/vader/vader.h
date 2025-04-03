@@ -68,18 +68,27 @@ class Vader  : public util::Printable {
 
     std::vector<std::string> getPlanNames() const;
     std::vector<std::string> getPlanNames(vaderPlanType plan) const;
+    bool needsTLADInit() const {return !recipeExecutionPlanBuilt_;}
+    oops::Variables initTLAD(oops::Variables &) const;
+    oops::Variables initTLAD(oops::Variables &, vaderPlanType &) const;
 
     /// Calculates as many variables in the list as possible
     oops::Variables changeVar(atlas::FieldSet &, oops::Variables &,
-                              vaderPlanType plan = vaderPlanType()) const;
-    oops::Variables changeVarTraj(atlas::FieldSet &, oops::Variables &);
-    oops::Variables changeVarTL(atlas::FieldSet &, oops::Variables &) const;
-    oops::Variables changeVarAD(atlas::FieldSet &, oops::Variables &) const;
+                              vaderPlanType &) const;
+    oops::Variables changeVar(atlas::FieldSet &, oops::Variables &) const;
+    void changeVarTraj(atlas::FieldSet const &, oops::Variables const &);
+    oops::Variables changeVarTL(atlas::FieldSet &) const;
+    oops::Variables changeVarAD(atlas::FieldSet &) const;
+    oops::Variables changeVarTL(atlas::FieldSet &, vaderPlanType &) const;
+    oops::Variables changeVarAD(atlas::FieldSet &, vaderPlanType &) const;
 
  private:
     std::map<oops::Variable, std::vector<std::unique_ptr<RecipeBase>>> cookbook_;
-    vaderPlanType recipeExecutionPlan_;
-    atlas::FieldSet trajectory_;
+    mutable vaderPlanType recipeExecutionPlan_;  // mutable due to being set in const changeVarTL/AD
+    mutable oops::Variables toVariables_;  // mutable due to being set in const changeVarTL/AD
+    mutable atlas::FieldSet trajectory_;  // mutable due to being set in const changeVarTL/AD
+    bool changeVarTrajCalled_ = false;
+    mutable bool recipeExecutionPlanBuilt_ = false;  // mutable due to being set in changeVarTL/AD
     const eckit::LocalConfiguration configVariables_;
     std::map<oops::Variable, std::vector<std::string>>
         getDefaultCookbookDef();
@@ -91,9 +100,26 @@ class Vader  : public util::Printable {
     bool planVariable(oops::Variables &,
                       oops::Variables &,
                       const oops::Variable &,
-                      bool,
+                      oops::Variables &,
+                      vaderPlanType &,
+                      const bool,
                       oops::Variables &,
                       vaderPlanType &) const;
+
+    void planVariables(oops::Variables &,
+                       oops::Variables &,
+                       vaderPlanType &) const;
+
+    void planVariables(oops::Variables &,
+                       oops::Variables &,
+                       vaderPlanType &,
+                       const bool,
+                       oops::Variables &,
+                       vaderPlanType &) const;
+
+    void createLinearPlanAndSetTraj(oops::Variables &,
+                                    oops::Variables &,
+                                    vaderPlanType &) const;
 
     void executePlanNL(atlas::FieldSet &, const vaderPlanType &) const;
     void executePlanTL(atlas::FieldSet &, const vaderPlanType &) const;

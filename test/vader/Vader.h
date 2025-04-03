@@ -43,9 +43,13 @@ class VaderTestParameters : public oops::Parameters {
         "trajectory grid", "trajectory grid description", this};
   oops::RequiredParameter<std::string> filename{"trajectory filename",
         "filename of existing netcdf file with trajectory ingredients", this};
+  oops::RequiredParameter<std::vector<std::string>> trajectoryVars{
+        "trajectory variables",
+        "trajectory variables required by recipe(s) being tested",
+        this};
   oops::RequiredParameter<std::vector<std::string>> ingredients{
         "ingredients",
-        "ingredient variables that must be available in the trajectory file",
+        "ingredient variables required by recipe(s) being tested",
         this};
   oops::RequiredParameter<std::vector<std::string>> products{"products",
         "target variables", this};
@@ -65,9 +69,11 @@ void testVaderAdjoint() {
   vaderConfig.set(vader::configModelVarsKey, modelVarsConfig);
 
   vader::Vader vader(params.vader, vaderConfig);
-  const oops::Variables ingredientVars(params.ingredients);
+  oops::Variables ingredientVars(params.ingredients);
+  oops::Variables trajectoryVars(params.trajectoryVars);
   const oops::Variables productVars(params.products);
   oops::Log::info() << "Testing vader" << std::endl;
+  oops::Log::info() << " Trajectory (x): " << trajectoryVars << std::endl;
   oops::Log::info() << " Ingredients (dx): " << ingredientVars << std::endl;
   oops::Log::info() << " Products (dy): " << productVars << std::endl;
 
@@ -81,32 +87,43 @@ void testVaderAdjoint() {
   const std::string & filename = params.filename;
   oops::Log::info() << "Reading trajectory from file: " << filename << std::endl;
   if ((retval = nc_open(filename.c_str(), NC_NOWRITE, &ncid))) ERR(retval);
-  std::vector<size_t> ingredientLevels(ingredientVars.size(), 0);
-  for (size_t jvar = 0; jvar < ingredientVars.size(); ++jvar) {
-    addFieldFromFile(traj, ingredientVars[jvar].name(), fs, grid,
-                     ingredientLevels[jvar], ncid);
+  std::vector<size_t> trajectoryVarsLevels(trajectoryVars.size(), 0);
+  for (size_t jvar = 0; jvar < trajectoryVars.size(); ++jvar) {
+    addFieldFromFile(traj, trajectoryVars[jvar].name(), fs, grid,
+                     trajectoryVarsLevels[jvar], ncid);
   }
+  oops::Log::info() << "Reading ingredients from file: " << filename << std::endl;
+  // Also read ingredients from file, but only to populate ingredientVarsLevels (better way?)
+  atlas::FieldSet tempFieldSet;
+  std::vector<size_t> ingredientVarsLevels(ingredientVars.size(), 0);
+  for (size_t jvar = 0; jvar < ingredientVars.size(); ++jvar) {
+    addFieldFromFile(tempFieldSet, ingredientVars[jvar].name(), fs, grid,
+                     ingredientVarsLevels[jvar], ncid);
+  }
+  if ((retval = nc_close(ncid))) ERR(retval);
   // run NL to set trajectory
   oops::Variables vars = productVars;
+  // oops::Variables incrementVars(traj.field_names());
   vader.changeVarTraj(traj, vars);
+
+  // Testing whether (dx, K^T dy) == (K dx, dy)
+  // Allocating dxin to contain randomized dx (for the ingredient variables)
+  atlas::FieldSet dxin;
+  for (size_t ivar = 0; ivar < ingredientVars.size(); ++ivar) {
+    addRandomField(dxin, ingredientVars[ivar].name(), fs, ingredientVarsLevels[ivar]);
+  }
+  // fill the product variable with Kdx
+  oops::Variables varsProduced = vader.initTLAD(ingredientVars);
+  vader.changeVarTL(dxin);
 
   // The test should be setup to do variable change for all variables, exit
   // if it's not
+  vars -= varsProduced;
   if (vars.size() > 0) {
     oops::Log::info() << "Not all variables can be converted; no recipes found for "
                       << vars << std::endl;
   }
   EXPECT_EQUAL(vars.size(), 0);
-
-  // Testing whether (dx, K^T dy) == (K dx, dy)
-  // Allocating dxin to contain randomized dx (for the ingredient variables)
-  atlas::FieldSet dxin;
-  for (size_t jvar = 0; jvar < ingredientVars.size(); ++jvar) {
-    addRandomField(dxin, ingredientVars[jvar].name(), fs, ingredientLevels[jvar]);
-  }
-  // fill the product variable with Kdx
-  vars = productVars;
-  vader.changeVarTL(dxin, vars);
 
   // Allocating dxout to contain randomized dy (for the product variable).
   // After calling recipe->executeAD, dy (the product variable) will be
@@ -114,7 +131,7 @@ void testVaderAdjoint() {
   atlas::FieldSet dxout, dy;
   for (const auto & productVar : productVars) {
     const std::string & name = productVar.name();
-    addRandomField(dxout, name, fs, traj.field(name).shape(1));
+    addRandomField(dxout, name, fs, dxin.field(name).shape(1));
     atlas::Field field(name, dxout.field(name).datatype(),
                   dxout.field(name).shape());
     auto from_view = atlas::array::make_view<double, 2>(dxout.field(name));
@@ -122,9 +139,18 @@ void testVaderAdjoint() {
     to_view.assign(from_view);
     dy.add(field);
   }
+  // If an ingredient is not already in dxout, and is also not present in the trajectory, Vader
+  // won't have enough information to create the field, so we must populate dxout with those
+  // zeroed-out ingredient fields before calling changeVarAD (Problem?)
+  for (size_t ivar = 0; ivar < ingredientVars.size(); ++ivar) {
+    const std::string & name = ingredientVars[ivar].name();
+    if (!(dxout.has(name) || traj.has(name))) {
+      addZeroField(dxout, name, fs, ingredientVarsLevels[ivar]);
+    }
+  }
+
   // fill the ingredients variables with K^T dxout
-  vars = productVars;
-  vader.changeVarAD(dxout, vars);
+  vader.changeVarAD(dxout);
 
   double zz1 = 0;
   // Compute (dx, K^T dy)

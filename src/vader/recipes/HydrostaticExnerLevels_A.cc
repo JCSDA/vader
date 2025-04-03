@@ -52,6 +52,14 @@ oops::Variables HydrostaticExnerLevels_A::ingredients() const
     return HydrostaticExnerLevels_A::Ingredients;
 }
 
+oops::Variables HydrostaticExnerLevels_A::trajectoryVars() const
+{
+    return oops::Variables{std::vector<std::string>{"air_pressure_levels",
+                            "height_above_mean_sea_level_levels",
+                            "hydrostatic_exner_levels",
+                            "virtual_potential_temperature"}};
+}
+
 size_t HydrostaticExnerLevels_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return (afieldset["height_above_mean_sea_level_levels"].shape(1));

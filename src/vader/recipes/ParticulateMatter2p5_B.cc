@@ -54,6 +54,11 @@ oops::Variables ParticulateMatter2p5_B::ingredients() const
     return ParticulateMatter2p5_B::Ingredients;
 }
 
+oops::Variables ParticulateMatter2p5_B::trajectoryVars() const
+{
+    return oops::Variables{std::vector<std::string>{"dry_air_density"}};
+}
+
 size_t ParticulateMatter2p5_B::productLevels(const atlas::FieldSet & afieldset) const
 {
     return afieldset.field("mixing_ratio_of_smoke_wrt_dry_air").shape(1);

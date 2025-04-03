@@ -3,6 +3,7 @@ trajectory grid:
   type : regular_gaussian
   N : 12
 trajectory filename: testdata/wind_at_10m_A.nc
+trajectory variables: []
 ingredients: [eastward_wind]
 products: [eastward_wind_at_10m]
 adjoint test tolerance: 1.e-12

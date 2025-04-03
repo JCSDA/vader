@@ -51,6 +51,11 @@ oops::Variables TotalMixingRatio_A::ingredients() const
     return TotalMixingRatio_A::Ingredients;
 }
 
+oops::Variables TotalMixingRatio_A::trajectoryVars() const
+{
+    return oops::Variables{};
+}
+
 size_t TotalMixingRatio_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return (afieldset["water_vapor_mixing_ratio_wrt_dry_air"].shape(1));
