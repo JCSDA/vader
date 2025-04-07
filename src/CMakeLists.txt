@@ -3,8 +3,6 @@ ecbuild_generate_config_headers( DESTINATION ${INSTALL_INCLUDE_DIR}/vader )
 list( APPEND vader_src_files
 vader/DefaultCookbook.h
 vader/vader.h
-vader/recipe.h
-vader/recipe.cc
 vader/RecipeBase.h
 vader/RecipeBase.cc
 vader/vader.cc
