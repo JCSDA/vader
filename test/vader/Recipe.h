@@ -153,33 +153,42 @@ void testRecipeAdjoint() {
   RecipeBase* recipe = RecipeFactory::create(recipeParams.name, recipeParams,
                                              eckit::LocalConfiguration());
   const oops::Variables ingredientVars = recipe->ingredients();
+  const oops::Variables trajectoryVars = recipe->trajectoryVars();
   const oops::Variable productVar = recipe->product();
   oops::Log::info() << "Testing vader recipe (K): " << recipe->name() << std::endl;
   oops::Log::info() << " Ingredients (dx): " << ingredientVars << std::endl;
+  oops::Log::info() << " Trajectory Vars (x): " << trajectoryVars << std::endl;
   oops::Log::info() << " Product (dy): " << productVar << std::endl;
 
   // set up grid and functionspace based on description in the yaml
   const atlas::StructuredGrid grid(params.grid.value());
   const atlas::functionspace::StructuredColumns fs(grid);
 
-  // Open NetCDF file and read all the ingredients for the trajectory
+  // Open NetCDF file and read all the fields for the trajectory
   atlas::FieldSet traj;
   int ncid, retval;
   const std::string & filename = params.filename;
+  std::vector<size_t> trajLevels(trajectoryVars.size(), 0);
   oops::Log::info() << "Reading trajectory from file: " << filename << std::endl;
   if ((retval = nc_open(filename.c_str(), NC_NOWRITE, &ncid))) ERR(retval);
+  for (size_t jvar = 0; jvar < trajectoryVars.size(); ++jvar) {
+    addFieldFromFile(traj, trajectoryVars[jvar].name(), fs, grid,
+                     trajLevels[jvar], ncid);
+  }
+
+  // We don't need to read ingredient fields from the file, but we do need to get their # of levels
+  atlas::FieldSet ingredientsNL;
   std::vector<size_t> ingredientLevels(ingredientVars.size(), 0);
+  oops::Log::info() << "Getting ingredient levels from file: " << filename << std::endl;
+  if ((retval = nc_open(filename.c_str(), NC_NOWRITE, &ncid))) ERR(retval);
   for (size_t jvar = 0; jvar < ingredientVars.size(); ++jvar) {
-    addFieldFromFile(traj, ingredientVars[jvar].name(), fs, grid,
+    addFieldFromFile(ingredientsNL, ingredientVars[jvar].name(), fs, grid,
                      ingredientLevels[jvar], ncid);
   }
 
   // allocate field for the product in the trajectory (usually done in vader,
   // but here the recipes are tested outside of vader infrastructure)
-  const size_t productLevels = recipe->productLevels(traj);
-  addZeroField(traj, productVar.name(), fs, productLevels);
-  // run NL to set trajectory
-  recipe->executeNL(traj);
+  const size_t productLevels = recipe->productLevels(ingredientsNL);
 
   // Testing whether (dx, K^T dy) == (K dx, dy)
   // Allocating dxin to contain randomized dx (for the ingredient variables)
