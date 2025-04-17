@@ -13,7 +13,7 @@ namespace mo {
 
 /// USED IN VARTRANSFORMS
 /// USED IN RECONFIGURESTATEGAUSS
-/// USED IN RECIPE CloudIceMixingRatio_A
+/// USED IN RECIPE CloudIceMixingRatioWrtWetAir_A
 /// USED IN SABER BLOCK GaussUVToGP
 /// \brief function to evaluate the cloud ice water mixing ratio
 ///        wrt moist air and condensed water:
@@ -21,13 +21,34 @@ namespace mo {
 void eval_cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water_nl(
   atlas::FieldSet & stateFlds);
 
-/// USED IN RECIPE CloudIceMixingRatio_A
+/// USED IN RECIPE CloudIceMixingRatioWrtWetAir_A
 void eval_cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water_tl(
   atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds);
 
-/// USED IN RECIPE CloudIceMixingRatio_A
+/// USED IN RECIPE CloudIceMixingRatioWrtWetAir_A
 void eval_cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water_ad(
   atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds);
+
+/// USED IN RECIPE CloudIceMixingRatioWrtDryAir_A
+void eval_cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water_inv_tl(
+  atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds);
+
+/// USED IN RECIPE CloudIceMixingRatioWrtDryAir_A
+void eval_cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water_inv_ad(
+  atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds);
+
+/// USED IN RECIPE CloudIceMixingRatioWrtDryAir_B
+void eval_cloud_ice_mixing_ratio_wrt_dry_air_nl(atlas::FieldSet & stateFlds);
+
+/// USED IN RECIPE CloudIceMixingRatioWrtDryAir_B
+void eval_cloud_ice_mixing_ratio_wrt_dry_air_tl(
+  atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds);
+
+/// USED IN RECIPE CloudIceMixingRatioWrtDryAir_B
+void eval_cloud_ice_mixing_ratio_wrt_dry_air_ad(
+  atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds);
+
+
 
 }  // namespace mo
 

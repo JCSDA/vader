@@ -14,8 +14,10 @@
 #include "recipes/AirPressureThickness.h"
 #include "recipes/AirTemperature.h"
 #include "recipes/AirVirtualTemperature.h"
-#include "recipes/CloudIceMixingRatio.h"
-#include "recipes/CloudLiquidMixingRatio.h"
+#include "recipes/CloudIceMixingRatioWrtDryAir.h"
+#include "recipes/CloudIceMixingRatioWrtWetAir.h"
+#include "recipes/CloudLiquidWaterMixingRatioWrtDryAir.h"
+#include "recipes/CloudLiquidWaterMixingRatioWrtWetAir.h"
 #include "recipes/DryAirDensity.h"
 #include "recipes/DryAirDensityLevelsMinusOne.h"
 #include "recipes/EastwardWindAt10m.h"
@@ -23,11 +25,12 @@
 #include "recipes/NorthwardWindAt10m.h"
 #include "recipes/ParticulateMatter2p5.h"
 #include "recipes/RainMixingRatio.h"
-#include "recipes/TotalMixingRatio.h"
 #include "recipes/TotalWater.h"
+#include "recipes/TotalWaterMixingRatioWrtDryAir.h"
 #include "recipes/VirtualPotentialTemperature.h"
-#include "recipes/WaterVaporMixingRatioWrtMoistAirAndCondensedWater.h"
-#include "recipes/WaterVaporMixingRatioWrtMoistAirAndCondensedWater2m.h"
+#include "recipes/WaterVaporMixingRatioWrtDryAir.h"
+#include "recipes/WaterVaporMixingRatioWrtWetAir.h"
+#include "recipes/WaterVaporMixingRatioWrtWetAir2m.h"
 
 namespace vader {
 
@@ -35,10 +38,16 @@ const cookbookConfigType Vader::defaultCookbookDefinition = {
         // Default VADER cookbook definition
         {oops::Variable{"air_temperature"},
                                      {AirTemperature_A::Name, AirTemperature_B::Name}},
+        {oops::Variable{"cloud_ice_mixing_ratio_wrt_dry_air"},
+                                     {CloudIceMixingRatioWrtDryAir_A::Name,
+                                      CloudIceMixingRatioWrtDryAir_B::Name}},
         {oops::Variable{"cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water"},
-                                     {CloudIceMixingRatio_A::Name}},
+                                     {CloudIceMixingRatioWrtWetAir_A::Name}},
+        {oops::Variable{"cloud_liquid_water_mixing_ratio_wrt_dry_air"},
+                                     {CloudLiquidWaterMixingRatioWrtDryAir_A::Name,
+                                      CloudLiquidWaterMixingRatioWrtDryAir_B::Name}},
         {oops::Variable{"cloud_liquid_water_mixing_ratio_wrt_moist_air_and_condensed_water"},
-                                     {CloudLiquidMixingRatio_A::Name}},
+                                     {CloudLiquidWaterMixingRatioWrtWetAir_A::Name}},
         {oops::Variable{"dry_air_density"},
                                      {DryAirDensity_A::Name}},
         {oops::Variable{"dry_air_density_levels_minus_one"},
@@ -51,12 +60,15 @@ const cookbookConfigType Vader::defaultCookbookDefinition = {
                                      {AirPotentialTemperature_A::Name}},
         {oops::Variable{"qrain"},    {RainMixingRatio_A::Name}},
         {oops::Variable{"total_water_mixing_ratio_wrt_dry_air"},
-                                     {TotalMixingRatio_A::Name}},
+                                     {TotalWaterMixingRatioWrtDryAir_A::Name}},
         {oops::Variable{"qt"},       {TotalWater_A::Name}},
+        {oops::Variable{"water_vapor_mixing_ratio_wrt_dry_air"},
+                                     {WaterVaporMixingRatioWrtDryAir_A::Name,
+                                      WaterVaporMixingRatioWrtDryAir_B::Name}},
         {oops::Variable{"water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water"},
-                                     {WaterVaporMixingRatioWrtMoistAirAndCondensedWater_A::Name}},
+                                     {WaterVaporMixingRatioWrtWetAir_A::Name}},
         {oops::Variable{"water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m"},
-                                     {WaterVaporMixingRatioWrtMoistAirAndCondensedWater2m_A::Name}},
+                                     {WaterVaporMixingRatioWrtWetAir2m_A::Name}},
         {oops::Variable{"eastward_wind_at_10m"},
                                      {uwind_at_10m_A::Name}},
         {oops::Variable{"virtual_potential_temperature"},

@@ -1,0 +1,13 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - total_water_mixing_ratio_wrt_moist_air_and_condensed_water
+  - cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water
+ingredients:
+  - total_water_mixing_ratio_wrt_moist_air_and_condensed_water
+  - cloud_ice_mixing_ratio_wrt_moist_air_and_condensed_water
+products: [cloud_ice_mixing_ratio_wrt_dry_air]
+adjoint test tolerance: 1.e-13

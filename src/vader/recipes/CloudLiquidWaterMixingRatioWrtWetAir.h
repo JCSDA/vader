@@ -19,8 +19,8 @@
 
 namespace vader {
 
-class CloudLiquidMixingRatio_AParameters : public RecipeParametersBase {
-  OOPS_CONCRETE_PARAMETERS(CloudLiquidMixingRatio_AParameters, RecipeParametersBase)
+class CloudLiquidWaterMixingRatioWrtWetAir_AParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(CloudLiquidWaterMixingRatioWrtWetAir_AParameters, RecipeParametersBase)
 
  public:
   oops::RequiredParameter<std::string> name{
@@ -29,21 +29,22 @@ class CloudLiquidMixingRatio_AParameters : public RecipeParametersBase {
 };
 
 // ------------------------------------------------------------------------------------------------
-/*! \brief CloudLiquidMixingRatio_A class defines a recipe for cloud liquid water mixing ratio wrt
- *         moist air and condensed water
+/*! \brief CloudLiquidWaterMixingRatioWrtWetAir_A class defines a recipe
+ *         for cloud liquid water mixing ratio wrt moist air and condensed water
  *
- *  \details This instantiation of RecipeBase produces the cloud liquid water mixing ratio wrt
- *          moist air and condensed water using the cloud liquid water mixing ratio wrt dry air
- *          and the moist air and condensed water mixing ratio wrt dry air.
+ *  \details This instantiation of RecipeBase produces
+ *          the cloud liquid water mixing ratio wrt moist air
+ *          and condensed water using the cloud ice mixing ratio wrt dry air and the moist air
+ *          and condensed water mixing ratio wrt dry air.
  */
-class CloudLiquidMixingRatio_A : public RecipeBase {
+class CloudLiquidWaterMixingRatioWrtWetAir_A : public RecipeBase {
  public:
     static const char Name[];
     static const oops::Variables Ingredients;
 
-    typedef CloudLiquidMixingRatio_AParameters Parameters_;
+    typedef CloudLiquidWaterMixingRatioWrtWetAir_AParameters Parameters_;
 
-    CloudLiquidMixingRatio_A(const Parameters_ &, const VaderConfigVars &);
+    CloudLiquidWaterMixingRatioWrtWetAir_A(const Parameters_ &, const VaderConfigVars &);
 
     // Recipe base class overrides
     std::string name() const override;

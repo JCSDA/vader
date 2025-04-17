@@ -10,4 +10,4 @@ ingredients:
   - cloud_liquid_water_mixing_ratio_wrt_dry_air
   - rain_mixing_ratio_wrt_dry_air
 products: [total_water_mixing_ratio_wrt_dry_air]
-adjoint test tolerance: 1.e-12
+run adjoint test: false

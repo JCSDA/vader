@@ -15,6 +15,8 @@ namespace mo {
 /// USED IN RECONFIGURESTATEGAUSS
 /// USED IN RECIPE WaterVaporMixingRatioWrtMoistAirAndCondensedWater_A
 /// USED IN SABER BLOCK GaussUVToGP
+/// TO BE REPLACED BY
+/// eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_from_mv_mt_nl
 /// \brief function to evaluate the water vapor mixing ratio wrt
 ///        moist air and condensed water (one possible definition
 ///        of specific humidity):
@@ -52,4 +54,29 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_tl(
 /// USED IN RECIPE WaterVaporMixingRatioWrtMoistAirAndCondensedWater2m_A
 void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_ad(
   atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds);
+
+/// USED IN RECIPE WaterVaporMixingRatioWrtDryAir_B
+/// (for testing underlying routines)
+void eval_water_vapor_mixing_ratio_wrt_dry_air_nl(atlas::FieldSet & stateFlds);
+
+/// USED IN RECIPE WaterVaporMixingRatioWrtDryAir_B
+/// (for testing underlying routines)
+void eval_water_vapor_mixing_ratio_wrt_dry_air_tl(
+  atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds);
+
+/// USED IN RECIPE WaterVaporMixingRatioWrtDryAir_B
+/// (for testing underlying routines)
+void eval_water_vapor_mixing_ratio_wrt_dry_air_ad(
+  atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds);
+
+/// USED IN RECIPE WaterVaporMixingRatioWrtDryAir_A
+/// (for testing underlying routines)
+void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_inv_tl(
+  atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds);
+
+/// USED IN RECIPE WaterVaporMixingRatioWrtDryAir_A
+/// (for testing underlying routines)
+void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_inv_ad(
+  atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds);
+
 }  // namespace mo

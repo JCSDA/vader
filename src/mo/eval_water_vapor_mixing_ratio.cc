@@ -12,8 +12,8 @@
 #include "atlas/field.h"
 #include "atlas/parallel/omp/omp.h"
 
-#include "mo/eval_ratio.h"
 #include "mo/eval_water_vapor_mixing_ratio.h"
+#include "mo/functions.h"
 
 #include "oops/util/FunctionSpaceHelpers.h"
 #include "oops/util/Logger.h"
@@ -34,36 +34,37 @@ using atlas::idx_t;
 // --------------------------------------------------------------------------------------
 
 void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_nl(
-        atlas::FieldSet & stateFlds) {
+    atlas::FieldSet & stateFlds) {
   oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_nl()] starting ..."
-          << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_nl()] starting ..."
+    << std::endl;
 
-  std::vector<std::string> fnames {"water_vapor_mixing_ratio_wrt_dry_air",
-                                   "total_water_mixing_ratio_wrt_dry_air",
-                                   q_moist_condensed_mo};
+  const std::vector<std::string> fnames {
+    "water_vapor_mixing_ratio_wrt_dry_air",
+    "total_water_mixing_ratio_wrt_dry_air",
+    q_moist_condensed_mo};
 
-  eval_ratio_to_second(stateFlds, fnames);
+  functions::eval_q_x_nl(stateFlds, fnames);
 
   oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_nl()] ... exit"
-          << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_nl()] ... exit"
+    << std::endl;
 }
 
 // --------------------------------------------------------------------------------------
 
 void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_tl(
-        atlas::FieldSet & incFlds,
-        const atlas::FieldSet & stateFlds) {
+    atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds) {
   oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_tl()] starting ..."
-          << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_tl()] starting ..."
+    << std::endl;
 
-  std::vector<std::string> fnames {"water_vapor_mixing_ratio_wrt_dry_air",
-                                   "total_water_mixing_ratio_wrt_dry_air",
-                                   q_moist_condensed_mo};
+  const std::vector<std::string> fnames {
+    "water_vapor_mixing_ratio_wrt_dry_air",
+    "total_water_mixing_ratio_wrt_dry_air",
+    q_moist_condensed_mo};
 
-  eval_ratio_to_second_tl(incFlds, stateFlds, fnames);
+  functions::eval_q_x_tl(incFlds, stateFlds, fnames);
 
   oops::Log::trace()
     << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_tl()] ... exit"
@@ -73,17 +74,17 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_tl(
 // --------------------------------------------------------------------------------------
 
 void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_ad(
-        atlas::FieldSet & hatFlds,
-        const atlas::FieldSet & stateFlds) {
+    atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds) {
   oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_ad()] starting ..."
-          << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_ad()] starting ..."
+    << std::endl;
 
-  std::vector<std::string> fnames {"water_vapor_mixing_ratio_wrt_dry_air",
-                                   "total_water_mixing_ratio_wrt_dry_air",
-                                   q_moist_condensed_mo};
+  const std::vector<std::string> fnames {
+    "water_vapor_mixing_ratio_wrt_dry_air",
+    "total_water_mixing_ratio_wrt_dry_air",
+    q_moist_condensed_mo};
 
-  eval_ratio_to_second_ad(hatFlds, stateFlds, fnames);
+  functions::eval_q_x_ad(hatFlds, stateFlds, fnames);
 
   oops::Log::trace()
     << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_ad()] ... exit"
@@ -93,10 +94,10 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_ad(
 // --------------------------------------------------------------------------------------
 
 void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_nl(
-        atlas::FieldSet & stateFlds) {
+    atlas::FieldSet & stateFlds) {
   oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_nl()]"
-          << " starting ..." << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_nl()]"
+    << " starting ..." << std::endl;
 
   const auto ds_q = make_view<const double, 2>(stateFlds[q_moist_condensed_mo]);
   auto ds_q2m = make_view<double, 2>(stateFlds[q2m_moist_condensed_mo]);
@@ -117,11 +118,10 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_nl(
 // --------------------------------------------------------------------------------------
 
 void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_tl(
-        atlas::FieldSet & incFlds,
-        const atlas::FieldSet & stateFlds) {
+    atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds) {
   oops::Log::trace()
-          << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_tl()]"
-          << " starting ..." << std::endl;
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_tl()]"
+    << " starting ..." << std::endl;
 
   auto q2m_inc = make_view<double, 2>(incFlds[q2m_moist_condensed_mo]);
   auto q_inc = make_view<const double, 2>(incFlds[q_moist_condensed_mo]);
@@ -142,8 +142,7 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_tl(
 // --------------------------------------------------------------------------------------
 
 void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_ad(
-        atlas::FieldSet & hatFlds,
-        const atlas::FieldSet & stateFlds) {
+    atlas::FieldSet & hatFlds, const atlas::FieldSet & stateFlds) {
   oops::Log::trace()
     << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_ad()]"
     << " starting ..." << std::endl;
@@ -163,6 +162,107 @@ void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_ad(
 
   oops::Log::trace()
     << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_at_2m_ad()] ... exit"
+    << std::endl;
+}
+
+// --------------------------------------------------------------------------------------
+
+void eval_water_vapor_mixing_ratio_wrt_dry_air_nl(atlas::FieldSet & stateFlds) {
+  oops::Log::trace()
+    << "[eval_water_vapor_mixing_ratio_wrt_dry_air_nl()] starting ..."
+    << std::endl;
+
+  const std::vector<std::string> fnames {
+    q_moist_condensed_mo,
+    "total_water_mixing_ratio_wrt_moist_air_and_condensed_water",
+    "water_vapor_mixing_ratio_wrt_dry_air"};
+
+  functions::eval_m_x_nl(stateFlds, fnames);
+
+  oops::Log::trace()
+    << "[eval_water_vapor_mixing_ratio_wrt_dry_air_nl()] ... exit"
+    << std::endl;
+}
+
+// --------------------------------------------------------------------------------------
+
+void eval_water_vapor_mixing_ratio_wrt_dry_air_tl(
+    atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds) {
+  oops::Log::trace()
+    << "[eval_water_vapor_mixing_ratio_wrt_dry_air_tl()] starting ..."
+    << incFlds.field_names()
+    << stateFlds.field_names()
+    << std::endl;
+
+  const std::vector<std::string> fnames {
+    q_moist_condensed_mo,
+    "total_water_mixing_ratio_wrt_moist_air_and_condensed_water",
+    "water_vapor_mixing_ratio_wrt_dry_air"};
+
+  functions::eval_m_x_tl(incFlds, stateFlds, fnames);
+
+  oops::Log::trace()
+    << "[eval_water_vapor_mixing_ratio_wrt_dry_air_tl()] ... exit"
+    << std::endl;
+}
+
+// --------------------------------------------------------------------------------------
+
+void eval_water_vapor_mixing_ratio_wrt_dry_air_ad(
+    atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds) {
+  oops::Log::trace()
+    << "[eval_water_vapor_mixing_ratio_wrt_dry_air_ad()] starting ..."
+    << std::endl;
+
+  const std::vector<std::string> fnames {
+    q_moist_condensed_mo,
+    "total_water_mixing_ratio_wrt_moist_air_and_condensed_water",
+    "water_vapor_mixing_ratio_wrt_dry_air"};
+
+  functions::eval_m_x_ad(incFlds, stateFlds, fnames);
+
+  oops::Log::trace()
+    << "[eval_water_vapor_mixing_ratio_wrt_dry_air_ad()] ... exit"
+    << std::endl;
+}
+
+// --------------------------------------------------------------------------------------
+
+void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_inv_tl(
+    atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds) {
+  oops::Log::trace()
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_inv_tl()] starting ..."
+    << std::endl;
+
+  const std::vector<std::string> fnames {
+    q_moist_condensed_mo,
+    "total_water_mixing_ratio_wrt_dry_air",
+    "water_vapor_mixing_ratio_wrt_dry_air"};
+
+  functions::eval_q_x_inv_tl(incFlds, stateFlds, fnames);
+
+  oops::Log::trace()
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_inv_tl()] ... exit"
+    << std::endl;
+}
+
+// --------------------------------------------------------------------------------------
+
+void eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_inv_ad(
+    atlas::FieldSet & incFlds, const atlas::FieldSet & stateFlds) {
+  oops::Log::trace()
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_inv_ad()] starting ..."
+    << std::endl;
+
+  const std::vector<std::string> fnames {
+    q_moist_condensed_mo,
+    "total_water_mixing_ratio_wrt_dry_air",
+    "water_vapor_mixing_ratio_wrt_dry_air"};
+
+  functions::eval_q_x_inv_ad(incFlds, stateFlds, fnames);
+
+  oops::Log::trace()
+    << "[eval_water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water_inv_ad()] ... exit"
     << std::endl;
 }
 

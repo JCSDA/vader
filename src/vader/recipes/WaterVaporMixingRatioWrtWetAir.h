@@ -19,9 +19,8 @@
 
 namespace vader {
 
-class WaterVaporMixingRatioWrtMoistAirAndCondensedWater2m_AParameters :
-                                            public RecipeParametersBase {
-  OOPS_CONCRETE_PARAMETERS(WaterVaporMixingRatioWrtMoistAirAndCondensedWater2m_AParameters,
+class WaterVaporMixingRatioWrtWetAir_AParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(WaterVaporMixingRatioWrtWetAir_AParameters,
                            RecipeParametersBase)
 
  public:
@@ -31,21 +30,22 @@ class WaterVaporMixingRatioWrtMoistAirAndCondensedWater2m_AParameters :
 };
 
 // ------------------------------------------------------------------------------------------------
-/*! \brief WaterVaporMixingRatioWrtMoistAirAndCondensedWater2m_A class defines a recipe for water
- *         vapor mixing ratio wrt moist air and condensed water at 2m
+/*! \brief WaterVaporMixingRatioWrtWetAir_A class defines a recipe for water
+ *         vapor mixing ratio wrt moist air and condensed water
  *
  *  \details This instantiation of RecipeBase produces the water vapor mixing ratio wrt moist air
- *          and condensed water at 2m using the atmospheric specific humidity at the lowest level
+ *          and condensed water using the water vapor mixing ratio wrt dry air and the moist air
+ *          and condensed water mixing ratio wrt dry air.
  */
-class WaterVaporMixingRatioWrtMoistAirAndCondensedWater2m_A : public RecipeBase {
+class WaterVaporMixingRatioWrtWetAir_A : public RecipeBase {
  public:
     static const char Name[];
     static const oops::Variables Ingredients;
 
-    typedef WaterVaporMixingRatioWrtMoistAirAndCondensedWater2m_AParameters Parameters_;
+    typedef WaterVaporMixingRatioWrtWetAir_AParameters Parameters_;
 
-    WaterVaporMixingRatioWrtMoistAirAndCondensedWater2m_A(const Parameters_ &,
-                                                          const VaderConfigVars &);
+    WaterVaporMixingRatioWrtWetAir_A(const Parameters_ &,
+                                                        const VaderConfigVars &);
 
     // Recipe base class overrides
     std::string name() const override;
