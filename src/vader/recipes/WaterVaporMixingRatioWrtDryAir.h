@@ -66,7 +66,6 @@ class WaterVaporMixingRatioWrtDryAir_A : public RecipeBase {
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
     bool hasTLAD() const override { return true; }
     bool hasNL() const override { return false; }
-    void executeNL(atlas::FieldSet &) override;
     void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
     void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 

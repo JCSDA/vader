@@ -230,7 +230,6 @@ class Test_VarA_from_G : public RecipeBase {
                                     atlas::PointXY(0.0, 0.0)});}
     bool hasTLAD() const override { return true; }
     bool hasNL() const override { return false; }
-    void executeNL(atlas::FieldSet &) override;
     void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
     void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 

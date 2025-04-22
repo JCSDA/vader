@@ -85,7 +85,7 @@ class RecipeBase : public util::Printable,
   virtual bool hasNL() const { return true; }
 
 /// Execute methods perform the variable change
-  virtual void executeNL(atlas::FieldSet &) = 0;
+  virtual void executeNL(atlas::FieldSet &) {}
   virtual void executeTL(atlas::FieldSet &, const atlas::FieldSet &) {}
   virtual void executeAD(atlas::FieldSet &, const atlas::FieldSet &) {}
 

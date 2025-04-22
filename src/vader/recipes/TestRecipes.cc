@@ -97,11 +97,6 @@ void Test_VarA_from_C_D::executeNL(atlas::FieldSet & afieldset)
     oops::Log::trace() << "entering/leaving empty Test_VarA_from_C_D::executeNL function"
         << std::endl;
 }
-void Test_VarA_from_G::executeNL(atlas::FieldSet & afieldset)
-{
-    oops::Log::trace() << "entering/leaving empty Test_VarA_from_G::executeNL function"
-        << std::endl;
-}
 void Test_VarA_from_G::executeTL(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarA_from_G::executeTL function"
