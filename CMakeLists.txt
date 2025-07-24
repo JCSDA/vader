@@ -22,9 +22,11 @@ set( CMAKE_DIRECTORY_LABELS ${PROJECT_NAME} )
 ## Configuration options
 include( ${PROJECT_NAME}_compiler_flags )
 option( ENABLE_VADER_DOC "Build VADER documentation" OFF )
+option( OPENMP "Build VADER with OpenMP support" ON )
 
 message( STATUS "VADER variables")
 message( STATUS "  - ENABLE_VADER_DOC: ${ENABLE_VADER_DOC}" )
+message( STATUS "  - OPENMP: ${OPENMP}" )
 
 ## Dependencies
 find_package( Boost 1.64.0 REQUIRED )
@@ -34,6 +36,9 @@ find_package( jedicmake QUIET )  # Prefer find modules from jedi-cmake
 find_package( MPI REQUIRED COMPONENTS C Fortran )
 find_package( oops 1.10.0 REQUIRED )
 find_package( NetCDF REQUIRED COMPONENTS C Fortran )
+if(OPENMP)
+  find_package( OpenMP REQUIRED COMPONENTS CXX )
+endif()
 
 find_package( gsw QUIET )
 if( ${gsw_FOUND} )
