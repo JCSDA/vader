@@ -47,22 +47,33 @@ else( ${gsw_FOUND} )
     message(STATUS "GSW NOT FOUND: Excluding Marine Recipes")
 endif( ${gsw_FOUND} )
 
-
 ## Sources
 add_subdirectory( src )
-add_subdirectory( test )
 add_subdirectory( tools )
 
 if( ENABLE_VADER_DOC )
     add_subdirectory( docs )
 endif()
 
-## Tests
-ecbuild_add_test( TARGET ${PROJECT_NAME}_coding_norms
-                  TYPE SCRIPT
-                  COMMAND ${PROJECT_NAME}_cpplint.py
-                  ARGS --quiet --recursive ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/test
-                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+if( BUILD_TESTING )
+  # Test data
+  find_package( jedi-model-data 1.0.0 QUIET )
+
+  # If test data repo found build the tests
+  if( jedi-model-data_FOUND )
+      message( STATUS "jedi-model-data found; building vader tests" )
+      add_subdirectory( test )
+  else()
+      message( STATUS "jedi-model-data not found; skipping vader tests" )
+  endif()
+
+  ## Tests
+  ecbuild_add_test( TARGET ${PROJECT_NAME}_coding_norms
+                    TYPE SCRIPT
+                    COMMAND ${PROJECT_NAME}_cpplint.py
+                    ARGS --quiet --recursive ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/test
+                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+endif()
 
 ## Package Config
 ecbuild_install_project( NAME ${PROJECT_NAME} )

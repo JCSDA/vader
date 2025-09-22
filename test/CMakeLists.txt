@@ -51,14 +51,14 @@ testinput/vader_WaterVaporMixingRatioWrtWetAir2m_A.yaml
 )
 
 list( APPEND vader_testdata
-  testdata/AirTemperature_A.nc
-  testdata/wind_at_10m_A.nc
-  testdata/gauss_state_F12.nc
-  testdata/air_density_levels_minus_one_A.nc
-  testdata/air_density_levels_minus_one_B.nc
-  testdata/dry_air_density_levels_minus_one_A.nc
-  testdata/aero6_gauss_state_F12.nc
-  testdata/rrfs_sd_gauss_state_F12.nc
+  AirTemperature_A.nc
+  wind_at_10m_A.nc
+  gauss_state_F12.nc
+  air_density_levels_minus_one_A.nc
+  air_density_levels_minus_one_B.nc
+  dry_air_density_levels_minus_one_A.nc
+  aero6_gauss_state_F12.nc
+  rrfs_sd_gauss_state_F12.nc
 )
 
 # Create data directory for test input and symlink all files
@@ -68,12 +68,16 @@ foreach(FILENAME ${vader_testinput})
            ${CMAKE_CURRENT_SOURCE_DIR}/${FILENAME}
            ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME} )
 endforeach(FILENAME)
+
+# Path to the vader test files
+set (jedi_model_data_tier_1_vader "${CMAKE_SOURCE_DIR}/jedi-model-data/testinput_tier_1/vader")
+
 # Create data directory for test data and symlink all files
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testdata)
 foreach(FILENAME ${vader_testdata})
     execute_process( COMMAND ${CMAKE_COMMAND} -E create_symlink
-           ${CMAKE_CURRENT_SOURCE_DIR}/${FILENAME}
-           ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME} )
+           ${jedi_model_data_tier_1_vader}/${FILENAME}
+           ${CMAKE_CURRENT_BINARY_DIR}/testdata/${FILENAME} )
 endforeach(FILENAME)
 
 # Create test executables
