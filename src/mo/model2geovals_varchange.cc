@@ -19,6 +19,7 @@
 #include "mo/functions.h"
 #include "mo/model2geovals_varchange.h"
 
+#include "oops/util/for_each.h"
 #include "oops/util/FunctionSpaceHelpers.h"
 #include "oops/util/Logger.h"
 
@@ -26,8 +27,10 @@ using atlas::array::make_view;
 using atlas::idx_t;
 using atlas::util::Config;
 
-namespace mo {
+using View = atlas::array::LocalView<double, 1>;
+using ConstView = atlas::array::LocalView<const double, 1>;
 
+namespace mo {
 
 void evalParamAParamB(atlas::FieldSet & stateFlds)
 {
@@ -41,37 +44,33 @@ void evalParamAParamB(atlas::FieldSet & stateFlds)
   }
   stateFlds["height_above_mean_sea_level"].metadata().get("boundary_layer_index", blindex);
 
-  const auto heightView = make_view<const double, 2>(stateFlds["height_above_mean_sea_level"]);
-  const auto heightLevelsView =
-                        make_view<const double, 2>(stateFlds["height_above_mean_sea_level_levels"]);
-  const auto pressureLevelsView = make_view<const double, 2>
-      (stateFlds["air_pressure_levels_minus_one"]);
-  const auto specificHumidityView = make_view<const double, 2>(
-                           stateFlds["water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water"]);
-  auto param_aView = make_view<double, 2>(stateFlds["surf_param_a"]);
-  auto param_bView = make_view<double, 2>(stateFlds["surf_param_b"]);
+  const double exp_pmsh = constants::Lclr * constants::rd / constants::grav;
 
-  // temperature at level above boundary layer
-  double t_bl;
-  // temperature at model surface height
-  double t_msh;
+  util::for_each_column(
+    [=] (ConstView height,
+         ConstView heightLevels,
+         ConstView pressureLevels,
+         ConstView specificHumidity,
+         View param_a,
+         View param_b) {
+      // temperature at level above boundary layer
+      double t_bl = (-constants::grav / constants::rd) *
+             (heightLevels(blindex + 1) - heightLevels(blindex)) /
+             log(pressureLevels(blindex + 1) / pressureLevels(blindex));
+      t_bl = t_bl / (1.0 + constants::c_virtual * specificHumidity(blindex));
 
-  double exp_pmsh = constants::Lclr * constants::rd / constants::grav;
+      // temperature at model surface height
+      const double t_msh = t_bl + constants::Lclr * (height(blindex) - heightLevels(0));
 
-  const idx_t sizeOwned = util::getSizeOwned(stateFlds["surf_param_a"].functionspace());
-
-  for (idx_t jn = 0; jn < sizeOwned; ++jn) {
-    t_bl = (-constants::grav / constants::rd) *
-           (heightLevelsView(jn, blindex + 1) - heightLevelsView(jn, blindex)) /
-           log(pressureLevelsView(jn, blindex + 1) / pressureLevelsView(jn, blindex));
-
-    t_bl = t_bl / (1.0 + constants::c_virtual * specificHumidityView(jn, blindex));
-
-    t_msh = t_bl + constants::Lclr * (heightView(jn, blindex) - heightLevelsView(jn, 0));
-
-    param_aView(jn, 0) = heightLevelsView(jn, 0) + t_msh / constants::Lclr;
-    param_bView(jn, 0) = t_msh / (pow(pressureLevelsView(jn, 0), exp_pmsh) * constants::Lclr);
-  }
+      param_a(0) = heightLevels(0) + t_msh / constants::Lclr;
+      param_b(0) = t_msh / (pow(pressureLevels(0), exp_pmsh) * constants::Lclr);
+    },
+    stateFlds["height_above_mean_sea_level"],
+    stateFlds["height_above_mean_sea_level_levels"],
+    stateFlds["air_pressure_levels_minus_one"],
+    stateFlds["water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water"],
+    stateFlds["surf_param_a"],
+    stateFlds["surf_param_b"]);
 
   stateFlds["surf_param_a"].set_dirty();
   stateFlds["surf_param_b"].set_dirty();
