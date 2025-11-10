@@ -10,6 +10,7 @@
 #include <netcdf.h>
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 #include <boost/any.hpp>
@@ -70,8 +71,8 @@ void testRecipeNonlinear() {
 
   // create recipe
   const auto & recipeParams = params.recipe.value().recipeParams.value();
-  RecipeBase* recipe = RecipeFactory::create(recipeParams.name, recipeParams,
-                                             eckit::LocalConfiguration());
+  std::unique_ptr<RecipeBase> recipe(RecipeFactory::create(
+      recipeParams.name, recipeParams, eckit::LocalConfiguration()));
   const oops::Variables ingredientVars = recipe->ingredients();
   const oops::Variable productVar = recipe->product();
   oops::Log::info() << "Testing non-linear vader recipe: " << recipe->name()
@@ -154,8 +155,8 @@ void testRecipeAdjoint() {
 
   // create recipe
   const auto & recipeParams = params.recipe.value().recipeParams.value();
-  RecipeBase* recipe = RecipeFactory::create(recipeParams.name, recipeParams,
-                                             eckit::LocalConfiguration());
+  std::unique_ptr<RecipeBase> recipe(RecipeFactory::create(
+      recipeParams.name, recipeParams, eckit::LocalConfiguration()));
   const oops::Variables ingredientVars = recipe->ingredients();
   const oops::Variables trajectoryVars = recipe->trajectoryVars();
   const oops::Variable productVar = recipe->product();
