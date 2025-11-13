@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2024 UCAR
+ * (C) Copyright 2025 UCAR
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,33 +17,33 @@
 #include "oops/util/parameters/RequiredParameter.h"
 #include "vader/RecipeBase.h"
 
-namespace vader
-{
+namespace vader {
 
-// -------------------------------------------------------------------------------------------------
-
-class AirPressure_AParameters : public RecipeParametersBase {
-  OOPS_CONCRETE_PARAMETERS(AirPressure_AParameters, RecipeParametersBase)
+class SulfateMassFraction_AParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(SulfateMassFraction_AParameters, RecipeParametersBase)
 
  public:
-    oops::RequiredParameter<std::string> name{"recipe name", this};
+  oops::RequiredParameter<std::string> name{
+     "recipe name",
+     this};
 };
-/*! \brief AirPressure_A class defines a recipe for pressure levels from pressure
-           thickness.
+
+// ------------------------------------------------------------------------------------------------
+/*! \brief SulfateMassFraction_A class defines a recipe for sulfate mixing ratio
  *
- *  \details This recipe uses pressure at the interfaces, along with the Phillips method to
- *           compute pressure at the mid points. It does not provide TL/AD algorithms.
+ *  \details This recipe produces sulfate mass fraction in ug/kg from sulfate in ppmv
+ *
  */
-class AirPressure_A : public RecipeBase
-{
+class SulfateMassFraction_A : public RecipeBase {
  public:
     static const char Name[];
     static const oops::Variables Ingredients;
 
-    typedef AirPressure_AParameters Parameters_;
+    typedef SulfateMassFraction_AParameters Parameters_;
 
-    AirPressure_A(const Parameters_ &, const VaderConfigVars &);
+    SulfateMassFraction_A(const Parameters_ &, const VaderConfigVars &);
 
+    // Recipe base class overrides
     std::string name() const override;
     oops::Variable product() const override;
     oops::Variables ingredients() const override;
@@ -54,7 +54,5 @@ class AirPressure_A : public RecipeBase
  private:
     const VaderConfigVars & configVariables_;
 };
-
-// -------------------------------------------------------------------------------------------------
 
 }  // namespace vader

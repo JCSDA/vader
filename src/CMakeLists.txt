@@ -10,7 +10,6 @@ vader/VaderParameters.h
 vader/recipes/AirPotentialTemperature_A.cc
 vader/recipes/AirPotentialTemperature_B.cc
 vader/recipes/AirPotentialTemperature.h
-vader/recipes/AirPressure_A.cc
 vader/recipes/AirPressureAtInterface_A.cc
 vader/recipes/AirPressureAtInterface_B.cc
 vader/recipes/AirPressureAtInterface_C.cc
@@ -18,6 +17,7 @@ vader/recipes/AirPressureAtInterface.h
 vader/recipes/WindReductionFactorAt10m.h
 vader/recipes/WindReductionFactorAt10m_A.cc
 vader/recipes/AirPressure.h
+vader/recipes/AirPressure_A.cc
 vader/recipes/AirPressureExtendedUpByOne_A.cc
 vader/recipes/AirPressureExtendedUpByOne.h
 vader/recipes/AirPressureThickness_A.cc
@@ -26,6 +26,7 @@ vader/recipes/AirPressureToKappa_A.cc
 vader/recipes/AirPressureToKappa.h
 vader/recipes/AirTemperature_A.cc
 vader/recipes/AirTemperature_B.cc
+vader/recipes/AirTemperature_C.cc
 vader/recipes/AirTemperature.h
 vader/recipes/AirVirtualTemperature_A.cc
 vader/recipes/AirVirtualTemperature.h
@@ -64,6 +65,8 @@ vader/recipes/SaturationSpecificHumidity.h
 vader/recipes/SaturationSpecificHumidity_A.cc
 vader/recipes/SaturationVaporPressure.h
 vader/recipes/SaturationVaporPressure_A.cc
+vader/recipes/SulfateMassFraction.h
+vader/recipes/SulfateMassFraction_A.cc
 vader/recipes/SurfaceAirPressure.h
 vader/recipes/SurfaceAirPressure_A.cc
 vader/recipes/TestRecipes.cc
@@ -86,6 +89,9 @@ vader/recipes/NorthwardWindAt10m.h
 vader/recipes/WaterVaporMixingRatioWrtDryAir.h
 vader/recipes/WaterVaporMixingRatioWrtDryAir_A.cc
 vader/recipes/WaterVaporMixingRatioWrtDryAir_B.cc
+vader/recipes/WaterVaporMixingRatioWrtDryAir_C.cc
+vader/recipes/WaterVaporMixingRatioWrtMoistAir.h
+vader/recipes/WaterVaporMixingRatioWrtMoistAir_A.cc
 vader/recipes/WaterVaporMixingRatioWrtWetAir.h
 vader/recipes/WaterVaporMixingRatioWrtWetAir_A.cc
 vader/recipes/WaterVaporMixingRatioWrtWetAir2m.h
