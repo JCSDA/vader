@@ -1,4 +1,6 @@
 vader: {}
+cookbook:
+  northward_wind_at_10m: [vwind_at_10m_A]
 trajectory grid:
   type : regular_gaussian
   N : 12

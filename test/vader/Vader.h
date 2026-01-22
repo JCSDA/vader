@@ -55,6 +55,8 @@ class VaderTestParameters : public oops::Parameters {
         "target variables", this};
   oops::RequiredParameter<double> tolerance{"adjoint test tolerance",
         "adjoint test tolerance", this};
+  oops::OptionalParameter<eckit::LocalConfiguration> cookbook{
+    "cookbook", "custom cookbook to use for the test", this};
 };
 
 // -----------------------------------------------------------------------------
@@ -67,6 +69,9 @@ void testVaderAdjoint() {
   modelVarsConfig.set("gas_constant_of_dry_air", 2.8705e2);
   eckit::LocalConfiguration vaderConfig;
   vaderConfig.set(vader::configModelVarsKey, modelVarsConfig);
+  if (params.cookbook.value() != boost::none) {
+    vaderConfig.set(vader::configCookbookKey, *params.cookbook.value());
+  }
 
   vader::Vader vader(params.vader, vaderConfig);
   oops::Variables ingredientVars(params.ingredients);
