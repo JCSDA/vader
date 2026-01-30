@@ -140,4 +140,41 @@ plan variable tests:
   expected planned products: []
   expected recipe plan: []
   expected traj recipe plan: []
-
+# Need to produce intermediate missing trajectory variable in a low level recipe
+- cookbook:
+    TestVarA: [Test_VarA_from_B_C] # produces A, needs ingredients B, C,   no traj
+    TestVarC: [Test_VarC_from_D_E] # produces C, needs ingredients D, E,   traj D, E
+    TestVarE: [Test_VarE_from_F]   # produces E, needs ingredients F,      traj F
+  ingredients: [TestVarB, TestVarD, TestVarF] # available ingredients
+  products: [TestVarA]
+  trajectory variables: [TestVarD, TestVarF]  # available trajectory variables
+  plan for TLAD: true
+  expected planned products: [TestVarA, TestVarC, TestVarE]
+  expected recipe plan: [Test_VarE_from_F, Test_VarC_from_D_E, Test_VarA_from_B_C]
+  expected traj recipe plan: [Test_VarE_from_F]
+# Need to produce intermediate missing trajectory variable in a low level recipe
+# but last recipe fails due to missing ingredient
+- cookbook:
+    TestVarA: [Test_VarA_from_B_C] # produces A, needs ingredients B, C,   no traj
+    TestVarC: [Test_VarC_from_D_E] # produces C, needs ingredients D, E,   traj D, E
+    TestVarE: [Test_VarE_from_F]   # produces E, needs ingredients F,      traj F
+  ingredients: [TestVarB, TestVarD] # available ingredients
+  products: [TestVarA]
+  trajectory variables: [TestVarD]  # available trajectory variables
+  plan for TLAD: true
+  expected planned products: []
+  expected recipe plan: []
+  expected traj recipe plan: []
+  # can produce first trajectory ingredient variable via a recipe, but second trajectory ingredient
+# variable cannot be produced
+- cookbook:
+    TestVarB: [Test_VarB_from_A] # produces B, needs ingredient A,   traj A
+    TestVarA: [Test_VarA_from_C_D] # produces A, needs ingredients C, D,   no traj
+    TestVarC: [Test_VarC_from_F]   # produces C, needs ingredients F,      no traj
+  ingredients: [TestVarA] # available ingredients
+  products: [TestVarB]
+  trajectory variables: [TestVarF]  # available trajectory variables
+  plan for TLAD: true
+  expected planned products: []
+  expected recipe plan: []
+  expected traj recipe plan: []

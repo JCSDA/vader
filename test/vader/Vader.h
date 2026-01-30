@@ -55,8 +55,10 @@ class VaderTestParameters : public oops::Parameters {
         "target variables", this};
   oops::RequiredParameter<double> tolerance{"adjoint test tolerance",
         "adjoint test tolerance", this};
+  oops::OptionalParameter<eckit::LocalConfiguration> modelData{
+        "model data", "model data to use for the test", this};
   oops::OptionalParameter<eckit::LocalConfiguration> cookbook{
-    "cookbook", "custom cookbook to use for the test", this};
+        "cookbook", "custom cookbook to use for the test", this};
 };
 
 // -----------------------------------------------------------------------------
@@ -65,10 +67,10 @@ void testVaderAdjoint() {
   VaderTestParameters params;
   params.validateAndDeserialize(::test::TestEnvironment::config());
 
-  eckit::LocalConfiguration modelVarsConfig;
-  modelVarsConfig.set("gas_constant_of_dry_air", 2.8705e2);
   eckit::LocalConfiguration vaderConfig;
-  vaderConfig.set(vader::configModelVarsKey, modelVarsConfig);
+  if (params.modelData.value() != boost::none) {
+    vaderConfig.set(vader::configModelVarsKey, *params.modelData.value());
+  }
   if (params.cookbook.value() != boost::none) {
     vaderConfig.set(vader::configCookbookKey, *params.cookbook.value());
   }
@@ -106,17 +108,21 @@ void testVaderAdjoint() {
                      ingredientVarsLevels[jvar], ncid);
   }
   if ((retval = nc_close(ncid))) ERR(retval);
+
   // run NL to set trajectory
   oops::Variables vars = productVars;
+
   // oops::Variables incrementVars(traj.field_names());
   vader.changeVarTraj(traj, vars);
 
   // Testing whether (dx, K^T dy) == (K dx, dy)
   // Allocating dxin to contain randomized dx (for the ingredient variables)
   atlas::FieldSet dxin;
+
   for (size_t ivar = 0; ivar < ingredientVars.size(); ++ivar) {
     addRandomField(dxin, ingredientVars[ivar].name(), fs, ingredientVarsLevels[ivar]);
   }
+
   // fill the product variable with Kdx
   oops::Variables varsProduced = vader.initTLAD(ingredientVars);
   vader.changeVarTL(dxin);
@@ -156,12 +162,13 @@ void testVaderAdjoint() {
 
   // fill the ingredients variables with K^T dxout
   vader.changeVarAD(dxout);
-
   double zz1 = 0;
+
   // Compute (dx, K^T dy)
   for (const auto & ingredientVar : ingredientVars) {
     zz1 += dotProduct(dxin[ingredientVar.name()], dxout[ingredientVar.name()]);
   }
+
   // Compute (Kdx, dy)
   double zz2 = 0;
   for (const auto & productVar : productVars) {

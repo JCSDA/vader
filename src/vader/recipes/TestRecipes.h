@@ -66,6 +66,40 @@ class Test_VarA_from_B : public RecipeBase {
 };
 
 // ------------------------------------------------------------------------------------------------
+/*! \brief Test_VarA_from_B_C class defines a recipe for TestVarA
+ *
+ *  \details This instantiation of RecipeBase produces TestVarA
+ *           using TestVarB and TestVarC as input.
+ */
+class Test_VarA_from_B_C : public RecipeBase {
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+
+    typedef TestRecipeParameters Parameters_;
+
+    Test_VarA_from_B_C(const Parameters_ &, const VaderConfigVars &);
+
+    // Recipe base class overrides
+    std::string name() const override;
+    oops::Variable product() const override {return oops::Variable{"TestVarA"};}
+    oops::Variables ingredients() const override {
+      return oops::Variables{std::vector<std::string>{"TestVarB", "TestVarC"}};
+    }
+    size_t productLevels(const atlas::FieldSet &) const override {return 1;}
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override
+                                {return atlas::functionspace::PointCloud({
+                                    atlas::PointXY(0.0, 0.0)});}
+    bool hasTLAD() const override { return true; }
+    bool hasNL() const override { return true; }
+    void executeNL(atlas::FieldSet &) override;
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+
+ private:
+};
+
+// ------------------------------------------------------------------------------------------------
 /*! \brief Test_VarA_from_C_D class defines a recipe for TestVarA
  *
  *  \details This instantiation of RecipeBase produces TestVarA
@@ -135,7 +169,7 @@ class Test_VarB_from_E : public RecipeBase {
  *
  *  \details This instantiation of RecipeBase produces TestVarB
  *           using TestVarA as input. Non-linear recipe only.
- *           This recipe combines with recipe Test_VarA_from_B to make 
+ *           This recipe combines with recipe Test_VarA_from_B to make
  *           sure the Vader algorithm does not end up in an infinte
  *           recursion loop when attempting to create ingredients.
  */
@@ -168,6 +202,47 @@ class Test_VarB_from_A : public RecipeBase {
 
  private:
 };
+
+// ------------------------------------------------------------------------------------------------
+/*! \brief Test_VarC_from_D_E class defines a recipe for TestVarC
+ *
+ *  \details This instantiation of RecipeBase produces TestVarC
+ *           using TestVarD and TestVarE as ingredients
+ *           and TestVarD and TestVarE as trajectory variables.
+ */
+
+class Test_VarC_from_D_E : public RecipeBase {
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+    static const oops::Variables TrajectoryVars;
+
+    typedef TestRecipeParameters Parameters_;
+
+    Test_VarC_from_D_E(const Parameters_ &, const VaderConfigVars &);
+
+    // Recipe base class overrides
+    std::string name() const override;
+    oops::Variable product() const override {return oops::Variable{"TestVarC"};}
+    oops::Variables ingredients() const override {
+      return oops::Variables{std::vector<std::string>{"TestVarD", "TestVarE"}};
+    }
+    oops::Variables trajectoryVars() const override {
+      return oops::Variables{std::vector<std::string>{"TestVarD", "TestVarE"}};
+    }
+    size_t productLevels(const atlas::FieldSet &) const override {return 1;}
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override
+                                {return atlas::functionspace::PointCloud({
+                                    atlas::PointXY(0.0, 0.0)});}
+    bool hasTLAD() const override { return true; }
+    bool hasNL() const override { return true; }
+    void executeNL(atlas::FieldSet &) override;
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+
+ private:
+};
+
 // ------------------------------------------------------------------------------------------------
 /*! \brief Test_VarC_from_F class defines a recipe for TestVarC
  *
@@ -230,6 +305,43 @@ class Test_VarA_from_G : public RecipeBase {
                                     atlas::PointXY(0.0, 0.0)});}
     bool hasTLAD() const override { return true; }
     bool hasNL() const override { return false; }
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+
+ private:
+};
+
+// ------------------------------------------------------------------------------------------------
+/*! \brief Test_VarE_from_F class defines a recipe for TestVarE
+ *
+ *  \details This instantiation of RecipeBase produces TestVarE
+ *           using TestVarF as ingredient and TestVarF as trajectory variable.
+ */
+class Test_VarE_from_F : public RecipeBase {
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+    static const oops::Variables TrajectoryVars;
+    typedef TestRecipeParameters Parameters_;
+
+    Test_VarE_from_F(const Parameters_ &, const VaderConfigVars &);
+
+    // Recipe base class overrides
+    std::string name() const override;
+    oops::Variable product() const override {return oops::Variable{"TestVarE"};}
+    oops::Variables ingredients() const override {
+      return oops::Variables{std::vector<std::string>{"TestVarF"}};
+    }
+    oops::Variables trajectoryVars() const override {
+      return oops::Variables{std::vector<std::string>{"TestVarF"}};
+    }
+    size_t productLevels(const atlas::FieldSet &) const override {return 1;}
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override
+                                {return atlas::functionspace::PointCloud({
+                                    atlas::PointXY(0.0, 0.0)});}
+    bool hasTLAD() const override { return true; }
+    bool hasNL() const override { return true; }
+    void executeNL(atlas::FieldSet &) override;
     void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
     void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 
