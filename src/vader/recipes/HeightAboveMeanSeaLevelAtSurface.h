@@ -19,8 +19,8 @@
 
 namespace vader {
 
-class WaterVaporMixingRatioWrtMoistAir_AParameters : public RecipeParametersBase {
-  OOPS_CONCRETE_PARAMETERS(WaterVaporMixingRatioWrtMoistAir_AParameters, RecipeParametersBase)
+class HeightAboveMeanSeaLevelAtSurface_A_Parameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(HeightAboveMeanSeaLevelAtSurface_A_Parameters, RecipeParametersBase)
 
  public:
   oops::RequiredParameter<std::string> name{
@@ -29,28 +29,26 @@ class WaterVaporMixingRatioWrtMoistAir_AParameters : public RecipeParametersBase
 };
 
 // ------------------------------------------------------------------------------------------------
-/*! \brief WaterVaporMixingRatioWrtMoistAir_A class defines a recipe for water_vapor_mixing_ratio_
- *         wrt_moist_air (specific humidity).
- *
- *  \details This instantiation of RecipeBase produces water_vapor_mixing_ratio_wrt_moist_air (q,
- *           specific humidity) using water_vapor_mixing_ratio_wrt_dry_air (r, humidity mixing
- *           ratio).
- *
+/*!
+ * \brief HeightAboveMeanSeaLevelAtSurface_A class defines a recipe for
+ *        height_above_mean_sea_level_at_surface from geopotential_height_at_surface
+ *        Approximate recipe as it does not take into account the topography of the Earth.
+ *        The error is higher in mountainous regions and typically less than 30 meters
+ *        (max value on top of Mt. Everest).
  */
-class WaterVaporMixingRatioWrtMoistAir_A : public RecipeBase {
+class HeightAboveMeanSeaLevelAtSurface_A : public RecipeBase {
  public:
     static const char Name[];
     static const oops::Variables Ingredients;
 
-    typedef WaterVaporMixingRatioWrtMoistAir_AParameters Parameters_;
+    typedef HeightAboveMeanSeaLevelAtSurface_A_Parameters Parameters_;
 
-    WaterVaporMixingRatioWrtMoistAir_A(const Parameters_ &, const VaderConfigVars &);
+    HeightAboveMeanSeaLevelAtSurface_A(const Parameters_ &, const VaderConfigVars &);
 
     // Recipe base class overrides
     std::string name() const override;
     oops::Variable product() const override;
     oops::Variables ingredients() const override;
-    oops::Variables trajectoryVars() const override;
     size_t productLevels(const atlas::FieldSet &) const override;
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
     bool hasTLAD() const override { return true; }

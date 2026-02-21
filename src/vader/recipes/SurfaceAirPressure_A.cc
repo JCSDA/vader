@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2021-2022  UCAR.
+ * (C) Copyright 2021-2026 UCAR.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,9 +9,7 @@
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/SurfaceAirPressure.h"
 
@@ -69,46 +67,60 @@ const {
 // -------------------------------------------------------------------------------------------------
 
 void SurfaceAirPressure_A::executeNL(atlas::FieldSet & afieldset) {
-    //
     oops::Log::trace() << "SurfaceAirPressure_A::executeNL Starting" << std::endl;
 
-    // Get the fields
-    atlas::Field delp = afieldset.field("air_pressure_thickness");
-    atlas::Field ps = afieldset.field("air_pressure_at_surface");
-
-    // Get the units
-    std::string delp_units, ps_units, prsi_units;
-    delp.metadata().get("units", delp_units);
-    ps.metadata().get("units", ps_units);
-
-    // Assert that the units match
-    ASSERT_MSG(ps_units == delp_units, "In Vader::SurfaceAirPressure_A::executeNL the units for "
-               "surface pressure " + ps_units + "do not match the pressure thickness units"
-               + delp_units);
-
     // Get ptop
-    double ptop = configVariables_.getDouble("air_pressure_at_top_of_atmosphere_model");
+    const double ptop = configVariables_.getDouble("air_pressure_at_top_of_atmosphere_model");
 
-    // Set the array views to manipulate the data
-    auto delp_view = atlas::array::make_view<double, 2>(delp);
-    auto ps_view = atlas::array::make_view<double, 2>(ps);
+    util::for_each_column(
+        [&](auto ps_col, const auto delp_col) {
+            // Initialize surface pressure
+            ps_col(0) = ptop;
 
-    // Get the grid size
-    const int gridSize = delp.shape(0);
-    const int nLevel = delp.shape(1);
+            // Accumulate delp vertically within the column
+            for (int k = 0; k < delp_col.shape(0); ++k) {
+                ps_col(0) += delp_col(k);
+            }
+        },
+        afieldset["air_pressure_at_surface"], afieldset["air_pressure_thickness"]);
 
-    // Set pressure at the surface to surface pressure
-    for ( size_t jNode = 0; jNode < gridSize ; ++jNode ) {
-        ps_view(jNode, 0) = ptop;
-    }
-
-    // Compute pressure from pressure thickness starting at the surface
-    for (int level = 0; level < delp.shape(1); ++level) {
-        for ( size_t jNode = 0; jNode < gridSize ; ++jNode ) {
-            ps_view(jNode, 0) = ps_view(jNode, 0) + delp_view(jNode, level);
-        }
-    }
     oops::Log::trace() << "SurfaceAirPressure_A::executeNL Done" << std::endl;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+void SurfaceAirPressure_A::executeTL(atlas::FieldSet & afieldsetTL,
+                               const atlas::FieldSet & /*afieldsetTraj*/) {
+    oops::Log::trace() << "SurfaceAirPressure_A::executeTL Starting" << std::endl;
+
+    util::for_each_column(
+        [&](auto ps_tl_col, const auto delp_tl_col) {
+            ps_tl_col(0) = 0.0;
+            for (int k = 0; k < delp_tl_col.shape(0); ++k) {
+                ps_tl_col(0) += delp_tl_col(k);
+            }
+        },
+        afieldsetTL["air_pressure_at_surface"], afieldsetTL["air_pressure_thickness"]);
+
+    oops::Log::trace() << "SurfaceAirPressure_A::executeTL Done" << std::endl;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+void SurfaceAirPressure_A::executeAD(atlas::FieldSet & afieldsetAD,
+                               const atlas::FieldSet & /*afieldsetTraj*/) {
+    oops::Log::trace() << "SurfaceAirPressure_A::executeAD Starting" << std::endl;
+
+    util::for_each_column(
+        [&](auto ps_ad_col, auto delp_ad_col) {
+            for (int k = 0; k < delp_ad_col.shape(0); ++k) {
+                delp_ad_col(k) += ps_ad_col(0);
+            }
+            ps_ad_col(0) = 0.0;
+        },
+        afieldsetAD["air_pressure_at_surface"], afieldsetAD["air_pressure_thickness"]);
+
+    oops::Log::trace() << "SurfaceAirPressure_A::executeAD Done" << std::endl;
 }
 
 }  // namespace vader

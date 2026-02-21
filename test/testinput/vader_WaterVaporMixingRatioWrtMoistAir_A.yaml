@@ -1,0 +1,13 @@
+vader: {}
+cookbook:
+  water_vapor_mixing_ratio_wrt_moist_air: [WaterVaporMixingRatioWrtMoistAir_A]
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - water_vapor_mixing_ratio_wrt_dry_air
+ingredients:
+  - water_vapor_mixing_ratio_wrt_dry_air
+products: [water_vapor_mixing_ratio_wrt_moist_air]
+adjoint test tolerance: 1.e-13

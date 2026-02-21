@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2021-2022 UCAR
+ * (C) Copyright 2021-2026 UCAR
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -28,13 +28,26 @@ class SurfaceAirPressure_AParameters : public RecipeParametersBase {
 };
 
 // -------------------------------------------------------------------------------------------------
-/// Recipe base class
-
-/*! \brief SurfaceAirPressure_A class defines a recipe for surface pressure
+/*! \brief SurfaceAirPressure_A class defines a recipe for air_pressure_at_surface
+ *         from air_pressure_thickness
+ *
+ *         NL:
+ *             ps(j) = ptop + sum_{level=0..nLevel-1} delp(j, level)
+ *         TL:
+ *             ps'(j) = sum_{level} delp'(j, level)    (ptop fixed)
+ *         AD:
+ *             delp_ad(j, level) += ps_ad(j)  for each level
+ *             ps_ad(j) = 0
+ *
+ *         where:
+ *         - delp is air_pressure_thickness (Pa)
+ *         - ps is air_pressure_at_surface (Pa)
+ *         - ptop is air_pressure_at_top_of_atmosphere_model (Pa)
+ *         - j indexes horizontal points (0..npoint-1)
+ *         - level indexes vertical levels (0..nLevel-1)
  *
  *  \details This recipe produces surface pressure from air pressure thickness (delp) by summing
- *           the pressure at the model top with all the delp values. It does not provide
- *           TL/AD algorithms.
+ *           the pressure at the model top with all the delp values.
  */
 class SurfaceAirPressure_A : public RecipeBase
 {
@@ -51,10 +64,12 @@ class SurfaceAirPressure_A : public RecipeBase
     oops::Variables ingredients() const override;
     size_t productLevels(const atlas::FieldSet &) const override;
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+    bool hasTLAD() const override { return true; }
     void executeNL(atlas::FieldSet &) override;
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 
  private:
-    std::map<std::string, double> p0Defaults_;
     const VaderConfigVars & configVariables_;
 };
 }  // namespace vader

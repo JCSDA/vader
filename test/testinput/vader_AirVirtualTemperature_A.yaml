@@ -1,0 +1,20 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+cookbook:
+  virtual_temperature: [AirVirtualTemperature_A]
+  water_vapor_mixing_ratio_wrt_moist_air: [WaterVaporMixingRatioWrtMoistAir_A]
+model data:
+  epsilon: 0.62198
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - air_temperature
+  - water_vapor_mixing_ratio_wrt_dry_air
+ingredients:
+  - air_temperature
+  - water_vapor_mixing_ratio_wrt_dry_air
+products: # Need to include intermediate products for the AD test
+  - water_vapor_mixing_ratio_wrt_moist_air
+  - virtual_temperature
+adjoint test tolerance: 1.e-12

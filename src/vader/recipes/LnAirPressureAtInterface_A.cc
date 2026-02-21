@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2023  UCAR.
+ * (C) Copyright 2023-2026 UCAR
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,9 +9,7 @@
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/LnAirPressureAtInterface.h"
 
@@ -37,10 +35,7 @@ LnAirPressureAtInterface_A::LnAirPressureAtInterface_A(const
                                                      LnAirPressureAtInterface_AParameters & params,
                                                      const VaderConfigVars & configVariables)
 {
-    oops::Log::trace() << "LnAirPressureAtInterface_A::LnAirPressureAtInterface_A Starting"
-                       << std::endl;
-    oops::Log::trace() << "LnAirPressureAtInterface_A::LnAirPressureAtInterface_A Done"
-                       << std::endl;
+    oops::Log::trace() << "LnAirPressureAtInterface_A::LnAirPressureAtInterface_A" << std::endl;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -63,6 +58,12 @@ oops::Variables LnAirPressureAtInterface_A::ingredients() const {
 
 // -------------------------------------------------------------------------------------------------
 
+oops::Variables LnAirPressureAtInterface_A::trajectoryVars() const {
+    return oops::Variables{std::vector<std::string>{"air_pressure_levels"}};
+}
+
+// -------------------------------------------------------------------------------------------------
+
 size_t LnAirPressureAtInterface_A::productLevels(const atlas::FieldSet & afieldset) const {
     return afieldset.field("air_pressure_levels").shape(1);
 }
@@ -80,25 +81,51 @@ void LnAirPressureAtInterface_A::executeNL(atlas::FieldSet & afieldset) {
     //
     oops::Log::trace() << "LnAirPressureAtInterface_A::executeNL Starting" << std::endl;
 
-    // Get fields
-    atlas::Field airPressureLevelsF = afieldset.field("air_pressure_levels");
-    atlas::Field lnAirPressureAtInterfaceF = afieldset.field("ln_air_pressure_at_interface");
+    util::for_each_value(
+      [&](const double p_int, double& ln_p_int) {
+          ln_p_int = log(p_int);
+      },
+      afieldset["air_pressure_levels"],
+      afieldset["ln_air_pressure_at_interface"]);
 
-    // Get field views
-    auto airPressureLevels = atlas::array::make_view<double, 2>(airPressureLevelsF);
-    auto lnAirPressureAtInterface = atlas::array::make_view<double, 2>(lnAirPressureAtInterfaceF);
-
-    // Grid dimensions
-    size_t h_size = airPressureLevelsF.shape(0);
-    int v_size = airPressureLevelsF.shape(1);
-
-    // Calculate the output variable
-    for (int vv = 0; vv < v_size; ++vv) {
-      for ( size_t hh = 0; hh < h_size ; ++hh ) {
-        lnAirPressureAtInterface(hh, vv) = log(airPressureLevels(hh, vv));
-      }
-    }
     oops::Log::trace() << "LnAirPressureAtInterface_A::executeNL Done" << std::endl;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+void LnAirPressureAtInterface_A::executeTL(atlas::FieldSet & afieldsetTL,
+                                     const atlas::FieldSet & afieldsetTraj) {
+    oops::Log::trace() << "LnAirPressureAtInterface_A::executeTL Starting" << std::endl;
+
+    util::for_each_value(
+      [&](const double p_int, const double p_int_tl, double& ln_p_int_tl) {
+          ln_p_int_tl = p_int_tl / p_int;
+      },
+      afieldsetTraj["air_pressure_levels"],
+      afieldsetTL["air_pressure_levels"],
+      afieldsetTL["ln_air_pressure_at_interface"]);
+
+    oops::Log::trace() << "LnAirPressureAtInterface_A::executeTL Done" << std::endl;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+void LnAirPressureAtInterface_A::executeAD(atlas::FieldSet & afieldsetAD,
+                                     const atlas::FieldSet & afieldsetTraj) {
+    oops::Log::trace() << "LnAirPressureAtInterface_A::executeAD Starting" << std::endl;
+
+    util::for_each_value(
+      [&](const double p_int, double& p_int_ad, double& ln_p_int_ad) {
+          if (ln_p_int_ad != 0.0) {
+            p_int_ad += ln_p_int_ad / p_int;
+            ln_p_int_ad = 0.0;
+          }
+      },
+      afieldsetTraj["air_pressure_levels"],
+      afieldsetAD["air_pressure_levels"],
+      afieldsetAD["ln_air_pressure_at_interface"]);
+
+    oops::Log::trace() << "LnAirPressureAtInterface_A::executeAD Done" << std::endl;
 }
 
 // -------------------------------------------------------------------------------------------------

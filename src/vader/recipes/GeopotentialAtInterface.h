@@ -19,8 +19,8 @@
 
 namespace vader {
 
-class WaterVaporMixingRatioWrtMoistAir_AParameters : public RecipeParametersBase {
-  OOPS_CONCRETE_PARAMETERS(WaterVaporMixingRatioWrtMoistAir_AParameters, RecipeParametersBase)
+class GeopotentialAtInterface_A_Parameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(GeopotentialAtInterface_A_Parameters, RecipeParametersBase)
 
  public:
   oops::RequiredParameter<std::string> name{
@@ -29,22 +29,22 @@ class WaterVaporMixingRatioWrtMoistAir_AParameters : public RecipeParametersBase
 };
 
 // ------------------------------------------------------------------------------------------------
-/*! \brief WaterVaporMixingRatioWrtMoistAir_A class defines a recipe for water_vapor_mixing_ratio_
- *         wrt_moist_air (specific humidity).
+/*! \brief GeopotentialAtInterface_A computes geopotential at model interfaces
  *
- *  \details This instantiation of RecipeBase produces water_vapor_mixing_ratio_wrt_moist_air (q,
- *           specific humidity) using water_vapor_mixing_ratio_wrt_dry_air (r, humidity mixing
- *           ratio).
- *
+ *  Uses hydrostatic integration with layer-averaged virtual temperature.
+ *  Inputs: geopotential at full levels, virtual_temperature, ln_air_pressure at full levels
+ *  and interfaces. Output: geopotential_at_interface (m^2 s^-2).
+ *  Full TL/AD support.
  */
-class WaterVaporMixingRatioWrtMoistAir_A : public RecipeBase {
+
+class GeopotentialAtInterface_A : public RecipeBase {
  public:
     static const char Name[];
     static const oops::Variables Ingredients;
 
-    typedef WaterVaporMixingRatioWrtMoistAir_AParameters Parameters_;
+    typedef GeopotentialAtInterface_A_Parameters Parameters_;
 
-    WaterVaporMixingRatioWrtMoistAir_A(const Parameters_ &, const VaderConfigVars &);
+    GeopotentialAtInterface_A(const Parameters_ &, const VaderConfigVars &);
 
     // Recipe base class overrides
     std::string name() const override;

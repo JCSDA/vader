@@ -19,8 +19,8 @@
 
 namespace vader {
 
-class WaterVaporMixingRatioWrtMoistAir_AParameters : public RecipeParametersBase {
-  OOPS_CONCRETE_PARAMETERS(WaterVaporMixingRatioWrtMoistAir_AParameters, RecipeParametersBase)
+class GeopotentialHeight_A_Parameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(GeopotentialHeight_A_Parameters, RecipeParametersBase)
 
  public:
   oops::RequiredParameter<std::string> name{
@@ -29,28 +29,38 @@ class WaterVaporMixingRatioWrtMoistAir_AParameters : public RecipeParametersBase
 };
 
 // ------------------------------------------------------------------------------------------------
-/*! \brief WaterVaporMixingRatioWrtMoistAir_A class defines a recipe for water_vapor_mixing_ratio_
- *         wrt_moist_air (specific humidity).
+/*! \brief GeopotentialHeight_A class defines a recipe for geopotential_height
+ *         from geopotential
  *
- *  \details This instantiation of RecipeBase produces water_vapor_mixing_ratio_wrt_moist_air (q,
- *           specific humidity) using water_vapor_mixing_ratio_wrt_dry_air (r, humidity mixing
- *           ratio).
+ *         NL:
+               z(j, k) = phi(j, k) / g
+ *         TL:
+               z'(j, k) = phi'(j, k) / g
+ *         AD:
+               phi_ad(j, k) += z_ad(j, k) / g
+ *             z_ad(j, k) = 0
+ *
+ *         where:
+ *         - phi is geopotential (m^2 s^-2)
+ *         - g is standard_gravitational_acceleration (m s^-2)
+ *         - z is geopotential_height (m)
+ *         - j is indexes horizontal points
+ *         - k is vertical levels
  *
  */
-class WaterVaporMixingRatioWrtMoistAir_A : public RecipeBase {
+class GeopotentialHeight_A : public RecipeBase {
  public:
     static const char Name[];
     static const oops::Variables Ingredients;
 
-    typedef WaterVaporMixingRatioWrtMoistAir_AParameters Parameters_;
+    typedef GeopotentialHeight_A_Parameters Parameters_;
 
-    WaterVaporMixingRatioWrtMoistAir_A(const Parameters_ &, const VaderConfigVars &);
+    GeopotentialHeight_A(const Parameters_ &, const VaderConfigVars &);
 
     // Recipe base class overrides
     std::string name() const override;
     oops::Variable product() const override;
     oops::Variables ingredients() const override;
-    oops::Variables trajectoryVars() const override;
     size_t productLevels(const atlas::FieldSet &) const override;
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
     bool hasTLAD() const override { return true; }

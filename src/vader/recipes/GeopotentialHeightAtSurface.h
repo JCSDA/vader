@@ -19,8 +19,8 @@
 
 namespace vader {
 
-class WaterVaporMixingRatioWrtMoistAir_AParameters : public RecipeParametersBase {
-  OOPS_CONCRETE_PARAMETERS(WaterVaporMixingRatioWrtMoistAir_AParameters, RecipeParametersBase)
+class GeopotentialHeightAtSurface_A_Parameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(GeopotentialHeightAtSurface_A_Parameters, RecipeParametersBase)
 
  public:
   oops::RequiredParameter<std::string> name{
@@ -29,28 +29,36 @@ class WaterVaporMixingRatioWrtMoistAir_AParameters : public RecipeParametersBase
 };
 
 // ------------------------------------------------------------------------------------------------
-/*! \brief WaterVaporMixingRatioWrtMoistAir_A class defines a recipe for water_vapor_mixing_ratio_
- *         wrt_moist_air (specific humidity).
+/*! \brief GeopotentialHeightAtSurface_A class defines a recipe for geopotential_height_at_surface
+ *         from surface_geopotential
  *
- *  \details This instantiation of RecipeBase produces water_vapor_mixing_ratio_wrt_moist_air (q,
- *           specific humidity) using water_vapor_mixing_ratio_wrt_dry_air (r, humidity mixing
- *           ratio).
+ *         NL:
+ *             z_surf(j) = phi_surf(j) / g
+ *         TL:
+ *             z_surf'(j) = phi_surf'(j) / g
+ *         AD:
+ *             phi_surf_ad(j) += z_surf_ad(j) / g
+ *             z_surf_ad(j) = 0
  *
+ *         where:
+ *         - phi_surf is surface_geopotential (m^2 s^-2)
+ *         - g is standard_gravitational_acceleration (m s^-2)
+ *         - z_surf is geopotential_height_at_surface (m)
+ *         - j indexes horizontal points (0..npoint-1)
  */
-class WaterVaporMixingRatioWrtMoistAir_A : public RecipeBase {
+class GeopotentialHeightAtSurface_A : public RecipeBase {
  public:
     static const char Name[];
     static const oops::Variables Ingredients;
 
-    typedef WaterVaporMixingRatioWrtMoistAir_AParameters Parameters_;
+    typedef GeopotentialHeightAtSurface_A_Parameters Parameters_;
 
-    WaterVaporMixingRatioWrtMoistAir_A(const Parameters_ &, const VaderConfigVars &);
+    GeopotentialHeightAtSurface_A(const Parameters_ &, const VaderConfigVars &);
 
     // Recipe base class overrides
     std::string name() const override;
     oops::Variable product() const override;
     oops::Variables ingredients() const override;
-    oops::Variables trajectoryVars() const override;
     size_t productLevels(const atlas::FieldSet &) const override;
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
     bool hasTLAD() const override { return true; }

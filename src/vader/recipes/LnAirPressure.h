@@ -17,36 +17,44 @@
 #include "oops/util/parameters/RequiredParameter.h"
 #include "vader/RecipeBase.h"
 
-namespace vader {
+namespace vader
+{
 
-class WaterVaporMixingRatioWrtMoistAir_AParameters : public RecipeParametersBase {
-  OOPS_CONCRETE_PARAMETERS(WaterVaporMixingRatioWrtMoistAir_AParameters, RecipeParametersBase)
+// -------------------------------------------------------------------------------------------------
+
+class LnAirPressure_AParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(LnAirPressure_AParameters, RecipeParametersBase)
 
  public:
-  oops::RequiredParameter<std::string> name{
-     "recipe name",
-     this};
+    oops::RequiredParameter<std::string> name{"recipe name", this};
 };
 
-// ------------------------------------------------------------------------------------------------
-/*! \brief WaterVaporMixingRatioWrtMoistAir_A class defines a recipe for water_vapor_mixing_ratio_
- *         wrt_moist_air (specific humidity).
+/*! \brief LnAirPressure_A class defines a recipe for ln_air_pressure from air_pressure
  *
- *  \details This instantiation of RecipeBase produces water_vapor_mixing_ratio_wrt_moist_air (q,
- *           specific humidity) using water_vapor_mixing_ratio_wrt_dry_air (r, humidity mixing
- *           ratio).
+ *         NL:
+ *             ln_p(j, k) = ln( p(j, k) )
+ *         TL:
+ *             ln_p'(j, k) = p'(j, k) / p(j, k)
+ *         AD:
+ *             p_ad(j, k) += ln_p_ad(j, k) / p(j, k)
+ *             ln_p_ad(j, k) = 0
  *
+ *         where:
+ *         - p is air_pressure (Pa)
+ *         - ln_p is ln(air_pressure) (unitless)
+ *         - j indexes horizontal points (0..npoint-1)
+ *         - k indexes vertical levels (0..nlevels-1)
  */
-class WaterVaporMixingRatioWrtMoistAir_A : public RecipeBase {
+class LnAirPressure_A : public RecipeBase
+{
  public:
     static const char Name[];
     static const oops::Variables Ingredients;
 
-    typedef WaterVaporMixingRatioWrtMoistAir_AParameters Parameters_;
+    typedef LnAirPressure_AParameters Parameters_;
 
-    WaterVaporMixingRatioWrtMoistAir_A(const Parameters_ &, const VaderConfigVars &);
+    LnAirPressure_A(const Parameters_ &, const VaderConfigVars &);
 
-    // Recipe base class overrides
     std::string name() const override;
     oops::Variable product() const override;
     oops::Variables ingredients() const override;
@@ -57,9 +65,8 @@ class WaterVaporMixingRatioWrtMoistAir_A : public RecipeBase {
     void executeNL(atlas::FieldSet &) override;
     void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
     void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
-
- private:
-    const VaderConfigVars & configVariables_;
 };
+
+// -------------------------------------------------------------------------------------------------
 
 }  // namespace vader

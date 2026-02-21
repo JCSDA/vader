@@ -1,0 +1,13 @@
+vader: {}
+cookbook:
+  ln_air_pressure: [LnAirPressure_A]
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - air_pressure
+ingredients:
+  - air_pressure
+products: [ln_air_pressure]
+adjoint test tolerance: 1.e-12

@@ -1,0 +1,35 @@
+vader: {}
+cookbook:
+  geopotential_height_levels: [GeopotentialHeightAtInterface_A]
+  geopotential_levels: [GeopotentialAtInterface_A]
+  ln_air_pressure: [LnAirPressure_A]
+  ln_air_pressure_at_interface: [LnAirPressureAtInterface_A]
+  virtual_temperature: [AirVirtualTemperature_A]
+  water_vapor_mixing_ratio_wrt_moist_air: [WaterVaporMixingRatioWrtMoistAir_A]
+model data:
+  standard_gravitational_acceleration: 9.80665
+  epsilon: 0.62198
+  gas_constant_of_dry_air: 2.8705e2
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - air_pressure
+  - air_pressure_levels
+  - air_temperature
+  - water_vapor_mixing_ratio_wrt_dry_air
+ingredients:
+  - air_pressure
+  - air_pressure_levels
+  - air_temperature
+  - geopotential
+  - water_vapor_mixing_ratio_wrt_dry_air
+products: # Need to include intermediate products for the AD test
+  - water_vapor_mixing_ratio_wrt_moist_air
+  - virtual_temperature
+  - ln_air_pressure
+  - ln_air_pressure_at_interface
+  - geopotential_levels
+  - geopotential_height_levels
+adjoint test tolerance: 1.e-12

@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 203 UCAR
+ * (C) Copyright 2023-2026 UCAR
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -29,11 +29,22 @@ class LnAirPressureAtInterface_AParameters : public RecipeParametersBase {
     oops::RequiredParameter<std::string> name{"recipe name", this};
 };
 
-/*! \brief LnAirPressureAtInterface_A class defines a recipe for pressure levels from pressure
-           thickness.
+/*! \brief LnAirPressureAtInterface_A class defines a recipe for ln_air_pressure_at_interface
+ *         from air_pressure_levels
  *
- *  \details This recipe uses pressure at the interfaces, along with the Phillips method to
- *           compute pressure at the mid points. It does not provide TL/AD algorithms.
+ *         NL:
+ *             ln_p_int(j, k) = ln( p_int(j, k) )
+ *         TL:
+ *             ln_p_int'(j, k) = p_int'(j, k) / p_int(j, k)
+ *         AD:
+ *             p_int_ad(j, k) += ln_p_int_ad(j, k) / p_int(j, k)
+ *             ln_p_int_ad(j, k) = 0
+ *
+ *         where:
+ *         - p_int is air_pressure_levels (Pa)
+ *         - ln_p_int is ln_air_pressure_at_interface (unitless)
+ *         - j indexes horizontal points (0..npoint-1)
+ *         - k indexes interfaces (0..nint-1)
  */
 class LnAirPressureAtInterface_A : public RecipeBase
 {
@@ -48,9 +59,13 @@ class LnAirPressureAtInterface_A : public RecipeBase
     std::string name() const override;
     oops::Variable product() const override;
     oops::Variables ingredients() const override;
+    oops::Variables trajectoryVars() const override;
     size_t productLevels(const atlas::FieldSet &) const override;
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+    bool hasTLAD() const override { return true; }
     void executeNL(atlas::FieldSet &) override;
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 };
 
 // -------------------------------------------------------------------------------------------------
