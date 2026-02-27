@@ -5,13 +5,7 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <cmath>
-#include <iostream>
-#include <vector>
-
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/NorthwardWindAt10m.h"
 
@@ -63,54 +57,60 @@ atlas::FunctionSpace vwind_at_10m_A::productFunctionSpace(const atlas::FieldSet
     return afieldset["northward_wind"].functionspace();
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void vwind_at_10m_A::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering vwind_at_10m_A::executeNL function"
       << std::endl;
 
-    auto northward_wind_view = atlas::array::make_view<double, 2>(afieldset["northward_wind"]);
-    auto vwind_at_10m_A_view =
-                             atlas::array::make_view<double, 2>(afieldset["northward_wind_at_10m"]);
+    util::for_each_column(
+      [](const auto northward_wind_col,
+         auto northward_wind_at_10m_col) {
+         northward_wind_at_10m_col(0) = northward_wind_col(0);
+      },
+      afieldset["northward_wind"],
+      afieldset["northward_wind_at_10m"]);
 
-    size_t no_of_horizontal_pts = vwind_at_10m_A_view.shape(0);
-    for ( size_t jnode = 0; jnode < no_of_horizontal_pts ; ++jnode ) {
-      vwind_at_10m_A_view(jnode, 0) = northward_wind_view(jnode, 0);
-    }
     oops::Log::trace() << "leaving vwind_at_10m_A::executeNL function" << std::endl;
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void vwind_at_10m_A::executeTL(atlas::FieldSet & afieldsetTL,
-                                      const atlas::FieldSet & afieldsetTraj)
+                                      const atlas::FieldSet & /*afieldsetTraj*/)
 {
     oops::Log::trace() << "entering vwind_at_10m_A::executeTL function"
         << std::endl;
 
-    auto tl_northward_wind_view = atlas::array::make_view<double, 2>(afieldsetTL["northward_wind"]);
-    auto tl_vwind_at_10m_A_view =
-                           atlas::array::make_view<double, 2>(afieldsetTL["northward_wind_at_10m"]);
+    util::for_each_column(
+      [](const auto tl_northward_wind_col,
+         auto tl_northward_wind_at_10m_col) {
+         tl_northward_wind_at_10m_col(0) = tl_northward_wind_col(0);
+      },
+      afieldsetTL["northward_wind"],
+      afieldsetTL["northward_wind_at_10m"]);
 
-    size_t no_of_horizontal_pts = tl_vwind_at_10m_A_view.shape(0);
-    for ( size_t jnode = 0; jnode < no_of_horizontal_pts ; ++jnode ) {
-      tl_vwind_at_10m_A_view(jnode, 0) = tl_northward_wind_view(jnode, 0);
-    }
     oops::Log::trace() << "leaving vwind_at_10m_A::executeTL function" << std::endl;
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void vwind_at_10m_A::executeAD(atlas::FieldSet & afieldsetAD,
-                                      const atlas::FieldSet & afieldsetTraj)
+                                      const atlas::FieldSet & /*afieldsetTraj*/)
 {
     oops::Log::trace() << "entering vwind_at_10m_A::executeAD function"
         << std::endl;
 
-    auto ad_northward_wind_view = atlas::array::make_view<double, 2>(afieldsetAD["northward_wind"]);
-    auto ad_vwind_at_10m_A_view =
-                           atlas::array::make_view<double, 2>(afieldsetAD["northward_wind_at_10m"]);
+    util::for_each_column(
+      [](auto ad_northward_wind_at_10m_col,
+         auto ad_northward_wind_col) {
+         ad_northward_wind_col(0) += ad_northward_wind_at_10m_col(0);
+         ad_northward_wind_at_10m_col(0) = 0.0;
+      },
+      afieldsetAD["northward_wind_at_10m"],
+      afieldsetAD["northward_wind"]);
 
-    size_t no_of_horizontal_pts = ad_northward_wind_view.shape(0);
-    for ( size_t jnode = 0; jnode < no_of_horizontal_pts ; ++jnode ) {
-      ad_northward_wind_view(jnode, 0) += ad_vwind_at_10m_A_view(jnode, 0);
-      ad_vwind_at_10m_A_view(jnode, 0) = 0.0;
-    }
     oops::Log::trace() << "leaving vwind_at_10m_A::executeAD function" << std::endl;
 }
 

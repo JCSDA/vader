@@ -5,13 +5,12 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
 #include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/AirPressureAtInterface.h"
 
@@ -78,7 +77,6 @@ atlas::FunctionSpace AirPressureAtInterface_A::productFunctionSpace(const atlas:
 // -------------------------------------------------------------------------------------------------
 
 void AirPressureAtInterface_A::executeNL(atlas::FieldSet & afieldset) {
-    //
     oops::Log::trace() << "AirPressureAtInterface_A::executeNL Starting" << std::endl;
 
     // Get the fields
@@ -105,21 +103,17 @@ void AirPressureAtInterface_A::executeNL(atlas::FieldSet & afieldset) {
     ASSERT(ak.size() == nLevels+1);
     ASSERT(bk.size() == nLevels+1);
 
-    // Get the grid size
-    const int gridSize = ps.shape(0);
-
-    // Set the array views to manipulate the data
-    auto prsi_view = atlas::array::make_view<double, 2>(prsi);
-    auto ps_view = atlas::array::make_view<double, 2>(ps);
-
     // Compute pressure thickness from pressure at the levels
-    for (int level = 0; level < nLevels + 1; ++level) {
-        for ( size_t jNode = 0; jNode < gridSize ; ++jNode ) {
-            prsi_view(jNode, level) = ak[level] + bk[level] * ps_view(jNode, 0);
-        }
-    }
+    util::for_each_column(
+        [&](const auto ps_col,
+            auto prsi_col) {
+            for (int level = 0; level < nLevels + 1; ++level) {
+                prsi_col(level) = ak[level] + bk[level] * ps_col(0);
+            }
+        },
+        ps,
+        prsi);
 
-    // Return
     oops::Log::trace() << "AirPressureAtInterface_A::executeNL Done" << std::endl;
 }
 

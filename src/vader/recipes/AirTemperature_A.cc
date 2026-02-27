@@ -5,18 +5,13 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field.h"
-
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/AirTemperature.h"
-
-using atlas::array::make_view;
-using atlas::idx_t;
 
 namespace vader
 {
@@ -73,66 +68,72 @@ atlas::FunctionSpace AirTemperature_A::productFunctionSpace(const atlas::FieldSe
     return fields[APT].functionspace();
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void AirTemperature_A::executeNL(atlas::FieldSet & fields)
 {
     oops::Log::trace() << "entering AirTemperature_A::executeNL function" << std::endl;
 
-    auto exner_view = make_view<const double, 2>(fields[DEF]);
-    auto potential_temperature_view = make_view<const double, 2>(fields[APT]);
-    auto temp_view = make_view<double, 2>(fields[AT]);
+    util::for_each_value(
+        [](const double apt,
+           const double exner,
+           double& temp) {
+           temp = apt * exner;
+        },
+        fields[APT],
+        fields[DEF],
+        fields[AT]);
 
-    for (idx_t jn = 0; jn < fields[AT].shape(0) ; ++jn) {
-      for (idx_t jl = 0; jl < fields[AT].shape(1); ++jl) {
-        temp_view(jn, jl) = potential_temperature_view(jn, jl) *
-                            exner_view(jn, jl);
-      }
-    }
     oops::Log::trace() << "leaving AirTemperature_A::executeNL function" << std::endl;
 }
 
-void AirTemperature_A::executeTL(atlas::FieldSet & fields,
-                                const atlas::FieldSet & trajFields)
+// -------------------------------------------------------------------------------------------------
+
+void AirTemperature_A::executeTL(atlas::FieldSet & fieldsTL,
+                                 const atlas::FieldSet & trajFields)
 {
     oops::Log::trace() << "entering AirTemperature_A::executeTL function" << std::endl;
 
-    auto exner_traj_view = make_view<const double, 2>(trajFields[DEF]);
-    auto potential_temperature_traj_view = make_view<const double, 2>(trajFields[APT]);
-    auto exner_view = make_view<const double, 2>(fields[DEF]);
-    auto potential_temperature_view = make_view<const double, 2>(fields[APT]);
-    auto temp_view = make_view<double, 2>(fields[AT]);
+    util::for_each_value(
+        [](const double traj_exner,
+           const double traj_apt,
+           const double tl_apt,
+           const double tl_exner,
+           double& tl_temp) {
+           tl_temp = traj_apt * tl_exner + tl_apt * traj_exner;
+        },
+        trajFields[DEF],
+        trajFields[APT],
+        fieldsTL[APT],
+        fieldsTL[DEF],
+        fieldsTL[AT]);
 
-    for (idx_t jn = 0; jn < fields[AT].shape(0) ; ++jn) {
-      for (idx_t jl = 0; jl < fields[AT].shape(1); ++jl) {
-        temp_view(jn, jl) = potential_temperature_traj_view(jn, jl) *
-                            exner_view(jn, jl) +
-                            potential_temperature_view(jn, jl) *
-                            exner_traj_view(jn, jl);
-      }
-    }
     oops::Log::trace() << "leaving AirTemperature_A::executeTL function" << std::endl;
 }
 
+// -------------------------------------------------------------------------------------------------
 
-void AirTemperature_A::executeAD(atlas::FieldSet & fields,
+void AirTemperature_A::executeAD(atlas::FieldSet & fieldsAD,
                                  const atlas::FieldSet & trajFields)
 {
     oops::Log::trace() << "entering AirTemperature_A::executeAD function" << std::endl;
 
-    auto exner_traj_view = make_view<const double, 2>(trajFields[DEF]);
-    auto potential_temperature_traj_view = make_view<const double, 2>(trajFields[APT]);
-    auto exner_view = make_view<double, 2>(fields[DEF]);
-    auto potential_temperature_view = make_view<double, 2>(fields[APT]);
-    auto temp_view = make_view<double, 2>(fields[AT]);
+    util::for_each_value(
+        [](const double traj_exner,
+           const double traj_apt,
+           double& ad_temp,
+           double& ad_apt,
+           double& ad_exner) {
+           ad_exner += traj_apt * ad_temp;
+           ad_apt += ad_temp * traj_exner;
+           ad_temp = 0.0;
+        },
+        trajFields[DEF],
+        trajFields[APT],
+        fieldsAD[AT],
+        fieldsAD[APT],
+        fieldsAD[DEF]);
 
-    for (idx_t jn = 0; jn < fields[AT].shape(0) ; ++jn) {
-      for (idx_t jl = 0; jl < fields[AT].shape(1); ++jl) {
-        exner_view(jn, jl) += potential_temperature_traj_view(jn, jl) *
-                              temp_view(jn, jl);
-        potential_temperature_view(jn, jl) += temp_view(jn, jl) *
-                                              exner_traj_view(jn, jl);
-        temp_view(jn, jl) = 0.0;
-      }
-    }
     oops::Log::trace() << "leaving AirTemperature_A::executeAD function" << std::endl;
 }
 

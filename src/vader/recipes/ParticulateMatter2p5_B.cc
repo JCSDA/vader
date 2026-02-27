@@ -5,13 +5,11 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/ParticulateMatter2p5.h"
 
@@ -70,114 +68,74 @@ atlas::FunctionSpace ParticulateMatter2p5_B::productFunctionSpace
     return afieldset.field("mixing_ratio_of_smoke_wrt_dry_air").functionspace();
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void ParticulateMatter2p5_B::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering ParticulateMatter2p5_B::executeNL function" << std::endl;
 
-    atlas::Field airdens = afieldset.field("dry_air_density");
-    atlas::Field mixing_ratio_of_smoke_wrt_dry_air =
-                   afieldset.field("mixing_ratio_of_smoke_wrt_dry_air");
-    atlas::Field mixing_ratio_of_dust_wrt_dry_air =
-                   afieldset.field("mixing_ratio_of_dust_wrt_dry_air");
-    atlas::Field mass_density_of_particulate_matter_2p5_in_air =
-                   afieldset.field("mass_density_of_particulate_matter_2p5_in_air");
+    util::for_each_value(
+      [](const double airdens,
+         const double mixing_ratio_of_smoke_wrt_dry_air,
+         const double mixing_ratio_of_dust_wrt_dry_air,
+         double& mass_density_of_particulate_matter_2p5_in_air) {
+         mass_density_of_particulate_matter_2p5_in_air = airdens *
+           (mixing_ratio_of_smoke_wrt_dry_air + mixing_ratio_of_dust_wrt_dry_air);
+      },
+      afieldset["dry_air_density"],
+      afieldset["mixing_ratio_of_smoke_wrt_dry_air"],
+      afieldset["mixing_ratio_of_dust_wrt_dry_air"],
+      afieldset["mass_density_of_particulate_matter_2p5_in_air"]);
 
-    auto airdens_view = atlas::array::make_view<double, 2>(airdens);
-    auto mixing_ratio_of_smoke_wrt_dry_air_view =
-           atlas::array::make_view<double, 2>(mixing_ratio_of_smoke_wrt_dry_air);
-    auto mixing_ratio_of_dust_wrt_dry_air_view  =
-           atlas::array::make_view<double, 2>(mixing_ratio_of_dust_wrt_dry_air);
-    auto mass_density_of_particulate_matter_2p5_in_air_view =
-           atlas::array::make_view<double, 2>(mass_density_of_particulate_matter_2p5_in_air);
-
-    int nlevels = mixing_ratio_of_smoke_wrt_dry_air.shape(1);
-    size_t grid_size = mixing_ratio_of_smoke_wrt_dry_air.size()/nlevels;
-
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) =
-                            airdens_view(jnode, level)*
-                            (mixing_ratio_of_smoke_wrt_dry_air_view(jnode, level)
-                            + mixing_ratio_of_dust_wrt_dry_air_view(jnode, level));
-      }
-    }
     oops::Log::trace() << "leaving ParticulateMatter2p5_B::executeNL function" << std::endl;
 }
+
+// -------------------------------------------------------------------------------------------------
 
 void ParticulateMatter2p5_B::executeTL(atlas::FieldSet & afieldsetTL,
                                         const atlas::FieldSet & afieldsetTraj)
 {
     oops::Log::trace() << "entering ParticulateMatter2p5_B::executeTL function" << std::endl;
 
-    atlas::Field airdens = afieldsetTraj.field("dry_air_density");
-    auto airdens_view = atlas::array::make_view<double, 2>(airdens);
+    util::for_each_value(
+      [](const double airdens,
+         const double tl_mixing_ratio_of_smoke_wrt_dry_air,
+         const double tl_mixing_ratio_of_dust_wrt_dry_air,
+         double& tl_mass_density_of_particulate_matter_2p5_in_air) {
+           tl_mass_density_of_particulate_matter_2p5_in_air = airdens *
+             (tl_mixing_ratio_of_smoke_wrt_dry_air + tl_mixing_ratio_of_dust_wrt_dry_air);
+  },
+      afieldsetTraj["dry_air_density"],
+      afieldsetTL["mixing_ratio_of_smoke_wrt_dry_air"],
+      afieldsetTL["mixing_ratio_of_dust_wrt_dry_air"],
+      afieldsetTL["mass_density_of_particulate_matter_2p5_in_air"]);
 
-    atlas::Field tl_mixing_ratio_of_smoke_wrt_dry_air =
-             afieldsetTL.field("mixing_ratio_of_smoke_wrt_dry_air");
-    auto tl_mixing_ratio_of_smoke_wrt_dry_air_view =
-           atlas::array::make_view<double, 2>(tl_mixing_ratio_of_smoke_wrt_dry_air);
-
-    atlas::Field tl_mixing_ratio_of_dust_wrt_dry_air =
-             afieldsetTL.field("mixing_ratio_of_dust_wrt_dry_air");
-    auto tl_mixing_ratio_of_dust_wrt_dry_air_view =
-           atlas::array::make_view<double, 2>(tl_mixing_ratio_of_dust_wrt_dry_air);
-
-
-    atlas::Field tl_mass_density_of_particulate_matter_2p5_in_air =
-             afieldsetTL.field("mass_density_of_particulate_matter_2p5_in_air");
-    auto tl_mass_density_of_particulate_matter_2p5_in_air_view =
-           atlas::array::make_view<double, 2>(tl_mass_density_of_particulate_matter_2p5_in_air);
-
-    int nlevels = tl_mixing_ratio_of_smoke_wrt_dry_air.shape(1);
-    size_t grid_size = tl_mixing_ratio_of_smoke_wrt_dry_air.size()/nlevels;
-
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        tl_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) =
-                         airdens_view(jnode, level)*
-                        (tl_mixing_ratio_of_smoke_wrt_dry_air_view(jnode, level)
-                        + tl_mixing_ratio_of_dust_wrt_dry_air_view(jnode, level));
-      }
-    }
     oops::Log::trace() << "leaving ParticulateMatter2p5_B::executeTL function" << std::endl;
 }
 
+// -------------------------------------------------------------------------------------------------
 
 void ParticulateMatter2p5_B::executeAD(atlas::FieldSet & afieldsetAD,
                                         const atlas::FieldSet & afieldsetTraj)
 {
     oops::Log::trace() << "entering ParticulateMatter2p5_B::executeAD function" << std::endl;
 
-    atlas::Field airdens = afieldsetTraj.field("dry_air_density");
-    auto airdens_view = atlas::array::make_view<double, 2>(airdens);
+    util::for_each_value(
+      [](const double airdens,
+         double& ad_mass_density_of_particulate_matter_2p5_in_air,
+         double& ad_mixing_ratio_of_smoke_wrt_dry_air,
+         double& ad_mixing_ratio_of_dust_wrt_dry_air) {
+         ad_mixing_ratio_of_smoke_wrt_dry_air += airdens *
+                     ad_mass_density_of_particulate_matter_2p5_in_air;
+         ad_mixing_ratio_of_dust_wrt_dry_air  += airdens *
+                     ad_mass_density_of_particulate_matter_2p5_in_air;
+         ad_mass_density_of_particulate_matter_2p5_in_air = 0.0f;
+      },
+      afieldsetTraj["dry_air_density"],
+      afieldsetAD["mass_density_of_particulate_matter_2p5_in_air"],
+      afieldsetAD["mixing_ratio_of_smoke_wrt_dry_air"],
+      afieldsetAD["mixing_ratio_of_dust_wrt_dry_air"]);
 
-    atlas::Field ad_mixing_ratio_of_smoke_wrt_dry_air =
-             afieldsetAD.field("mixing_ratio_of_smoke_wrt_dry_air");
-    auto ad_mixing_ratio_of_smoke_wrt_dry_air_view =
-           atlas::array::make_view<double, 2>(ad_mixing_ratio_of_smoke_wrt_dry_air);
-
-    atlas::Field ad_mixing_ratio_of_dust_wrt_dry_air =
-             afieldsetAD.field("mixing_ratio_of_dust_wrt_dry_air");
-    auto ad_mixing_ratio_of_dust_wrt_dry_air_view =
-           atlas::array::make_view<double, 2>(ad_mixing_ratio_of_dust_wrt_dry_air);
-
-    atlas::Field ad_mass_density_of_particulate_matter_2p5_in_air =
-             afieldsetAD.field("mass_density_of_particulate_matter_2p5_in_air");
-    auto ad_mass_density_of_particulate_matter_2p5_in_air_view =
-           atlas::array::make_view<double, 2>(ad_mass_density_of_particulate_matter_2p5_in_air);
-
-    int nlevels = ad_mixing_ratio_of_smoke_wrt_dry_air.shape(1);
-    size_t grid_size = ad_mixing_ratio_of_smoke_wrt_dry_air.size()/nlevels;
-
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        ad_mixing_ratio_of_smoke_wrt_dry_air_view(jnode, level) += airdens_view(jnode, level)*
-                     ad_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level);
-        ad_mixing_ratio_of_dust_wrt_dry_air_view(jnode, level)  += airdens_view(jnode, level)*
-                     ad_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level);
-        ad_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) = 0.0f;
-      }
-    }
     oops::Log::trace() << "leaving ParticulateMatter2p5_B::executeAD function" << std::endl;
 }
 

@@ -5,7 +5,7 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
@@ -73,7 +73,8 @@ void SurfaceAirPressure_A::executeNL(atlas::FieldSet & afieldset) {
     const double ptop = configVariables_.getDouble("air_pressure_at_top_of_atmosphere_model");
 
     util::for_each_column(
-        [&](auto ps_col, const auto delp_col) {
+        [&](const auto delp_col,
+            auto ps_col) {
             // Initialize surface pressure
             ps_col(0) = ptop;
 
@@ -82,7 +83,8 @@ void SurfaceAirPressure_A::executeNL(atlas::FieldSet & afieldset) {
                 ps_col(0) += delp_col(k);
             }
         },
-        afieldset["air_pressure_at_surface"], afieldset["air_pressure_thickness"]);
+        afieldset["air_pressure_thickness"],
+        afieldset["air_pressure_at_surface"]);
 
     oops::Log::trace() << "SurfaceAirPressure_A::executeNL Done" << std::endl;
 }
@@ -94,13 +96,15 @@ void SurfaceAirPressure_A::executeTL(atlas::FieldSet & afieldsetTL,
     oops::Log::trace() << "SurfaceAirPressure_A::executeTL Starting" << std::endl;
 
     util::for_each_column(
-        [&](auto ps_tl_col, const auto delp_tl_col) {
+        [&](const auto delp_tl_col,
+            auto ps_tl_col) {
             ps_tl_col(0) = 0.0;
             for (int k = 0; k < delp_tl_col.shape(0); ++k) {
                 ps_tl_col(0) += delp_tl_col(k);
             }
         },
-        afieldsetTL["air_pressure_at_surface"], afieldsetTL["air_pressure_thickness"]);
+        afieldsetTL["air_pressure_thickness"],
+        afieldsetTL["air_pressure_at_surface"]);
 
     oops::Log::trace() << "SurfaceAirPressure_A::executeTL Done" << std::endl;
 }
@@ -112,13 +116,15 @@ void SurfaceAirPressure_A::executeAD(atlas::FieldSet & afieldsetAD,
     oops::Log::trace() << "SurfaceAirPressure_A::executeAD Starting" << std::endl;
 
     util::for_each_column(
-        [&](auto ps_ad_col, auto delp_ad_col) {
+        [&](auto ps_ad_col,
+            auto delp_ad_col) {
             for (int k = 0; k < delp_ad_col.shape(0); ++k) {
                 delp_ad_col(k) += ps_ad_col(0);
             }
             ps_ad_col(0) = 0.0;
         },
-        afieldsetAD["air_pressure_at_surface"], afieldsetAD["air_pressure_thickness"]);
+        afieldsetAD["air_pressure_at_surface"],
+        afieldsetAD["air_pressure_thickness"]);
 
     oops::Log::trace() << "SurfaceAirPressure_A::executeAD Done" << std::endl;
 }

@@ -5,7 +5,7 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
@@ -82,11 +82,12 @@ void LnAirPressureAtInterface_A::executeNL(atlas::FieldSet & afieldset) {
     oops::Log::trace() << "LnAirPressureAtInterface_A::executeNL Starting" << std::endl;
 
     util::for_each_value(
-      [&](const double p_int, double& ln_p_int) {
-          ln_p_int = log(p_int);
-      },
-      afieldset["air_pressure_levels"],
-      afieldset["ln_air_pressure_at_interface"]);
+        [](const double p_int,
+           double& ln_p_int) {
+           ln_p_int = std::log(p_int);
+        },
+        afieldset["air_pressure_levels"],
+        afieldset["ln_air_pressure_at_interface"]);
 
     oops::Log::trace() << "LnAirPressureAtInterface_A::executeNL Done" << std::endl;
 }
@@ -98,12 +99,14 @@ void LnAirPressureAtInterface_A::executeTL(atlas::FieldSet & afieldsetTL,
     oops::Log::trace() << "LnAirPressureAtInterface_A::executeTL Starting" << std::endl;
 
     util::for_each_value(
-      [&](const double p_int, const double p_int_tl, double& ln_p_int_tl) {
-          ln_p_int_tl = p_int_tl / p_int;
-      },
-      afieldsetTraj["air_pressure_levels"],
-      afieldsetTL["air_pressure_levels"],
-      afieldsetTL["ln_air_pressure_at_interface"]);
+        [](const double p_int,
+           const double p_int_tl,
+           double& ln_p_int_tl) {
+           ln_p_int_tl = p_int_tl / p_int;
+        },
+        afieldsetTraj["air_pressure_levels"],
+        afieldsetTL["air_pressure_levels"],
+        afieldsetTL["ln_air_pressure_at_interface"]);
 
     oops::Log::trace() << "LnAirPressureAtInterface_A::executeTL Done" << std::endl;
 }
@@ -115,15 +118,17 @@ void LnAirPressureAtInterface_A::executeAD(atlas::FieldSet & afieldsetAD,
     oops::Log::trace() << "LnAirPressureAtInterface_A::executeAD Starting" << std::endl;
 
     util::for_each_value(
-      [&](const double p_int, double& p_int_ad, double& ln_p_int_ad) {
-          if (ln_p_int_ad != 0.0) {
-            p_int_ad += ln_p_int_ad / p_int;
-            ln_p_int_ad = 0.0;
-          }
-      },
-      afieldsetTraj["air_pressure_levels"],
-      afieldsetAD["air_pressure_levels"],
-      afieldsetAD["ln_air_pressure_at_interface"]);
+        [](const double p_int,
+           double& p_int_ad,
+           double& ln_p_int_ad) {
+           if (ln_p_int_ad != 0.0) {
+               p_int_ad += ln_p_int_ad / p_int;
+               ln_p_int_ad = 0.0;
+           }
+        },
+        afieldsetTraj["air_pressure_levels"],
+        afieldsetAD["air_pressure_levels"],
+        afieldsetAD["ln_air_pressure_at_interface"]);
 
     oops::Log::trace() << "LnAirPressureAtInterface_A::executeAD Done" << std::endl;
 }

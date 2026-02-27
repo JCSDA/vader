@@ -9,9 +9,7 @@
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/AirTemperature.h"
 
@@ -60,6 +58,8 @@ atlas::FunctionSpace AirTemperature_B::productFunctionSpace(const atlas::FieldSe
     return afieldset.field("virtual_temperature").functionspace();
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void AirTemperature_B::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering AirTemperature_B::executeNL function"
@@ -67,24 +67,16 @@ void AirTemperature_B::executeNL(atlas::FieldSet & afieldset)
 
     const double epsilon = configVariables_.getDouble("epsilon");
 
-    atlas::Field virtual_temperature = afieldset.field("virtual_temperature");
-    atlas::Field temperature = afieldset.field("air_temperature");
-    atlas::Field specific_humidity = afieldset.field("water_vapor_mixing_ratio_wrt_moist_air");
+    util::for_each_value(
+        [&](const double vTemp,
+            const double spechum,
+            double& temp) {
+            temp = vTemp / (1.0 + epsilon * spechum);
+        },
+        afieldset["virtual_temperature"],
+        afieldset["water_vapor_mixing_ratio_wrt_moist_air"],
+        afieldset["air_temperature"]);
 
-    auto virtual_temperature_view = atlas::array::make_view<double, 2>(virtual_temperature);
-    auto temperature_view = atlas::array::make_view<double, 2>(temperature);
-    auto specific_humidity_view = atlas::array::make_view<double, 2>(specific_humidity);
-
-    size_t grid_size = virtual_temperature.shape(0);
-
-    int nlevels = virtual_temperature.shape(1);
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        temperature_view(jnode, level) =
-            virtual_temperature_view(jnode, level) /
-            (1.0 + epsilon * specific_humidity_view(jnode, level));
-      }
-    }
     oops::Log::trace() << "leaving AirTemperature_B::executeNL function" << std::endl;
 }
 

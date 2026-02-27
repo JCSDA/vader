@@ -1,0 +1,13 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - air_pressure
+  - air_temperature
+ingredients:
+  - air_pressure
+  - air_temperature
+products: [dry_air_density]
+adjoint test tolerance: 1.e-12

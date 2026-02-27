@@ -95,8 +95,9 @@ void WaterVaporMixingRatioWrtMoistAir_A::executeNL(atlas::FieldSet & afieldset)
     // water_vapor_mixing_ratio_wrt_dry_air in kg/kg;
     // water_vapor_mixing_ratio_wrt_moist_air in kg/kg;
     util::for_each_value(
-        [&](const double mixr, double& q) {
-              q = mixr / (1. + mixr);
+        [&](const double mixr,
+            double& q) {
+            q = mixr / (1. + mixr);
         },
         afieldset["water_vapor_mixing_ratio_wrt_dry_air"],
         afieldset["water_vapor_mixing_ratio_wrt_moist_air"]);
@@ -116,7 +117,9 @@ void WaterVaporMixingRatioWrtMoistAir_A::executeTL(atlas::FieldSet & afieldsetTL
         << std::endl;
 
     util::for_each_value(
-        [&](const double mixr, const double mixr_tl, double& q_tl) {
+        [&](const double mixr,
+            const double mixr_tl,
+            double& q_tl) {
             const double fac = 1.0 / ((1.0 + mixr) * (1.0 + mixr));
             q_tl = fac * mixr_tl;
         },
@@ -139,7 +142,9 @@ void WaterVaporMixingRatioWrtMoistAir_A::executeAD(atlas::FieldSet & afieldsetAD
           << std::endl;
 
     util::for_each_value(
-        [&](const double mixr, double& q_ad, double& mixr_ad) {
+        [&](const double mixr,
+            double& q_ad,
+            double& mixr_ad) {
             const double fac = 1.0 / ((1.0 + mixr) * (1.0 + mixr));
             mixr_ad += fac * q_ad;
             q_ad = 0.0;

@@ -5,13 +5,11 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/AirPressureAtInterface.h"
 
@@ -77,7 +75,7 @@ void AirPressureAtInterface_B::executeNL(atlas::FieldSet & afieldset) {
     //
     oops::Log::trace() << "AirPressureAtInterface_B::executeNL Starting" << std::endl;
 
-    double ptop = configVariables_.getDouble("air_pressure_at_top_of_atmosphere_model");
+    const double ptop = configVariables_.getDouble("air_pressure_at_top_of_atmosphere_model");
 
     // Get the fields
     atlas::Field delp = afieldset.field("air_pressure_thickness");
@@ -93,25 +91,22 @@ void AirPressureAtInterface_B::executeNL(atlas::FieldSet & afieldset) {
                "for pressure at the levels" + prsi_units + "do not match the pressure thickness "
                "units " + delp_units);
 
-    // Set the array views to manipulate the data
-    auto delp_view = atlas::array::make_view<double, 2>(delp);
-    auto prsi_view = atlas::array::make_view<double, 2>(prsi);
+    // Get the number of levels
+    const int nLevel = prsi.shape(1);
 
-    // Get the grid size
-    const int gridSize = delp.shape(0);
-    const int nLevel = prsi.shape(1) - 1;  // Reduce by 1 since index begins at 0
+    util::for_each_column(
+        [&](const auto delp_col,
+            auto prsi_col) {
+            // Set pressure at the top of the atmosphere to ptop
+            prsi_col(0) = ptop;
+            // Compute pressure from pressure thickness starting at the top of the atmosphere
+            for (int level = 1; level < nLevel; ++level) {
+                prsi_col(level) = prsi_col(level-1) + delp_col(level-1);
+            }
+        },
+        delp,
+        prsi);
 
-    // Set pressure at the surface to surface pressure
-    for ( size_t jNode = 0; jNode < gridSize ; ++jNode ) {
-        prsi_view(jNode, 0) = ptop;
-    }
-
-    // Compute pressure from pressure thickness starting at the surface
-    for (int level = 1; level < prsi.shape(1); ++level) {
-        for ( size_t jNode = 0; jNode < gridSize ; ++jNode ) {
-            prsi_view(jNode, level) = prsi_view(jNode, level - 1) + delp_view(jNode, level - 1);
-        }
-    }
     oops::Log::trace() << "AirPressureAtInterface_B::executeNL Done" << std::endl;
 }
 

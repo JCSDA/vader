@@ -5,13 +5,11 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/AirPressure.h"
 
@@ -71,36 +69,35 @@ atlas::FunctionSpace AirPressure_A::productFunctionSpace(const atlas::FieldSet &
 // -------------------------------------------------------------------------------------------------
 
 void AirPressure_A::executeNL(atlas::FieldSet & afieldset) {
-    //
     oops::Log::trace() << "AirPressure_A::executeNL Starting" << std::endl;
 
     // Extract value from client config
     const double kappa = configVariables_.getDouble("kappa");  // Need better name
 
-    // Get fields
-    atlas::Field airPressureLevelsF = afieldset.field("air_pressure_levels");
-    atlas::Field airPressureF = afieldset.field("air_pressure");
-
-    auto airPressureLevels = atlas::array::make_view<double, 2>(airPressureLevelsF);
-    auto airPressure = atlas::array::make_view<double, 2>(airPressureF);
-
-    // Grid dimensions
-    size_t h_size = airPressureLevelsF.shape(0);
-    int v_size = airPressureLevelsF.shape(1) - 1;
-
     // kappa variations
     const double kap1 = kappa + 1.0;
     const double kapr = 1.0 / kappa;
 
-    // Calculate the output variable
-    for (int vv = 0; vv < v_size; ++vv) {
-      for ( size_t hh = 0; hh < h_size ; ++hh ) {
-        airPressure(hh, vv) = pow(((pow(airPressureLevels(hh, vv+1), kap1) -
-                                    pow(airPressureLevels(hh, vv), kap1)) /
-                                    (kap1*(airPressureLevels(hh, vv+1) -
-                                    airPressureLevels(hh, vv)))), kapr);
-      }
-    }
+    // Get fields
+    atlas::Field airPressureLevels = afieldset.field("air_pressure_levels");
+    atlas::Field airPressure = afieldset.field("air_pressure");
+
+    // Number of levels in the output field air_pressure
+    int nlevels = airPressureLevels.shape(1) - 1;
+
+    util::for_each_column(
+        [&](const auto airPressureLevels_col,
+            auto airPressure_col) {
+            for (int level = 0; level < nlevels; ++level) {
+                airPressure_col(level) = std::pow(((std::pow(airPressureLevels_col(level+1), kap1) -
+                                                    std::pow(airPressureLevels_col(level), kap1)) /
+                                                    (kap1*(airPressureLevels_col(level+1) -
+                                                    airPressureLevels_col(level)))), kapr);
+            }
+        },
+        airPressureLevels,
+        airPressure);
+
     oops::Log::trace() << "AirPressure_A::executeNL Done" << std::endl;
 }
 

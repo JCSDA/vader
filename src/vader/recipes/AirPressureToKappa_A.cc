@@ -5,13 +5,11 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/AirPressureToKappa.h"
 
@@ -77,33 +75,26 @@ void AirPressureToKappa_A::executeNL(atlas::FieldSet & afieldset) {
     const double kappa = configVariables_.getDouble("kappa");  // Need better name
 
     // Get fields
-    atlas::Field airPressureLevelsF = afieldset.field("air_pressure_levels");
-    atlas::Field lnAirPressureAtInterfaceF = afieldset.field("ln_air_pressure_at_interface");
-    atlas::Field airPressureToKappaF = afieldset.field("air_pressure_to_kappa");
+    atlas::Field airPressureLevels = afieldset.field("air_pressure_levels");
+    atlas::Field lnAirPressureAtInterface = afieldset.field("ln_air_pressure_at_interface");
+    atlas::Field airPressureToKappa = afieldset.field("air_pressure_to_kappa");
 
-    // Get field views
-    auto airPressureLevels = atlas::array::make_view<double, 2>(airPressureLevelsF);
-    auto lnAirPressureAtInterface = atlas::array::make_view<double, 2>(lnAirPressureAtInterfaceF);
-    auto airPressureToKappa = atlas::array::make_view<double, 2>(airPressureToKappaF);
+    util::for_each_column(
+        [&](const auto airPressureLevels_col,
+            const auto lnAirPressureAtInterface_col,
+            auto airPressureToKappa_col) {
+            for (int level = 0; level < airPressureLevels.shape(1) - 1; ++level) {
+                double pk1 = std::exp(kappa * lnAirPressureAtInterface_col(level));
+                double pk2 = std::exp(kappa * lnAirPressureAtInterface_col(level+1));
+                airPressureToKappa_col(level) = (pk2 - pk1) /
+                  (kappa * (lnAirPressureAtInterface_col(level+1) -
+                   lnAirPressureAtInterface_col(level)));
+            }
+        },
+        airPressureLevels,
+        lnAirPressureAtInterface,
+        airPressureToKappa);
 
-    // Grid dimensions
-    size_t h_size = airPressureLevelsF.shape(0);
-    int v_size = airPressureLevelsF.shape(1) - 1;
-
-    // Local variables
-    double pk1, pk2;
-
-    // Calculate the output variable
-    for (int vv = 0; vv < v_size; ++vv) {
-      for ( size_t hh = 0; hh < h_size ; ++hh ) {
-        // Temporary exp(kappa(ln(p)))
-        pk1 = exp(kappa*lnAirPressureAtInterface(hh, vv));
-        pk2 = exp(kappa*lnAirPressureAtInterface(hh, vv+1));
-        // Compute p to the kappa
-        airPressureToKappa(hh, vv) = (pk2 - pk1) /
-                 (kappa*(lnAirPressureAtInterface(hh, vv+1) - lnAirPressureAtInterface(hh, vv)));
-      }
-    }
     oops::Log::trace() << "AirPressureToKappa_A::executeNL Done" << std::endl;
 }
 

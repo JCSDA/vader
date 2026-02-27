@@ -5,13 +5,11 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/SeaWaterPotentialTemperature.h"
 
@@ -66,6 +64,8 @@ atlas::FunctionSpace SeaWaterPotentialTemperature_A::productFunctionSpace
     return afieldset.field("sea_water_temperature").functionspace();
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void SeaWaterPotentialTemperature_A::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering SeaWaterPotentialTemperature_A::executeNL function"
@@ -79,35 +79,37 @@ void SeaWaterPotentialTemperature_A::executeNL(atlas::FieldSet & afieldset)
     atlas::Field depth = afieldset.field("sea_water_depth");
     atlas::Field insitu_temperature = afieldset.field("sea_water_temperature");
 
-    // Get field views
-    auto potential_temperature_view = atlas::array::make_view<double, 2>(potential_temperature);
-    auto salinity_view = atlas::array::make_view<double, 2>(salinity);
-    auto latitude_view = atlas::array::make_view<double, 2>(latitude);
-    auto longitude_view = atlas::array::make_view<double, 2>(longitude);
-    auto depth_view = atlas::array::make_view<double, 2>(depth);
-    auto insitu_view = atlas::array::make_view<double, 2>(insitu_temperature);
-
-    // Grid dimensions
-    size_t grid_size = salinity.shape(0);
+    // Number of levels
     int nlevels = potential_temperature.shape(1);
 
-    // Local variables
-    double pressure, absolute_salinity;
+    util::for_each_column(
+        [&](
+            const auto salinity_col,
+            const auto depth_col,
+            const auto latitude_col,
+            const auto longitude_col,
+            const auto insitu_temperature_col,
+            auto potential_temperature_col) {
+            for (int level = 0; level < nlevels; ++level) {
+                // Obtain pressure from depth
+                double pressure = gsw_p_from_z_f90(-depth_col(level), latitude_col(0));
 
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        // Obtain pressure from depth
-        pressure = gsw_p_from_z_f90(-depth_view(jnode, level), latitude_view(jnode, 0));
+                // Convert practical salinity to absolute salinity
+                double absolute_salinity = gsw_sa_from_sp_f90(salinity_col(level), pressure,
+                                            longitude_col(0), latitude_col(0));
 
-        // Convert practical salinity to absolute salinity
-        absolute_salinity = gsw_sa_from_sp_f90(salinity_view(jnode, level), pressure,
-            longitude_view(jnode, 0), latitude_view(jnode, 0));
+                // Calculate Sea Water Potential Temperature
+                potential_temperature_col(level) = gsw_pt_from_t_f90(absolute_salinity,
+                                                    insitu_temperature_col(level), pressure);
+            }
+        },
+        salinity,
+        depth,
+        latitude,
+        longitude,
+        insitu_temperature,
+        potential_temperature);
 
-        // Calculate Sea Water Potential Temperature
-        potential_temperature_view(jnode, level) = gsw_pt_from_t_f90(absolute_salinity,
-            insitu_view(jnode, level), pressure);
-      }
-    }
     oops::Log::trace() << "leaving SeaWaterPotentialTemperature_A::executeNL function" << std::endl;
 }
 

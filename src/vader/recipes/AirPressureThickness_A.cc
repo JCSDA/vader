@@ -5,13 +5,11 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/AirPressureThickness.h"
 
@@ -88,19 +86,16 @@ void AirPressureThickness_A::executeNL(atlas::FieldSet & afieldset)
                "units for pressure " + prsi_units +
                "do not match the pressure thickness units" + delp_units);
 
-    // Set the array views to manipulate the data
-    auto prsi_view = atlas::array::make_view<double, 2>(prsi);
-    auto delp_view = atlas::array::make_view<double, 2>(delp);
+    util::for_each_column(
+        [&](const auto prsi_col,
+            auto delp_col) {
+            for (int level = 0; level < delp.shape(1); ++level) {
+                delp_col(level) = prsi_col(level+1) - prsi_col(level);
+            }
+        },
+        prsi,
+        delp);
 
-    // Get the grid size
-    const int gridSize = delp.shape(0);
-
-    // Compute pressure thickness from pressure at the levels
-    for (int level = 0; level < delp.shape(1); ++level) {
-        for ( size_t jNode = 0; jNode < gridSize ; ++jNode ) {
-            delp_view(jNode, level) = prsi_view(jNode, level+1) - prsi_view(jNode, level);
-        }
-    }
     oops::Log::trace() << "leaving AirPressureThickness_A execute function" << std::endl;
 }
 

@@ -71,8 +71,9 @@ void GeopotentialHeightAtSurface_A::executeNL(atlas::FieldSet & afieldset)
     const double inv_g = 1.0 / grav;
 
     util::for_each_value(
-      [&](const double phi_surf, double& z_surf) {
-        z_surf = phi_surf * inv_g;
+      [&](const double phi_surf,
+          double& z_surf) {
+          z_surf = phi_surf * inv_g;
       },
       afieldset["surface_geopotential"],
       afieldset["geopotential_height_at_surface"]);
@@ -92,14 +93,17 @@ void GeopotentialHeightAtSurface_A::executeTL(atlas::FieldSet & afieldsetTL,
     const double inv_g = 1.0 / grav;
 
     util::for_each_value(
-      [&](const double phi_surf_tl, double& z_surf_tl) {
-        z_surf_tl = phi_surf_tl * inv_g;
+      [&](const double phi_surf_tl,
+          double& z_surf_tl) {
+          z_surf_tl = phi_surf_tl * inv_g;
       },
       afieldsetTL["surface_geopotential"],
       afieldsetTL["geopotential_height_at_surface"]);
 
     oops::Log::trace() << "leaving GeopotentialHeightAtSurface_A::executeTL function" << std::endl;
 }
+
+// -------------------------------------------------------------------------------------------------
 
 void GeopotentialHeightAtSurface_A::executeAD(atlas::FieldSet & afieldsetAD,
                                         const atlas::FieldSet & /*afieldsetTraj*/)
@@ -111,9 +115,10 @@ void GeopotentialHeightAtSurface_A::executeAD(atlas::FieldSet & afieldsetAD,
     const double inv_g = 1.0 / grav;
 
     util::for_each_value(
-      [&](double& phi_surf_ad, double& z_surf_ad) {
-        phi_surf_ad += z_surf_ad * inv_g;
-        z_surf_ad = 0.0;
+      [&](double& phi_surf_ad,
+          double& z_surf_ad) {
+          phi_surf_ad += z_surf_ad * inv_g;
+          z_surf_ad = 0.0;
       },
       afieldsetAD["surface_geopotential"],
       afieldsetAD["geopotential_height_at_surface"]);

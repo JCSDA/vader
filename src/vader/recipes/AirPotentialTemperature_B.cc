@@ -5,13 +5,10 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/AirPotentialTemperature.h"
 
@@ -74,26 +71,15 @@ void AirPotentialTemperature_B::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering AirPotentialTemperature_B::executeNL function" << std::endl;
 
-    // Get fields
-    atlas::Field air_temperature_field = afieldset.field("air_temperature");
-    atlas::Field air_pressure_to_kappa_field = afieldset.field("air_pressure_to_kappa");
-    atlas::Field potential_temperature_field = afieldset.field("air_potential_temperature");
-
-    // Get field arrays
-    auto air_temperature = atlas::array::make_view<double, 2>(air_temperature_field);
-    auto air_pressure_to_kappa = atlas::array::make_view<double, 2>(air_pressure_to_kappa_field);
-    auto potential_temperature = atlas::array::make_view<double, 2>(potential_temperature_field);
-
-    // Grid dimensions
-    size_t h_size = air_temperature_field.shape(0);
-    int v_size = air_temperature_field.shape(1);
-
-    // Calculate the output variable
-    for (int vv = 0; vv < v_size; ++vv) {
-      for ( size_t hh = 0; hh < h_size ; ++hh ) {
-        potential_temperature(hh, vv) = air_temperature(hh, vv) / air_pressure_to_kappa(hh, vv);
-      }
-    }
+    util::for_each_value(
+      [](const double temp,
+         const double ptk,
+         double& ptemp) {
+         ptemp = temp / ptk;
+      },
+      afieldset["air_temperature"],
+      afieldset["air_pressure_to_kappa"],
+      afieldset["air_potential_temperature"]);
 
     oops::Log::trace() << "leaving AirPotentialTemperature_B::executeNL function" << std::endl;
 }

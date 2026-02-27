@@ -9,9 +9,7 @@
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/EastwardWindAt10m.h"
 
@@ -63,54 +61,60 @@ atlas::FunctionSpace uwind_at_10m_A::productFunctionSpace(const atlas::FieldSet
     return afieldset["eastward_wind"].functionspace();
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void uwind_at_10m_A::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering uwind_at_10m_A::executeNL function"
       << std::endl;
 
-    auto eastward_wind_view = atlas::array::make_view<double, 2>(afieldset["eastward_wind"]);
-    auto uwind_at_10m_A_view =
-                              atlas::array::make_view<double, 2>(afieldset["eastward_wind_at_10m"]);
+    util::for_each_column(
+        [](const auto eastward_wind_col,
+           auto uwind_at_10m_A_col) {
+           uwind_at_10m_A_col(0) = eastward_wind_col(0);
+        },
+        afieldset["eastward_wind"],
+        afieldset["eastward_wind_at_10m"]);
 
-    size_t no_of_horizontal_pts = uwind_at_10m_A_view.shape(0);
-    for ( size_t jnode = 0; jnode < no_of_horizontal_pts ; ++jnode ) {
-      uwind_at_10m_A_view(jnode, 0) = eastward_wind_view(jnode, 0);
-    }
     oops::Log::trace() << "leaving uwind_at_10m_A::executeNL function" << std::endl;
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void uwind_at_10m_A::executeTL(atlas::FieldSet & afieldsetTL,
-                                      const atlas::FieldSet & afieldsetTraj)
+                                      const atlas::FieldSet & /*afieldsetTraj*/)
 {
     oops::Log::trace() << "entering uwind_at_10m_A::executeTL function"
         << std::endl;
 
-    auto tl_eastward_wind_view = atlas::array::make_view<double, 2>(afieldsetTL["eastward_wind"]);
-    auto tl_uwind_at_10m_A_view =
-                            atlas::array::make_view<double, 2>(afieldsetTL["eastward_wind_at_10m"]);
+    util::for_each_column(
+        [](const auto tl_eastward_wind_col,
+           auto tl_uwind_at_10m_A_col) {
+           tl_uwind_at_10m_A_col(0) = tl_eastward_wind_col(0);
+        },
+        afieldsetTL["eastward_wind"],
+        afieldsetTL["eastward_wind_at_10m"]);
 
-    size_t no_of_horizontal_pts = tl_uwind_at_10m_A_view.shape(0);
-    for ( size_t jnode = 0; jnode < no_of_horizontal_pts ; ++jnode ) {
-      tl_uwind_at_10m_A_view(jnode, 0) = tl_eastward_wind_view(jnode, 0);
-    }
     oops::Log::trace() << "leaving uwind_at_10m_A::executeTL function" << std::endl;
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void uwind_at_10m_A::executeAD(atlas::FieldSet & afieldsetAD,
-                                      const atlas::FieldSet & afieldsetTraj)
+                                      const atlas::FieldSet & /*afieldsetTraj*/)
 {
     oops::Log::trace() << "entering uwind_at_10m_A::executeAD function"
         << std::endl;
 
-    auto ad_eastward_wind_view = atlas::array::make_view<double, 2>(afieldsetAD["eastward_wind"]);
-    auto ad_uwind_at_10m_A_view =
-                            atlas::array::make_view<double, 2>(afieldsetAD["eastward_wind_at_10m"]);
+    util::for_each_column(
+        [](auto ad_uwind_at_10m_A_col,
+           auto ad_eastward_wind_col) {
+           ad_eastward_wind_col(0) += ad_uwind_at_10m_A_col(0);
+           ad_uwind_at_10m_A_col(0) = 0.0;
+        },
+        afieldsetAD["eastward_wind_at_10m"],
+        afieldsetAD["eastward_wind"]);
 
-    size_t no_of_horizontal_pts = ad_eastward_wind_view.shape(0);
-    for ( size_t jnode = 0; jnode < no_of_horizontal_pts ; ++jnode ) {
-      ad_eastward_wind_view(jnode, 0) += ad_uwind_at_10m_A_view(jnode, 0);
-      ad_uwind_at_10m_A_view(jnode, 0) = 0.0;
-    }
     oops::Log::trace() << "leaving uwind_at_10m_A::executeAD function" << std::endl;
 }
 

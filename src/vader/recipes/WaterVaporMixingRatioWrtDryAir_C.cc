@@ -9,10 +9,7 @@
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/field/for_each.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/WaterVaporMixingRatioWrtDryAir.h"
 
@@ -70,11 +67,13 @@ void WaterVaporMixingRatioWrtDryAir_C::executeNL(atlas::FieldSet & afieldset)
           << "entering WaterVaporMixingRatioWrtDryAir_C::executeNL function"
           << std::endl;
 
-    atlas::field::for_each_value(afieldset["water_vapor_mixing_ratio_wrt_moist_air"],
-                                 afieldset["water_vapor_mixing_ratio_wrt_dry_air"],
-                                 [&](const double q, double& mixr) {
-        mixr = q / (1. - q);
-    });
+    util::for_each_value(
+        [](const double q,
+           double& mixr) {
+           mixr = q / (1. - q);
+        },
+        afieldset["water_vapor_mixing_ratio_wrt_moist_air"],
+        afieldset["water_vapor_mixing_ratio_wrt_dry_air"]);
 
     oops::Log::trace()
           << "leaving WaterVaporMixingRatioWrtDryAir_C::executeNL function"

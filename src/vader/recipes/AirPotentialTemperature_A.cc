@@ -5,13 +5,13 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
 #include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/AirPotentialTemperature.h"
 
@@ -62,6 +62,8 @@ atlas::FunctionSpace AirPotentialTemperature_A::productFunctionSpace
     return afieldset.field("air_temperature").functionspace();
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void AirPotentialTemperature_A::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering AirPotentialTemperature_A::executeNL function"
@@ -71,35 +73,29 @@ void AirPotentialTemperature_A::executeNL(atlas::FieldSet & afieldset)
     const double p0 = configVariables_.getDouble("reference_pressure");
     const double kappa = configVariables_.getDouble("kappa");  // Need better name
 
-    atlas::Field temperature = afieldset.field("air_temperature");
-    atlas::Field surface_pressure = afieldset.field("air_pressure_at_surface");
-    atlas::Field potential_temperature = afieldset.field("air_potential_temperature");
     std::string t_units, ps_units;
 
-    temperature.metadata().get("units", t_units);
+    afieldset.field("air_temperature").metadata().get("units", t_units);
     ASSERT_MSG(t_units == "K", "AirPotentialTemperature_A::executeNL: Incorrect units for "
                             "air_temperature");
-    surface_pressure.metadata().get("units", ps_units);
+    afieldset.field("air_pressure_at_surface").metadata().get("units", ps_units);
     ASSERT_MSG(ps_units == "Pa", "AirPotentialTemperature_A::executeNL: Incorrect units for "
                             "surface_air_pressure");
-    oops::Log::debug() << "AirPotentialTemperature_A::execute: p0 value: " << p0 <<
-        std::endl;
-    oops::Log::debug() << "AirPotentialTemperature_A::execute: kappa value: " << kappa <<
-    std::endl;
+    oops::Log::debug() << "AirPotentialTemperature_A::execute: p0 value: " << p0
+        << std::endl;
+    oops::Log::debug() << "AirPotentialTemperature_A::execute: kappa value: " << kappa
+        << std::endl;
 
-    auto temperature_view = atlas::array::make_view<double, 2>(temperature);
-    auto surface_pressure_view = atlas::array::make_view<double, 2>(surface_pressure);
-    auto potential_temperature_view = atlas::array::make_view<double, 2>(potential_temperature);
+    util::for_each_value(
+      [&](const double temp,
+          const double ps,
+          double& ptemp) {
+          ptemp = temp * std::pow(p0 / ps, kappa);
+      },
+      afieldset["air_temperature"],
+      afieldset["air_pressure_at_surface"],
+      afieldset["air_potential_temperature"]);
 
-    size_t grid_size = surface_pressure.size();
-
-    int nlevels = temperature.shape(1);
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        potential_temperature_view(jnode, level) =
-            temperature_view(jnode, level) * pow(p0 / surface_pressure_view(jnode, 0), kappa);
-      }
-    }
     oops::Log::trace() << "leaving AirPotentialTemperature_A::executeNL function" << std::endl;
 }
 

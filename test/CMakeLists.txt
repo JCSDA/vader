@@ -37,6 +37,7 @@ testinput/vader_CloudIceMixingRatioWrtWetAir_A.yaml
 testinput/vader_CloudLiquidWaterMixingRatioWrtDryAir_A.yaml
 testinput/vader_CloudLiquidWaterMixingRatioWrtDryAir_B.yaml
 testinput/vader_CloudLiquidWaterMixingRatioWrtWetAir_A.yaml
+testinput/vader_DryAirDensity_A.yaml
 testinput/vader_DryAirDensityLevelsMinusOne_A.yaml
 testinput/vader_GeopotentialAtInterface_A.yaml
 testinput/vader_GeopotentialHeight_A.yaml
@@ -274,6 +275,11 @@ ecbuild_add_test( TARGET  test_vader_vader_CloudIceMixingRatioWrtDryAir_B
 ecbuild_add_test( TARGET  test_vader_vader_CloudIceMixingRatioWrtWetAir_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
                   ARGS    "testinput/vader_CloudIceMixingRatioWrtWetAir_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  test_vader_vader_DryAirDensity_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "testinput/vader_DryAirDensity_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  test_vader_vader_DryAirDensityLevelsMinusOne_A

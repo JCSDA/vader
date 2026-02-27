@@ -9,10 +9,7 @@
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/field/for_each.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/SulfateMassFraction.h"
 
@@ -67,11 +64,13 @@ void SulfateMassFraction_A::executeNL(atlas::FieldSet & afieldset)
     const double sulfmw = configVariables_.getDouble("molecular_weight_of_so4");
     const double airmw = configVariables_.getDouble("molecular_weight_of_air");
 
-    atlas::field::for_each_value(afieldset["sulfate_ppmv"],
-                                 afieldset["mass_fraction_of_sulfate_in_air"],
-                                 [&](const double sulf_ppmv, double& sulf_ugkg) {
-        sulf_ugkg = sulf_ppmv * sulfmw / airmw * 1e3;
-    });
+    util::for_each_value(
+        [&](const double sulf_ppmv,
+            double& sulf_ugkg) {
+            sulf_ugkg = sulf_ppmv * sulfmw / airmw * 1e3;
+        },
+        afieldset["sulfate_ppmv"],
+        afieldset["mass_fraction_of_sulfate_in_air"]);
 
     oops::Log::trace() << "leaving SulfateMassFraction_A::executeNL function" << std::endl;
 }

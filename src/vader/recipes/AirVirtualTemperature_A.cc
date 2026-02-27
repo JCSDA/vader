@@ -9,9 +9,7 @@
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/AirVirtualTemperature.h"
 
@@ -68,6 +66,8 @@ atlas::FunctionSpace AirVirtualTemperature_A::productFunctionSpace
     return afieldset.field("air_temperature").functionspace();
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void AirVirtualTemperature_A::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering AirVirtualTemperature_A::executeNL function"
@@ -77,26 +77,20 @@ void AirVirtualTemperature_A::executeNL(atlas::FieldSet & afieldset)
     //           "ratio_of_dry_air_gas_to_water_vapor_constants"
     const double epsilon = configVariables_.getDouble("epsilon");
 
-    atlas::Field temperature = afieldset.field("air_temperature");
-    atlas::Field specific_humidity = afieldset.field("water_vapor_mixing_ratio_wrt_moist_air");
-    atlas::Field virtual_temperature = afieldset.field("virtual_temperature");
+    util::for_each_value(
+        [&](const double temp,
+            const double spechum,
+            double& vTemp) {
+            vTemp = temp * (1.0 + epsilon * spechum);
+        },
+        afieldset["air_temperature"],
+        afieldset["water_vapor_mixing_ratio_wrt_moist_air"],
+        afieldset["virtual_temperature"]);
 
-    auto temperature_view = atlas::array::make_view<double, 2>(temperature);
-    auto specific_humidity_view = atlas::array::make_view<double, 2>(specific_humidity);
-    auto virtual_temperature_view = atlas::array::make_view<double, 2>(virtual_temperature);
-
-    size_t grid_size = temperature.shape(0);
-
-    int nlevels = temperature.shape(1);
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        virtual_temperature_view(jnode, level) =
-            temperature_view(jnode, level) *
-            (1.0 + epsilon * specific_humidity_view(jnode, level));
-      }
-    }
     oops::Log::trace() << "leaving AirVirtualTemperature_A::executeNL function" << std::endl;
 }
+
+// -------------------------------------------------------------------------------------------------
 
 void AirVirtualTemperature_A::executeTL(atlas::FieldSet & afieldsetTL,
                                         const atlas::FieldSet & afieldsetTraj)
@@ -104,35 +98,27 @@ void AirVirtualTemperature_A::executeTL(atlas::FieldSet & afieldsetTL,
     oops::Log::trace() << "entering AirVirtualTemperature_A::executeTL function"
         << std::endl;
 
-    double epsilon = configVariables_.getDouble("epsilon");
+    const double epsilon = configVariables_.getDouble("epsilon");
 
-    atlas::Field traj_temperature = afieldsetTraj.field("air_temperature");
-    atlas::Field traj_specific_humidity =
-                                      afieldsetTraj.field("water_vapor_mixing_ratio_wrt_moist_air");
-    atlas::Field tl_temperature = afieldsetTL.field("air_temperature");
-    atlas::Field tl_specific_humidity = afieldsetTL.field("water_vapor_mixing_ratio_wrt_moist_air");
-    atlas::Field tl_virtual_temperature = afieldsetTL.field("virtual_temperature");
+    util::for_each_value(
+        [&](const double traj_temp,
+            const double traj_spechum,
+            const double tl_temp,
+            const double tl_spechum,
+            double& tl_vTemp) {
+            tl_vTemp = tl_temp * (1.0 + epsilon * traj_spechum) +
+                       traj_temp * epsilon * tl_spechum;
+        },
+        afieldsetTraj["air_temperature"],
+        afieldsetTraj["water_vapor_mixing_ratio_wrt_moist_air"],
+        afieldsetTL["air_temperature"],
+        afieldsetTL["water_vapor_mixing_ratio_wrt_moist_air"],
+        afieldsetTL["virtual_temperature"]);
 
-    auto tl_temperature_view = atlas::array::make_view<double, 2>(tl_temperature);
-    auto traj_temperature_view = atlas::array::make_view<double, 2>(traj_temperature);
-    auto traj_specific_humidity_view = atlas::array::make_view<double, 2>(traj_specific_humidity);
-    auto tl_specific_humidity_view = atlas::array::make_view<double, 2>(tl_specific_humidity);
-    auto tl_virtual_temperature_view = atlas::array::make_view<double, 2>(tl_virtual_temperature);
-
-    size_t grid_size = tl_specific_humidity.shape(0);
-
-    int nlevels = tl_temperature.shape(1);
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        tl_virtual_temperature_view(jnode, level) =
-            tl_temperature_view(jnode, level) *
-            (1.0 + epsilon * traj_specific_humidity_view(jnode, level)) +
-            (traj_temperature_view(jnode, level) * epsilon *
-             tl_specific_humidity_view(jnode, level));
-      }
-    }
     oops::Log::trace() << "leaving AirVirtualTemperature_A::executeTL function" << std::endl;
 }
+
+// -------------------------------------------------------------------------------------------------
 
 void AirVirtualTemperature_A::executeAD(atlas::FieldSet & afieldsetAD,
                                         const atlas::FieldSet & afieldsetTraj)
@@ -140,36 +126,23 @@ void AirVirtualTemperature_A::executeAD(atlas::FieldSet & afieldsetAD,
     oops::Log::trace() << "entering AirVirtualTemperature_A::executeAD function"
         << std::endl;
 
-    double epsilon = configVariables_.getDouble("epsilon");
+    const double epsilon = configVariables_.getDouble("epsilon");
 
-    atlas::Field traj_temperature = afieldsetTraj.field("air_temperature");
-    atlas::Field traj_specific_humidity =
-                                      afieldsetTraj.field("water_vapor_mixing_ratio_wrt_moist_air");
-    atlas::Field ad_temperature = afieldsetAD.field("air_temperature");
-    atlas::Field ad_specific_humidity = afieldsetAD.field("water_vapor_mixing_ratio_wrt_moist_air");
-    atlas::Field ad_virtual_temperature = afieldsetAD.field("virtual_temperature");
-
-    auto ad_temperature_view = atlas::array::make_view<double, 2>(ad_temperature);
-    auto traj_temperature_view = atlas::array::make_view<double, 2>(traj_temperature);
-    auto traj_specific_humidity_view = atlas::array::make_view<double, 2>(traj_specific_humidity);
-    auto ad_specific_humidity_view = atlas::array::make_view<double, 2>(ad_specific_humidity);
-    auto ad_virtual_temperature_view = atlas::array::make_view<double, 2>(ad_virtual_temperature);
-
-    size_t grid_size = ad_specific_humidity.shape(0);
-
-    int nlevels = ad_temperature.shape(1);
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        ad_temperature_view(jnode, level) += ad_virtual_temperature_view(jnode, level) *
-            (1.0 + epsilon * traj_specific_humidity_view(jnode, level));
-
-        ad_specific_humidity_view(jnode, level) +=
-            ad_virtual_temperature_view(jnode, level) * epsilon *
-            traj_temperature_view(jnode, level);
-
-        ad_virtual_temperature_view(jnode, level) = 0.0;
-      }
-    }
+    util::for_each_value(
+        [&](const double traj_temp,
+            const double traj_spechum,
+            double& ad_vTemp,
+            double& ad_temp,
+            double& ad_spechum) {
+            ad_temp += ad_vTemp * (1.0 + epsilon * traj_spechum);
+            ad_spechum += ad_vTemp * epsilon * traj_temp;
+            ad_vTemp = 0.0;
+        },
+        afieldsetTraj["air_temperature"],
+        afieldsetTraj["water_vapor_mixing_ratio_wrt_moist_air"],
+        afieldsetAD["virtual_temperature"],
+        afieldsetAD["air_temperature"],
+        afieldsetAD["water_vapor_mixing_ratio_wrt_moist_air"]);
 
     oops::Log::trace() << "leaving AirVirtualTemperature_A::executeAD function" << std::endl;
 }

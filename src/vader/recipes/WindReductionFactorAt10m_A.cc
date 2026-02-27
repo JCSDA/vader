@@ -5,13 +5,11 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/WindReductionFactorAt10m.h"
 
@@ -22,8 +20,10 @@ namespace vader {
 // Static attribute initialization
 const char WindReductionFactorAt10m_A::Name[] = "WindReductionFactorAt10m_A";
 const oops::Variables WindReductionFactorAt10m_A::Ingredients{
-      std::vector<std::string>{"eastward_wind_at_surface", "northward_wind_at_surface",
-                               "eastward_wind", "northward_wind"}};
+      std::vector<std::string>{"eastward_wind_at_surface",
+                               "northward_wind_at_surface",
+                               "eastward_wind",
+                               "northward_wind"}};
 
 // -------------------------------------------------------------------------------------------------
 
@@ -78,43 +78,37 @@ atlas::FunctionSpace WindReductionFactorAt10m_A::productFunctionSpace(const atla
 
 // -------------------------------------------------------------------------------------------------
 
-void WindReductionFactorAt10m_A::executeNL(atlas::FieldSet & afieldset) {
-    //
+void WindReductionFactorAt10m_A::executeNL(atlas::FieldSet & afieldset)
+{
     oops::Log::trace() << "WindReductionFactorAt10m_A::executeNL Starting" << std::endl;
 
-    // Get the fields
-    atlas::Field uu = afieldset.field("eastward_wind");
-    atlas::Field vv = afieldset.field("northward_wind");
-    atlas::Field u10m = afieldset.field("eastward_wind_at_surface");
-    atlas::Field v10m = afieldset.field("northward_wind_at_surface");
     // output:
     atlas::Field f10m = afieldset.field("wind_reduction_factor_at_10m");
-
-    // Set the units
     f10m.metadata().set("units", "none");
 
-    // Set the array views to manipulate the data
-    auto uu_view = atlas::array::make_view<double, 2>(uu);
-    auto vv_view = atlas::array::make_view<double, 2>(vv);
-    auto u10m_view = atlas::array::make_view<double, 2>(u10m);
-    auto v10m_view = atlas::array::make_view<double, 2>(v10m);
-    auto f10m_view = atlas::array::make_view<double, 2>(f10m);
+    // Reduce by 1 since index begins at 0
+    const int nLevel = afieldset.field("eastward_wind").shape(1) - 1;
 
-    // Get the grid size
-    const int gridSize = uu.shape(0);    // geom%nCells
-    const int nLevel = uu.shape(1) - 1;  // Reduce by 1 since index begins at 0
-
-    // for atlas fields, vertical is: top --> bottom.
-    //
-    for ( size_t jNode = 0; jNode < gridSize ; ++jNode ) {
-        f10m_view(jNode, 0) = sqrt(pow(u10m_view(jNode, 0), 2) + pow(v10m_view(jNode, 0), 2));
-        if (f10m_view(jNode, 0) > 0) {
-          f10m_view(jNode, 0) = f10m_view(jNode, 0)/sqrt(pow(uu_view(jNode, nLevel), 2)
-                               + pow(vv_view(jNode, nLevel), 2));
+    util::for_each_column(
+      [&](const auto uu_10m_col,
+          const auto vv_10m_col,
+          const auto uu_col,
+          const auto vv_col,
+          auto f10m_col) {
+        f10m_col(0) = std::sqrt(std::pow(uu_10m_col(0), 2) + std::pow(vv_10m_col(0), 2));
+        if (f10m_col(0) > 0) {
+            f10m_col(0) = f10m_col(0) / std::sqrt(std::pow(uu_col(nLevel), 2)
+                                      + std::pow(vv_col(nLevel), 2));
         } else {
-          f10m_view(jNode, 0) = 1.0;
+            f10m_col(0) = 1.0;
         }
-    }
+      },
+      afieldset["eastward_wind_at_surface"],
+      afieldset["northward_wind_at_surface"],
+      afieldset["eastward_wind"],
+      afieldset["northward_wind"],
+      f10m);
+
     oops::Log::trace() << "WindReductionFactorAt10m_A::executeNL Done" << std::endl;
 }
 

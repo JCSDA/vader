@@ -70,8 +70,9 @@ void GeopotentialHeight_A::executeNL(atlas::FieldSet & afieldset)
     const double inv_g = 1.0 / grav;
 
     util::for_each_value(
-      [&](const double phi, double& z) {
-        z = phi * inv_g;
+      [&](const double phi,
+          double& z) {
+          z = phi * inv_g;
       },
       afieldset["geopotential"],
       afieldset["geopotential_height"]);
@@ -91,8 +92,9 @@ void GeopotentialHeight_A::executeTL(atlas::FieldSet & afieldsetTL,
     const double inv_g = 1.0 / grav;
 
     util::for_each_value(
-      [&](const double phi_tl, double& z_tl) {
-        z_tl = phi_tl * inv_g;
+      [&](const double phi_tl,
+          double& z_tl) {
+          z_tl = phi_tl * inv_g;
       },
       afieldsetTL["geopotential"],
       afieldsetTL["geopotential_height"]);
@@ -112,9 +114,10 @@ void GeopotentialHeight_A::executeAD(atlas::FieldSet & afieldsetAD,
     const double inv_g = 1.0 / grav;
 
     util::for_each_value(
-      [&](double& phi_ad, double& z_ad) {
-        phi_ad += z_ad * inv_g;
-        z_ad = 0.0;
+      [&](double& phi_ad,
+          double& z_ad) {
+          phi_ad += z_ad * inv_g;
+          z_ad = 0.0;
       },
       afieldsetAD["geopotential"],
       afieldsetAD["geopotential_height"]);

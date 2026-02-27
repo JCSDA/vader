@@ -8,9 +8,7 @@
 #include <cmath>
 #include <iostream>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/DryAirDensity.h"
 
@@ -67,64 +65,54 @@ atlas::FunctionSpace DryAirDensity_A::productFunctionSpace(const atlas::FieldSet
     return afieldset.field("air_pressure").functionspace();
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void DryAirDensity_A::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering DryAirDensity_A::executeNL function"
       << std::endl;
-    double rdgas = 287.58f;
-    atlas::Field air_t = afieldset.field("air_temperature");
-    atlas::Field air_p = afieldset.field("air_pressure");
-    auto air_t_view = atlas::array::make_view<double, 2>(air_t);
-    auto air_p_view = atlas::array::make_view<double, 2>(air_p);
 
-    atlas::Field air_dens = afieldset.field("dry_air_density");
-    auto air_dens_view = atlas::array::make_view<double, 2>(air_dens);
+    const double rdgas = 287.58f;
+    util::for_each_value(
+        [&](const double air_p,
+            const double air_t,
+            double& air_dens) {
+            air_dens = air_p/(rdgas*air_t);
+        },
+        afieldset["air_pressure"],
+        afieldset["air_temperature"],
+        afieldset["dry_air_density"]);
 
-    int nlevels = air_t.shape(1);
-    size_t grid_size = air_t.size()/nlevels;
-
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        air_dens_view(jnode, level) = air_p_view(jnode, level)/(rdgas*air_t_view(jnode, level));
-      }
-    }
     oops::Log::trace() << "leaving DryAirDensity_A::executeNL function" << std::endl;
 }
+
+// -------------------------------------------------------------------------------------------------
 
 void DryAirDensity_A::executeTL(atlas::FieldSet & afieldsetTL,
                                       const atlas::FieldSet & afieldsetTraj)
 {
     oops::Log::trace() << "entering DryAirDensity_A::executeTL function"
         << std::endl;
-    double rdgas = 287.58f;
 
-    atlas::Field air_t = afieldsetTraj.field("air_temperature");
-    atlas::Field air_p = afieldsetTraj.field("air_pressure");
-    auto air_t_view = atlas::array::make_view<double, 2>(air_t);
-    auto air_p_view = atlas::array::make_view<double, 2>(air_p);
+    const double rdgas = 287.58f;
+    util::for_each_value(
+        [&](const double air_p,
+            const double air_t,
+            const double tl_air_p,
+            const double tl_air_t,
+            double& tl_air_dens) {
+            tl_air_dens = tl_air_p /(rdgas*air_t) - tl_air_t * (air_p/rdgas) / (air_t*air_t);
+        },
+        afieldsetTraj["air_pressure"],
+        afieldsetTraj["air_temperature"],
+        afieldsetTL["air_pressure"],
+        afieldsetTL["air_temperature"],
+        afieldsetTL["dry_air_density"]);
 
-    atlas::Field tl_air_t = afieldsetTL.field("air_temperature");
-    atlas::Field tl_air_p = afieldsetTL.field("air_pressure");
-    auto tl_air_t_view = atlas::array::make_view<double, 2>(tl_air_t);
-    auto tl_air_p_view = atlas::array::make_view<double, 2>(tl_air_p);
-
-    atlas::Field tl_air_dens = afieldsetTL.field("dry_air_density");
-    auto tl_air_dens_view = atlas::array::make_view<double, 2>(tl_air_dens);
-
-    int nlevels = air_t.shape(1);
-    size_t grid_size = air_t.size()/nlevels;
-
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        tl_air_dens_view(jnode, level) = tl_air_p_view(jnode, level)
-                                        /(rdgas*air_t_view(jnode, level))
-                                        -tl_air_t_view(jnode, level)
-                                        *(air_p_view(jnode, level)/rdgas)
-                                        /air_t_view(jnode, level)/air_t_view(jnode, level);
-      }
-    }
     oops::Log::trace() << "leaving DryAirDensity_A::executeTL function" << std::endl;
 }
+
+// -------------------------------------------------------------------------------------------------
 
 void DryAirDensity_A::executeAD(atlas::FieldSet & afieldsetAD,
                                       const atlas::FieldSet & afieldsetTraj)
@@ -132,34 +120,23 @@ void DryAirDensity_A::executeAD(atlas::FieldSet & afieldsetAD,
     oops::Log::trace() << "entering DryAirDensity::executeAD function"
         << std::endl;
 
-    double rdgas = 287.58f;
+    const double rdgas = 287.58f;
+    util::for_each_value(
+        [&](const double air_p,
+            const double air_t,
+            double& ad_air_dens,
+            double& ad_air_p,
+            double& ad_air_t) {
+            ad_air_p += ad_air_dens/(rdgas*air_t);
+            ad_air_t += -ad_air_dens * (air_p/rdgas) / (air_t*air_t);
+            ad_air_dens = 0.0;
+        },
+        afieldsetTraj["air_pressure"],
+        afieldsetTraj["air_temperature"],
+        afieldsetAD["dry_air_density"],
+        afieldsetAD["air_pressure"],
+        afieldsetAD["air_temperature"]);
 
-    atlas::Field air_t = afieldsetTraj.field("air_temperature");
-    atlas::Field air_p = afieldsetTraj.field("air_pressure");
-    auto air_t_view = atlas::array::make_view<double, 2>(air_t);
-    auto air_p_view = atlas::array::make_view<double, 2>(air_p);
-
-    atlas::Field ad_air_dens = afieldsetAD.field("dry_air_density");
-    auto ad_air_dens_view = atlas::array::make_view<double, 2>(ad_air_dens);
-
-    atlas::Field ad_air_t = afieldsetAD.field("air_temperature");
-    atlas::Field ad_air_p = afieldsetAD.field("air_pressure");
-    auto ad_air_t_view = atlas::array::make_view<double, 2>(ad_air_t);
-    auto ad_air_p_view = atlas::array::make_view<double, 2>(ad_air_p);
-
-    int nlevels = air_t.shape(1);
-    size_t grid_size = air_t.size()/nlevels;
-
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        ad_air_p_view(jnode, level) +=
-                 ad_air_dens_view(jnode, level)/(rdgas*air_t_view(jnode, level));
-        ad_air_t_view(jnode, level) +=
-                -ad_air_dens_view(jnode, level)*(air_p_view(jnode, level)/rdgas)
-                /air_t_view(jnode, level)/air_t_view(jnode, level);
-        ad_air_dens_view(jnode, level) = 0.0;
-      }
-    }
     oops::Log::trace() << "leaving DryAirDensity_A::executeAD function" << std::endl;
 }
 

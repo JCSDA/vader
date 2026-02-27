@@ -5,7 +5,7 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
@@ -81,11 +81,12 @@ void LnAirPressure_A::executeNL(atlas::FieldSet & afieldset) {
     oops::Log::trace() << "LnAirPressure_A::executeNL Starting" << std::endl;
 
     util::for_each_value(
-      [&](const double p, double& ln_p) {
-        ln_p = std::log(p);
-      },
-      afieldset["air_pressure"],
-      afieldset["ln_air_pressure"]);
+        [](const double p,
+           double& ln_p) {
+           ln_p = std::log(p);
+        },
+        afieldset["air_pressure"],
+        afieldset["ln_air_pressure"]);
 
     oops::Log::trace() << "LnAirPressure_A::executeNL Done" << std::endl;
 }
@@ -97,8 +98,10 @@ void LnAirPressure_A::executeTL(atlas::FieldSet & afieldsetTL,
     oops::Log::trace() << "LnAirPressure_A::executeTL Starting" << std::endl;
 
     util::for_each_value(
-        [&](const double p, const double p_tl, double& ln_p_tl) {
-          ln_p_tl = p_tl / p;
+        [](const double p,
+           const double p_tl,
+           double& ln_p_tl) {
+           ln_p_tl = p_tl / p;
         },
         afieldsetTraj["air_pressure"],
         afieldsetTL["air_pressure"],
@@ -114,15 +117,17 @@ void LnAirPressure_A::executeAD(atlas::FieldSet & afieldsetAD,
     oops::Log::trace() << "LnAirPressure_A::executeAD Starting" << std::endl;
 
     util::for_each_value(
-      [&](const double p, double& p_ad, double& ln_p_ad) {
-        if (ln_p_ad != 0.0) {
-          p_ad += ln_p_ad / p;
-          ln_p_ad = 0.0;
-        }
-      },
-      afieldsetTraj["air_pressure"],
-      afieldsetAD["air_pressure"],
-      afieldsetAD["ln_air_pressure"]);
+        [](const double p,
+           double& p_ad,
+           double& ln_p_ad) {
+           if (ln_p_ad != 0.0) {
+               p_ad += ln_p_ad / p;
+               ln_p_ad = 0.0;
+           }
+        },
+        afieldsetTraj["air_pressure"],
+        afieldsetAD["air_pressure"],
+        afieldsetAD["ln_air_pressure"]);
 
     oops::Log::trace() << "LnAirPressure_A::executeAD Done" << std::endl;
 }

@@ -5,15 +5,14 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/ParticulateMatter2p5.h"
+
 using std::vector;
 using std::string;
 
@@ -151,68 +150,64 @@ atlas::FunctionSpace ParticulateMatter2p5_A::productFunctionSpace
     return afieldset.field(AERO6_INGREDIENTS[4]).functionspace();
 }
 
+// -------------------------------------------------------------------------------------------------
+
 void ParticulateMatter2p5_A::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering ParticulateMatter2p5_A::executeNL function"
         << std::endl;
 
-    atlas::Field pm25at = afieldset.field(AERO6_INGREDIENTS[0]);
-    atlas::Field pm25ac = afieldset.field(AERO6_INGREDIENTS[1]);
-    atlas::Field pm25co = afieldset.field(AERO6_INGREDIENTS[2]);
-    atlas::Field airdens = afieldset.field(AERO6_INGREDIENTS[3]);
-    atlas::Field mass_density_of_particulate_matter_2p5_in_air =
-             afieldset.field("mass_density_of_particulate_matter_2p5_in_air");
+    //  Number of aerosol variables
+    const int nvars = AERO6_INGREDIENTS.size();
+    //  Assign index where the first aerosol variable starts
+    const int ivar_start = 4;
 
-    auto pm25at_view = atlas::array::make_view<double, 2>(pm25at);
-    auto pm25ac_view = atlas::array::make_view<double, 2>(pm25ac);
-    auto pm25co_view = atlas::array::make_view<double, 2>(pm25co);
-    auto airdens_view = atlas::array::make_view<double, 2>(airdens);
-
-    auto mass_density_of_particulate_matter_2p5_in_air_view =
-           atlas::array::make_view<double, 2>(mass_density_of_particulate_matter_2p5_in_air);
-
-    int nlevels = pm25at.shape(1);
-    size_t grid_size = pm25at.size()/nlevels;
-    int nvars = AERO6_INGREDIENTS.size();
-//  Assign array position where the first aerosal variable starts
-    int ivar_start = 4;
-
-//  Initilaze returned output variable
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) = 0.0;
-      }
-    }
+    // Initialize the output variable at 0.0
+    util::for_each_value(
+      [](double& mass_density_of_particulate_matter_2p5_in_air) {
+         mass_density_of_particulate_matter_2p5_in_air = 0.0;
+      },
+      afieldset["mass_density_of_particulate_matter_2p5_in_air"]);
 
     for (int ivar = ivar_start; ivar < nvars; ++ivar) {
-      atlas::Field tmp = afieldset.field(AERO6_INGREDIENTS[ivar]);
-      auto tmp_view = atlas::array::make_view<double, 2>(tmp);
-      for (int level = 0; level < nlevels; ++level) {
-        for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-          switch (imodes[ivar]) {
-          case 1:
-            mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) +=
-              tmp_view(jnode, level)*pm25at_view(jnode, level)*airdens_view(jnode, level);
-            break;
-          case 2:
-            mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) +=
-              tmp_view(jnode, level)*pm25ac_view(jnode, level)*airdens_view(jnode, level);
-            break;
-          case 3:
-            mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) +=
-              tmp_view(jnode, level)*pm25co_view(jnode, level)*airdens_view(jnode, level);
-            break;
-          default:
-            oops::Log::trace() << "ParticulateMatter2p5_A::execute: imodes must be [1, 2, 3]!"
-                               << (imodes[ivar]) << std::endl;
-            throw eckit::Exception(
-                         "ParticulateMatter2p5_A:: imodes value is invalid. STOP!!!", Here());
-          }
-        }
-      }
+      util::for_each_value(
+        [&](const double ingredient_var,
+            const double pm25at,
+            const double pm25ac,
+            const double pm25co,
+            const double airdens,
+            double& mass_density_of_particulate_matter_2p5_in_air) {
+            switch (imodes[ivar]) {
+            case 1:
+              mass_density_of_particulate_matter_2p5_in_air +=
+                ingredient_var * pm25at * airdens;
+              break;
+            case 2:
+              mass_density_of_particulate_matter_2p5_in_air +=
+                ingredient_var * pm25ac * airdens;
+              break;
+            case 3:
+              mass_density_of_particulate_matter_2p5_in_air +=
+                ingredient_var * pm25co * airdens;
+              break;
+            default:
+              oops::Log::trace() << "ParticulateMatter2p5_A::execute: imodes must be [1, 2, 3]!"
+                                << (imodes[ivar]) << std::endl;
+              throw eckit::Exception(
+                          "ParticulateMatter2p5_A:: imodes value is invalid. STOP!!!", Here());
+            }
+            },
+        afieldset[AERO6_INGREDIENTS[ivar]],
+        afieldset[AERO6_INGREDIENTS[0]],
+        afieldset[AERO6_INGREDIENTS[1]],
+        afieldset[AERO6_INGREDIENTS[2]],
+        afieldset[AERO6_INGREDIENTS[3]],
+        afieldset["mass_density_of_particulate_matter_2p5_in_air"]);
     }
     oops::Log::trace() << "leaving ParticulateMatter2p5_A::executeNL function" << std::endl;
 }
+
+// -------------------------------------------------------------------------------------------------
 
 void ParticulateMatter2p5_A::executeTL(atlas::FieldSet & afieldsetTL,
                                         const atlas::FieldSet & afieldsetTraj)
@@ -220,65 +215,58 @@ void ParticulateMatter2p5_A::executeTL(atlas::FieldSet & afieldsetTL,
     oops::Log::trace() << "entering ParticulateMatter2p5_A::executeTL function"
         << std::endl;
 
-    atlas::Field pm25at = afieldsetTraj.field(AERO6_INGREDIENTS[0]);
-    atlas::Field pm25ac = afieldsetTraj.field(AERO6_INGREDIENTS[1]);
-    atlas::Field pm25co = afieldsetTraj.field(AERO6_INGREDIENTS[2]);
-    atlas::Field airdens = afieldsetTraj.field(AERO6_INGREDIENTS[3]);
+    //  Number of aerosol variables
+    const int nvars = AERO6_INGREDIENTS.size();
+    //  Assign array position where the first aerosol variable starts
+    const int ivar_start = 4;
 
-    atlas::Field tl_mass_density_of_particulate_matter_2p5_in_air =
-      afieldsetTL.field("mass_density_of_particulate_matter_2p5_in_air");
-
-    auto pm25at_view = atlas::array::make_view<double, 2>(pm25at);
-    auto pm25ac_view = atlas::array::make_view<double, 2>(pm25ac);
-    auto pm25co_view = atlas::array::make_view<double, 2>(pm25co);
-    auto airdens_view = atlas::array::make_view<double, 2>(airdens);
-
-    auto tl_mass_density_of_particulate_matter_2p5_in_air_view =
-      atlas::array::make_view<double, 2>(tl_mass_density_of_particulate_matter_2p5_in_air);
-
-
-    int nlevels = pm25at.shape(1);
-    size_t grid_size = pm25at.size()/nlevels;
-    int nvars = AERO6_INGREDIENTS.size();
-//  Assign array position where the first aerosal variable starts
-    int ivar_start = 4;
-
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        tl_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) = 0.0;
-      }
-    }
+    // Initialize the output variable at 0.0
+    util::for_each_value(
+      [](double& tl_mass_density_of_particulate_matter_2p5_in_air) {
+         tl_mass_density_of_particulate_matter_2p5_in_air = 0.0;
+      },
+      afieldsetTL["mass_density_of_particulate_matter_2p5_in_air"]);
 
     for (int ivar = ivar_start; ivar < nvars; ++ivar) {
-      atlas::Field tmp = afieldsetTL.field(AERO6_INGREDIENTS[ivar]);
-      auto tmp_view = atlas::array::make_view<double, 2>(tmp);
-      for (int level = 0; level < nlevels; ++level) {
-        for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-          switch (imodes[ivar]) {
-          case 1:
-            tl_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) +=
-              tmp_view(jnode, level)*pm25at_view(jnode, level)*airdens_view(jnode, level);
-            break;
-          case 2:
-            tl_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) +=
-              tmp_view(jnode, level)*pm25ac_view(jnode, level)*airdens_view(jnode, level);
-            break;
-          case 3:
-            tl_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) +=
-              tmp_view(jnode, level)*pm25co_view(jnode, level)*airdens_view(jnode, level);
-            break;
-          default:
-            oops::Log::trace() << "ParticulateMatter2p5_A::execute: imodes must be [1, 2 ,3]!"
-                               << (imodes[ivar]) << std::endl;
-            throw eckit::Exception(
-                         "ParticulateMatter2p5_A:: imodes value is invalid. STOP!!!", Here());
+      util::for_each_value(
+        [&](const double pm25at,
+            const double pm25ac,
+            const double pm25co,
+            const double airdens,
+            const double tl_ingredient_var,
+            double& tl_mass_density_of_particulate_matter_2p5_in_air) {
+            switch (imodes[ivar]) {
+            case 1:
+              tl_mass_density_of_particulate_matter_2p5_in_air +=
+                tl_ingredient_var * pm25at * airdens;
+              break;
+            case 2:
+              tl_mass_density_of_particulate_matter_2p5_in_air +=
+                tl_ingredient_var * pm25ac * airdens;
+              break;
+            case 3:
+              tl_mass_density_of_particulate_matter_2p5_in_air +=
+                tl_ingredient_var * pm25co * airdens;
+              break;
+            default:
+              oops::Log::trace() << "ParticulateMatter2p5_A::execute: imodes must be [1, 2 ,3]!"
+                                << (imodes[ivar]) << std::endl;
+              throw eckit::Exception(
+                          "ParticulateMatter2p5_A:: imodes value is invalid. STOP!!!", Here());
           }
-        }
-      }
+        },
+        afieldsetTraj[AERO6_INGREDIENTS[0]],
+        afieldsetTraj[AERO6_INGREDIENTS[1]],
+        afieldsetTraj[AERO6_INGREDIENTS[2]],
+        afieldsetTraj[AERO6_INGREDIENTS[3]],
+        afieldsetTL[AERO6_INGREDIENTS[ivar]],
+        afieldsetTL["mass_density_of_particulate_matter_2p5_in_air"]);
     }
+
     oops::Log::trace() << "leaving ParticulateMatter2p5_A::executeTL function" << std::endl;
 }
 
+// -------------------------------------------------------------------------------------------------
 
 void ParticulateMatter2p5_A::executeAD(atlas::FieldSet & afieldsetAD,
                                         const atlas::FieldSet & afieldsetTraj)
@@ -286,65 +274,56 @@ void ParticulateMatter2p5_A::executeAD(atlas::FieldSet & afieldsetAD,
     oops::Log::trace() << "entering ParticulateMatter2p5_A::executeAD function"
         << std::endl;
 
-    atlas::Field pm25at = afieldsetTraj.field(AERO6_INGREDIENTS[0]);
-    atlas::Field pm25ac = afieldsetTraj.field(AERO6_INGREDIENTS[1]);
-    atlas::Field pm25co = afieldsetTraj.field(AERO6_INGREDIENTS[2]);
-    atlas::Field airdens = afieldsetTraj.field(AERO6_INGREDIENTS[3]);
-
-    atlas::Field ad_mass_density_of_particulate_matter_2p5_in_air =
-                   afieldsetAD.field("mass_density_of_particulate_matter_2p5_in_air");
-
-
-    auto pm25at_view = atlas::array::make_view<double, 2>(pm25at);
-    auto pm25ac_view = atlas::array::make_view<double, 2>(pm25ac);
-    auto pm25co_view = atlas::array::make_view<double, 2>(pm25co);
-    auto airdens_view = atlas::array::make_view<double, 2>(airdens);
-
-    auto ad_mass_density_of_particulate_matter_2p5_in_air_view =
-           atlas::array::make_view<double, 2>(ad_mass_density_of_particulate_matter_2p5_in_air);
-
-    int nlevels = pm25at.shape(1);
-    size_t grid_size = pm25at.size()/nlevels;
-    int nvars = AERO6_INGREDIENTS.size();
-//  Assign array position where the first aerosal variable starts
-    int ivar_start = 4;
+    //  Number of aerosol variables
+    const int nvars = AERO6_INGREDIENTS.size();
+    //  Assign array position where the first aerosol variable starts
+    const int ivar_start = 4;
 
     for (int ivar = ivar_start; ivar < nvars; ++ivar) {
-      atlas::Field tmp = afieldsetAD.field(AERO6_INGREDIENTS[ivar]);
-      auto tmp_view = atlas::array::make_view<double, 2>(tmp);
-      for (int level = 0; level < nlevels; ++level) {
-        for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-          switch (imodes[ivar]) {
-          case 1:
-            tmp_view(jnode, level) +=
-              ad_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level)*
-              pm25at_view(jnode, level)*airdens_view(jnode, level);
-            break;
-          case 2:
-            tmp_view(jnode, level) +=
-              ad_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level)*
-              pm25ac_view(jnode, level)*airdens_view(jnode, level);
-            break;
-          case 3:
-            tmp_view(jnode, level) +=
-              ad_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level)*
-              pm25co_view(jnode, level)*airdens_view(jnode, level);
-            break;
-          default:
-            oops::Log::trace() << "ParticulateMatter2p5_A::execute: imodes must be [1, 2, 3]!"
-                               << (imodes[ivar]) << std::endl;
-            throw eckit::Exception(
-                         "ParticulateMatter2p5_A:: imodes value is invalid. STOP!!!", Here());
-          }
-        }
-      }
+      oops::Log::info() << "entering ParticulateMatter2p5_A::executeAD function for variable "
+                         << AERO6_INGREDIENTS[ivar] << std::endl;
+      util::for_each_value(
+        [&](const double pm25at,
+            const double pm25ac,
+            const double pm25co,
+            const double airdens,
+            const double ad_mass_density_of_particulate_matter_2p5_in_air,
+            double& ad_ingredient_var) {
+            switch (imodes[ivar]) {
+            case 1:
+              ad_ingredient_var +=
+                ad_mass_density_of_particulate_matter_2p5_in_air * pm25at * airdens;
+              break;
+            case 2:
+              ad_ingredient_var +=
+                ad_mass_density_of_particulate_matter_2p5_in_air * pm25ac * airdens;
+              break;
+            case 3:
+              ad_ingredient_var +=
+                ad_mass_density_of_particulate_matter_2p5_in_air * pm25co * airdens;
+              break;
+            default:
+              oops::Log::trace() << "ParticulateMatter2p5_A::execute: imodes must be [1, 2, 3]!"
+                                  << (imodes[ivar]) << std::endl;
+              throw eckit::Exception(
+                            "ParticulateMatter2p5_A:: imodes value is invalid. STOP!!!", Here());
+            }
+        },
+        afieldsetTraj[AERO6_INGREDIENTS[0]],
+        afieldsetTraj[AERO6_INGREDIENTS[1]],
+        afieldsetTraj[AERO6_INGREDIENTS[2]],
+        afieldsetTraj[AERO6_INGREDIENTS[3]],
+        afieldsetAD["mass_density_of_particulate_matter_2p5_in_air"],
+        afieldsetAD[AERO6_INGREDIENTS[ivar]]);
     }
 
-    for (int level = 0; level < nlevels; ++level) {
-      for ( size_t jnode = 0; jnode < grid_size ; ++jnode ) {
-        ad_mass_density_of_particulate_matter_2p5_in_air_view(jnode, level) = 0.0f;
-      }
-    }
+    util::for_each_value(
+      [](double& ad_mass_density_of_particulate_matter_2p5_in_air) {
+         ad_mass_density_of_particulate_matter_2p5_in_air = 0.0;
+      },
+      afieldsetAD["mass_density_of_particulate_matter_2p5_in_air"]);
+
+
     oops::Log::trace() << "leaving ParticulateMatter2p5_A::executeAD function" << std::endl;
 }
 

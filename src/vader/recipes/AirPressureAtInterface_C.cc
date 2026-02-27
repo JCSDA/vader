@@ -5,13 +5,11 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <vector>
 
-#include "atlas/array.h"
-#include "atlas/field/Field.h"
-#include "atlas/util/Metadata.h"
+#include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/recipes/AirPressureAtInterface.h"
 
@@ -78,7 +76,6 @@ atlas::FunctionSpace AirPressureAtInterface_C::productFunctionSpace(const atlas:
 // -------------------------------------------------------------------------------------------------
 
 void AirPressureAtInterface_C::executeNL(atlas::FieldSet & afieldset) {
-    //
     oops::Log::trace() << "AirPressureAtInterface_C::executeNL Starting" << std::endl;
 
     // Get the input fields
@@ -93,48 +90,36 @@ void AirPressureAtInterface_C::executeNL(atlas::FieldSet & afieldset) {
     p.metadata().get("units", p_units);
     prsi.metadata().set("units", p_units);
 
-    // Set the array views to manipulate the data
-    auto zgrid_view = atlas::array::make_view<double, 2>(zgrid);
-    auto p_view = atlas::array::make_view<double, 2>(p);
-    auto ps_view = atlas::array::make_view<double, 2>(ps);
-    auto prsi_view = atlas::array::make_view<double, 2>(prsi);
-
-    // Get the grid size
-    const int gridSize = zgrid.shape(0);    // geom%nCells
     const int nLevel = zgrid.shape(1) - 1;  // Reduce by 1 since index begins at 0
 
-    // for atlas, vertical is top --> bottom. Start from bottom to top
-    // Set pressure at the bottom to surface pressure
-    for ( size_t jNode = 0; jNode < gridSize ; ++jNode ) {
-        prsi_view(jNode, nLevel) = ps_view(jNode, 0);
-    }
-
-    // Interpolate linearly pressure log(p) to geometrical height levels (zgrid)
-    // (follow MPAS-JEDI subroutine pressure_half_to_full). start from bottom to top
-    //
-    for (int level = nLevel-1; level >=1; --level) {
-        for ( size_t jNode = 0; jNode < gridSize ; ++jNode ) {
-            double w1 = (zgrid_view(jNode, level) - zgrid_view(jNode, level+1))
-                        /(zgrid_view(jNode, level-1) - zgrid_view(jNode, level+1));
+    util::for_each_column(
+        [&](const auto p_col,
+            const auto ps_col,
+            const auto zgrid_col,
+            auto prsi_col) {
+            // Set pressure at the bottom to surface pressure
+            prsi_col(nLevel) = ps_col(0);
+            // Interpolate linearly pressure log(p) to geometrical height levels (zgrid)
+            for (int level = nLevel-1; level >= 1; --level) {
+                double w1 = (zgrid_col(level) - zgrid_col(level+1))
+                            /(zgrid_col(level-1) - zgrid_col(level+1));
+                double w2 = 1.0 - w1;
+                prsi_col(level) = std::exp(w1*std::log(p_col(level)) + w2*std::log(p_col(level+1)));
+            }
+            // Extrapolate for the top level
+            double z0 = zgrid_col(0);
+            double z1 = 0.5*(z0 + zgrid_col(1));
+            double z2 = 0.5*(z1 + zgrid_col(2));
+            double w1 = (z0-z2)/(z1-z2);
             double w2 = 1.0 - w1;
-            prsi_view(jNode, level) = exp(w1*log(p_view(jNode, level))
-                        + w2*log(p_view(jNode, level+1)));
-        }
-            std::cout << std::scientific << prsi_view(2, level) << '\n';
-    }
+            prsi_col(0) = std::exp(w1*std::log(p_col(1))
+                                   + w2*std::log(p_col(2)) );
+        },
+        p,
+        ps,
+        zgrid,
+        prsi);
 
-    // Extrapolate for the top level
-    int level = 0;
-    for ( size_t jNode = 0; jNode < gridSize ; ++jNode ) {
-        double z0 = zgrid_view(jNode, level);
-        double z1 = 0.5*(zgrid_view(jNode, level) + zgrid_view(jNode, level+1));
-        double z2 = 0.5*(zgrid_view(jNode, level+1) + zgrid_view(jNode, level+2));
-        double w1 = (z0-z2)/(z1-z2);
-        double w2 = 1.0 - w1;
-        prsi_view(jNode, level) = exp(w1*log(p_view(jNode, level+1))
-                                  + w2*log(p_view(jNode, level+2)) );
-        std::cout << std::scientific << prsi_view(jNode, level) << '\n';
-    }
     oops::Log::trace() << "AirPressureAtInterface_C::executeNL Done" << std::endl;
 }
 

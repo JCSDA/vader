@@ -68,8 +68,9 @@ void HeightAboveMeanSeaLevelAtSurface_A::executeNL(atlas::FieldSet & afieldset)
     oops::Log::trace() << "entering HeightAboveMeanSeaLevelAtSurface_A::executeNL" << std::endl;
 
     util::for_each_value(
-      [&](const double z_surf, double& z_surf_sea) {
-        z_surf_sea = z_surf;
+      [](const double z_surf,
+         double& z_surf_sea) {
+         z_surf_sea = z_surf;
       },
       afieldset["geopotential_height_at_surface"],
       afieldset["height_above_mean_sea_level_at_surface"]);
@@ -86,8 +87,9 @@ void HeightAboveMeanSeaLevelAtSurface_A::executeTL(atlas::FieldSet & afieldsetTL
       << std::endl;
 
     util::for_each_value(
-      [&](const double z_surf_tl, double& z_surf_sea_tl) {
-        z_surf_sea_tl = z_surf_tl;
+      [](const double z_surf_tl,
+         double& z_surf_sea_tl) {
+         z_surf_sea_tl = z_surf_tl;
       },
       afieldsetTL["geopotential_height_at_surface"],
       afieldsetTL["height_above_mean_sea_level_at_surface"]);
@@ -105,9 +107,10 @@ void HeightAboveMeanSeaLevelAtSurface_A::executeAD(atlas::FieldSet & afieldsetAD
       << std::endl;
 
     util::for_each_value(
-      [&](double& z_surf_ad, double& z_surf_sea_ad) {
-        z_surf_ad += z_surf_sea_ad;
-        z_surf_sea_ad = 0.0;
+      [](double& z_surf_ad,
+         double& z_surf_sea_ad) {
+         z_surf_ad += z_surf_sea_ad;
+         z_surf_sea_ad = 0.0;
       },
       afieldsetAD["geopotential_height_at_surface"],
       afieldsetAD["height_above_mean_sea_level_at_surface"]);
