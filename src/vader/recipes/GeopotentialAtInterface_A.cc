@@ -105,12 +105,16 @@ void GeopotentialAtInterface_A::executeNL(atlas::FieldSet & afieldset)
         const auto ln_p_col,
         const auto ln_p_int_col,
         auto phi_int_col) {
-        double tv_layer_0 = 0.5 * (tv_col(0) + tv_col(1));
         double dln_top = ln_p_col(0) - ln_p_int_col(0);
-        phi_int_col(0) = phi_col(0) + rdry * tv_layer_0 * dln_top;
+        phi_int_col(0) = phi_col(0) + rdry * tv_col(0) * dln_top;
 
         for (int k = 0; k < nint - 1; ++k) {
-            double tv_layer_k = 0.5 * (tv_col(k) + tv_col(k + 1));
+            double tv_layer_k;
+            if (k < nlev - 1) {
+                tv_layer_k = 0.5 * (tv_col(k) + tv_col(k + 1));
+            } else {
+                tv_layer_k = tv_col(k);
+            }
             double dln = ln_p_int_col(k + 1) - ln_p_int_col(k);
             phi_int_col(k + 1) = phi_int_col(k) - rdry * tv_layer_k * dln;
         }
@@ -147,6 +151,13 @@ void GeopotentialAtInterface_A::executeTL(atlas::FieldSet & afieldsetTL,
         ABORT("GeopotentialAtInterface_A::executeTL: need at least 2 full levels and 2 interfaces");
     }
 
+    if (nint != nlev + 1) {
+        oops::Log::error() << "GeopotentialAtInterface_A::executeTL: number of interfaces "
+               "must be one more than the number of full levels" << std::endl;
+        ABORT("GeopotentialAtInterface_A::executeTL: number of interfaces "
+              "must be one more than the number of full levels");
+    }
+
     util::for_each_column(
     [&](const auto phi_tl_col,
         const auto tv_tl_col,
@@ -154,12 +165,16 @@ void GeopotentialAtInterface_A::executeTL(atlas::FieldSet & afieldsetTL,
         const auto ln_p_int_col,
         auto phi_int_tl_col) {
         double dln_top = ln_p_col(0) - ln_p_int_col(0);
-        double tv_layer_tl_0 = 0.5 * (tv_tl_col(0) + tv_tl_col(1));
-        phi_int_tl_col(0) = phi_tl_col(0) + rdry * tv_layer_tl_0 * dln_top;
+        phi_int_tl_col(0) = phi_tl_col(0) + rdry * tv_tl_col(0) * dln_top;
 
         for (int k = 0; k < nint - 1; ++k) {
+            double tv_layer_tl_k;
+            if (k < nlev - 1) {
+                tv_layer_tl_k = 0.5 * (tv_tl_col(k) + tv_tl_col(k + 1));
+            } else {
+                tv_layer_tl_k = tv_tl_col(k);
+            }
             double dln = ln_p_int_col(k + 1) - ln_p_int_col(k);
-            double tv_layer_tl_k = 0.5 * (tv_tl_col(k) + tv_tl_col(k + 1));
             phi_int_tl_col(k + 1) = phi_int_tl_col(k) - rdry * tv_layer_tl_k * dln;
         }
     },
@@ -195,26 +210,39 @@ void GeopotentialAtInterface_A::executeAD(atlas::FieldSet & afieldsetAD,
         ABORT("GeopotentialAtInterface_A::executeAD: need at least 2 full levels and 2 interfaces");
     }
 
+    if (nint != nlev + 1) {
+        oops::Log::error() << "GeopotentialAtInterface_A::executeTL: number of interfaces "
+               "must be one more than the number of full levels" << std::endl;
+        ABORT("GeopotentialAtInterface_A::executeTL: number of interfaces "
+              "must be one more than the number of full levels");
+    }
+
     util::for_each_column(
         [&](const auto ln_p_col,
             const auto ln_p_int_col,
             auto phi_ad_col,
             auto tv_ad_col,
             auto phi_int_ad_col) {
-            std::vector<double> tv_layer_ad(nlev - 1, 0.0);
-            for (int k = nlev - 2; k >= 0; --k) {
+            std::vector<double> tv_layer_ad(nlev, 0.0);
+            for (int k = nlev - 1; k >= 0; --k) {
                 double dln = ln_p_int_col(k + 1) - ln_p_int_col(k);
                 tv_layer_ad[k] -= rdry * phi_int_ad_col(k + 1) * dln;
                 phi_int_ad_col(k) += phi_int_ad_col(k + 1);
                 phi_int_ad_col(k + 1) = 0.0;
             }
+
             double dln_top = ln_p_col(0) - ln_p_int_col(0);
-            tv_layer_ad[0] += rdry * phi_int_ad_col(0) * dln_top;
+            tv_ad_col(0) += rdry * phi_int_ad_col(0) * dln_top;
             phi_ad_col(0) += phi_int_ad_col(0);
             phi_int_ad_col(0) = 0.0;
-            for (int k = 0; k < nlev - 1; ++k) {
-                tv_ad_col(k) += 0.5 * tv_layer_ad[k];
-                tv_ad_col(k + 1) += 0.5 * tv_layer_ad[k];
+
+            for (int k = 0; k < nlev; ++k) {
+                if (k < nlev - 1) {
+                    tv_ad_col(k)     += 0.5 * tv_layer_ad[k];
+                    tv_ad_col(k + 1) += 0.5 * tv_layer_ad[k];
+                } else {
+                    tv_ad_col(k)     += tv_layer_ad[k];
+                }
             }
         },
         ln_p,
