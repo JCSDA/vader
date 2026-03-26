@@ -42,7 +42,7 @@ jobs:
         with:
           container_version: 'latest'
           unittest_tag: 'vader'
-          unittest_dependencies: oops jedi-model-data
+          test_dependencies: oops jedi-model-data
           test_script: run_tests.sh
           target_repo_dir: target_repository
           bundle_branch: develop
