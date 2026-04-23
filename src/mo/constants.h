@@ -42,23 +42,24 @@ namespace constants {
   static constexpr double tol = 1.0e-5;
 
   static constexpr double p_zero = 1.0e5;
-  static constexpr double zerodegc = 273.15;             // conversion between degrees Celsius
-                                                         // and Kelvin
+  static constexpr double zerodegc = 273.15;              // conversion between degrees Celsius
+                                                          // and Kelvin
   static constexpr double deg2rad        = M_PI / 180.;
   static constexpr double rad2deg        = 180. * M_1_PI;
   static constexpr double grav           = 9.80665e+0;
-  static constexpr double t0c            = 2.7315e+2;    // temperature at zero celsius (K)
-  static constexpr double ttp            = 2.7316e+2;    // temperature at h2o triple point (K)
-  static constexpr double rd             = 2.8705e2;
+  static constexpr double t0c            = 2.7315e+2;     // temperature at zero celsius (K)
+  static constexpr double ttp            = 2.7316e+2;     // temperature at h2o triple point (K)
+  static constexpr double rd             = 2.8705e2;      // specific gas constant (J kg-1 K-1)
   static constexpr double rv             = 4.6150e2;
-  static constexpr double cp             = 1.0046e3;     // heat capacity at constant pressure
-                                                         //      for air
-  static constexpr double cv             = 7.1760e2;     // heat capacity at constant volume
-                                                         //      for air
-  static constexpr double rspec          = cp - cv;      // specific gas constant for dry air
+  static constexpr double cp             = 1.0046e3;      // heat capacity at constant pressure
+                                                          //      for air
+  static constexpr double cv             = 7.1760e2;      // heat capacity at constant volume
+                                                          //      for air
+  static constexpr double k_B            = 1.380649e-23;  // Boltzmann constant (J K-1)
+  static constexpr double rspec          = cp - cv;       // specific gas constant for dry air
   static constexpr double rspec_over_cp  = rspec / cp;
-  static constexpr double pref           = 1.0e5;        // Reference pressure for calculating
-                                                         //      exner
+  static constexpr double pref           = 1.0e5;         // Reference pressure for calculating
+                                                          //      exner
   static constexpr double rd_over_rv     = rd / rv;
   static constexpr double rd_over_cp     = rd / cp;
   static constexpr double cv_over_cp     = cv / cp;
@@ -117,6 +118,15 @@ namespace constants {
   static constexpr double icao_pressure_surface = 1013.25;  // Assumed surface pressure [hPa]
   static constexpr double icao_pressure_l   = 226.32;    // Assumed pressure at 11,000 gpm [hPa]
   static constexpr double icao_pressure_u   = 54.7487;   // Assumed pressure at 20,000 gpm [hPa]
+
+  // Constants for transforms between CLASSIC 2-bin dust and UKCA/GLOMAP 2-mode dust variables
+  static constexpr double glomap_dust_density = 2650;  // assumed density of dust (kg m-3)
+  static constexpr double sigma_acc = 1.59;  // modal width of the accumulation mode (unitless)
+  static constexpr double sigma_coarse = 2.0;  // modal width of the coarse mode (unitless)
+  static constexpr double Dmin_bin1 = 0.2e-6;  // minimum diameter of 2-bin dust in bin 1 (m)
+  static constexpr double Dmax_bin1 = 4e-6;  // maximum diameter of 2-bin dust in bin 1 (m)
+  static constexpr double Dmin_bin2 = 4e-6;  // minimum diameter of 2-bin dust in bin 2 (m)
+  static constexpr double Dmax_bin2 = 2e-5;   // maximum diameter of 2-bin dust in bin 2 (m)
 
 }  // namespace constants
 }  // namespace mo

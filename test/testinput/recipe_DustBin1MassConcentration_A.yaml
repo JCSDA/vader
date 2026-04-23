@@ -1,0 +1,7 @@
+recipe:
+  recipe name: DustBin1MassConcentration_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/dust_gauss_state_F12_lfric2um.nc
+nonlinear test tolerance: 1.e-12

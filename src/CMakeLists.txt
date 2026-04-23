@@ -43,6 +43,10 @@ vader/recipes/DryAirDensity.h
 vader/recipes/DryAirDensity_A.cc
 vader/recipes/DryAirDensityLevelsMinusOne.h
 vader/recipes/DryAirDensityLevelsMinusOne_A.cc
+mo/recipes/DustBin1MassConcentration.h
+mo/recipes/DustBin1MassConcentration_A.cc
+mo/recipes/DustBin2MassConcentration.h
+mo/recipes/DustBin2MassConcentration_A.cc
 vader/recipes/GeopotentialAtInterface_A.cc
 vader/recipes/GeopotentialAtInterface.h
 vader/recipes/GeopotentialHeight_A.cc
@@ -131,6 +135,8 @@ mo/eval_air_density.h
 mo/eval_air_density.cc
 mo/eval_dry_air_density.h
 mo/eval_dry_air_density.cc
+mo/eval_dust_2bin_mass_concentration.h
+mo/eval_dust_2bin_mass_concentration.cc
 mo/eval_exner.h
 mo/eval_exner.cc
 mo/eval_geostrophic_to_hydrostatic_pressure.h

@@ -8,6 +8,8 @@ testinput/recipe_CloudIceMixingRatioWrtWetAir_A.yaml
 testinput/recipe_CloudLiquidWaterMixingRatioWrtWetAir_A.yaml
 testinput/recipe_AirDensityLevelsMinusOne_A.yaml
 testinput/recipe_DryAirDensityLevelsMinusOne_A.yaml
+testinput/recipe_DustBin1MassConcentration_A.yaml
+testinput/recipe_DustBin2MassConcentration_A.yaml
 testinput/recipe_HydrostaticExnerLevels_A.yaml
 testinput/recipe_HydrostaticPressureLevels_A.yaml
 testinput/recipe_LogDerivativeSaturationVaporPressure_A.yaml
@@ -72,6 +74,7 @@ list( APPEND vader_testdata
   dry_air_density_levels_minus_one_A.nc
   aero6_gauss_state_F12.nc
   rrfs_sd_gauss_state_F12.nc
+  dust_gauss_state_F12_lfric2um.nc
 )
 
 # Create data directory for test input and symlink all files
@@ -129,10 +132,19 @@ ecbuild_add_test( TARGET  vader_recipe_AirDensityLevelsMinusOne_A
                   ARGS    "testinput/recipe_AirDensityLevelsMinusOne_A.yaml"
                   LIBS    vader )
 
-
 ecbuild_add_test( TARGET  vader_recipe_DryAirDensityLevelsMinusOne_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_DryAirDensityLevelsMinusOne_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_DustBin1MassConcentration_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_DustBin1MassConcentration_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_DustBin2MassConcentration_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_DustBin2MassConcentration_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_HydrostaticExnerLevels_A
