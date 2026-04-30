@@ -199,7 +199,7 @@ target_include_directories( ${PROJECT_NAME} SYSTEM PUBLIC ${Boost_INCLUDE_DIRS} 
 target_link_libraries( ${PROJECT_NAME} PUBLIC ${oops_LIBRARIES} ) #TODO: Change to "oops::oops" once oops adds namespace support
 
 if( gsw_FOUND )
-  target_link_libraries( ${PROJECT_NAME} PUBLIC gsw )
+  target_link_libraries( ${PROJECT_NAME} PUBLIC gsw ${gsw_LIBRARIES} )
   target_compile_definitions( ${PROJECT_NAME} PUBLIC GSW_FOUND )
 endif( gsw_FOUND )
 
