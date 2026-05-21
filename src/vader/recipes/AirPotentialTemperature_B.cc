@@ -5,6 +5,7 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+#include <cmath>
 #include <iostream>
 #include <vector>
 
@@ -29,7 +30,8 @@ static RecipeMaker<AirPotentialTemperature_B> makerTempToPTemp_(AirPotentialTemp
 // -------------------------------------------------------------------------------------------------
 
 AirPotentialTemperature_B::AirPotentialTemperature_B(const Parameters_ & params,
-                                        const VaderConfigVars & configVariables) {
+                                        const VaderConfigVars & configVariables) :
+    configVariables_{configVariables} {
     oops::Log::trace() << "AirPotentialTemperature_B::AirPotentialTemperature_B(params)"
         << std::endl;
 }
@@ -71,11 +73,15 @@ void AirPotentialTemperature_B::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering AirPotentialTemperature_B::executeNL function" << std::endl;
 
+    const double p0 = configVariables_.getDouble("reference_pressure");
+    const double kappa = configVariables_.getDouble("kappa");
+    const double p0_kappa = std::pow(p0, kappa);
+
     util::for_each_value(
-      [](const double temp,
-         const double ptk,
-         double& ptemp) {
-         ptemp = temp / ptk;
+      [=](const double temp,
+          const double ptk,
+          double& ptemp) {
+          ptemp = temp * p0_kappa / ptk;
       },
       afieldset["air_temperature"],
       afieldset["air_pressure_to_kappa"],

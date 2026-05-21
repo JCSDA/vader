@@ -88,6 +88,9 @@ class AirPotentialTemperature_B : public RecipeBase {
     size_t productLevels(const atlas::FieldSet &) const override;
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
     void executeNL(atlas::FieldSet &) override;
+
+ private:
+    const VaderConfigVars & configVariables_;
 };
 
 }  // namespace vader
