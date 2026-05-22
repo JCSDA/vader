@@ -76,12 +76,13 @@ void AirVirtualTemperature_A::executeNL(atlas::FieldSet & afieldset)
     // TODO(vahl) :"epsilon" should be changed to more CCPP
     //           "ratio_of_dry_air_gas_to_water_vapor_constants"
     const double epsilon = configVariables_.getDouble("epsilon");
+    const double epsilon_star = 1.0 / epsilon - 1.0;
 
     util::for_each_value(
         [&](const double temp,
             const double spechum,
             double& vTemp) {
-            vTemp = temp * (1.0 + epsilon * spechum);
+            vTemp = temp * (1.0 + epsilon_star * spechum);
         },
         afieldset["air_temperature"],
         afieldset["water_vapor_mixing_ratio_wrt_moist_air"],
@@ -99,6 +100,7 @@ void AirVirtualTemperature_A::executeTL(atlas::FieldSet & afieldsetTL,
         << std::endl;
 
     const double epsilon = configVariables_.getDouble("epsilon");
+    const double epsilon_star = 1.0 / epsilon - 1.0;
 
     util::for_each_value(
         [&](const double traj_temp,
@@ -106,8 +108,8 @@ void AirVirtualTemperature_A::executeTL(atlas::FieldSet & afieldsetTL,
             const double tl_temp,
             const double tl_spechum,
             double& tl_vTemp) {
-            tl_vTemp = tl_temp * (1.0 + epsilon * traj_spechum) +
-                       traj_temp * epsilon * tl_spechum;
+            tl_vTemp = tl_temp * (1.0 + epsilon_star * traj_spechum) +
+                       traj_temp * epsilon_star * tl_spechum;
         },
         afieldsetTraj["air_temperature"],
         afieldsetTraj["water_vapor_mixing_ratio_wrt_moist_air"],
@@ -127,6 +129,7 @@ void AirVirtualTemperature_A::executeAD(atlas::FieldSet & afieldsetAD,
         << std::endl;
 
     const double epsilon = configVariables_.getDouble("epsilon");
+    const double epsilon_star = 1.0 / epsilon - 1.0;
 
     util::for_each_value(
         [&](const double traj_temp,
@@ -134,8 +137,8 @@ void AirVirtualTemperature_A::executeAD(atlas::FieldSet & afieldsetAD,
             double& ad_vTemp,
             double& ad_temp,
             double& ad_spechum) {
-            ad_temp += ad_vTemp * (1.0 + epsilon * traj_spechum);
-            ad_spechum += ad_vTemp * epsilon * traj_temp;
+            ad_temp += ad_vTemp * (1.0 + epsilon_star * traj_spechum);
+            ad_spechum += ad_vTemp * epsilon_star * traj_temp;
             ad_vTemp = 0.0;
         },
         afieldsetTraj["air_temperature"],
