@@ -8,6 +8,9 @@
 
  implicit none
 
+ private
+ public :: c_umGetLookUp2D
+
  contains
 
  !-------------------------------------------------------------------
@@ -23,7 +26,7 @@
    character(len=error_string_length) :: err_msg
 
    if (err_value /= 0) then
-     write(err_msg,'(2a,i0)') trim(str_mess), " failed with error code ", err_value
+     write(err_msg,"(2a,i0)") trim(str_mess), " failed with error code ", err_value
      call abor1_ftn(err_msg)
    end if
 
@@ -31,12 +34,13 @@
  !-------------------------------------------------------------------
  subroutine c_umGetLookUp2D(filename_length, c_filename, &
                         & fieldname_length, c_fieldname, nbins, nlevels, &
-                        & values) bind(c, name='umGetLookUp2D_f90')
+                        & values) bind(c, name="umGetLookUp2D_f90")
 
-   use iso_c_binding
-   use netcdf
-   use kinds
-   use string_f_c_mod
+   use, intrinsic :: iso_c_binding, only: c_char, c_double, c_int
+   use netcdf, only: &
+     nf90_close, nf90_get_var, nf90_inq_varid, nf90_nowrite, nf90_open
+   use string_f_c_mod, only: c_f_string
+   implicit none
 
    integer, parameter :: char_length = 800
 

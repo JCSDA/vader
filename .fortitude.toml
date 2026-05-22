@@ -1,0 +1,3 @@
+[check]
+target-std="f2008"
+line-length=133
