@@ -10,7 +10,7 @@
 
 cmake_minimum_required( VERSION 3.12 )
 
-project( vader VERSION 1.7.0 LANGUAGES CXX Fortran )
+project( vader VERSION 1.10.0 LANGUAGES CXX Fortran )
 
 ## Ecbuild integration
 find_package( ecbuild QUIET )
@@ -34,7 +34,7 @@ find_package( Boost 1.64.0 REQUIRED )
 # Required
 find_package( jedicmake QUIET )  # Prefer find modules from jedi-cmake
 find_package( MPI REQUIRED COMPONENTS C Fortran )
-find_package( oops 1.10.0 REQUIRED )
+find_package( oops 1.13.0 REQUIRED )
 find_package( NetCDF REQUIRED COMPONENTS C Fortran )
 if(OPENMP)
   find_package( OpenMP REQUIRED COMPONENTS CXX )
