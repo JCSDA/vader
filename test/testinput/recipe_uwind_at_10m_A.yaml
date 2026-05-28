@@ -5,4 +5,6 @@ trajectory grid:
   N : 12
 trajectory filename: testdata/wind_at_10m_A.nc
 adjoint test tolerance: 1.e-12
-run nonlinear test: false  # Product variable not available in trajectory
+model data:
+  levels_are_top_down: false
+  nLevels: 70

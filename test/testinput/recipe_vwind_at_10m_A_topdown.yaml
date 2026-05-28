@@ -3,8 +3,8 @@ recipe:
 trajectory grid:
   type : regular_gaussian
   N : 12
-trajectory filename: testdata/wind_at_10m_A.nc
+trajectory filename: testdata/wind_at_10m_A_flipped.nc
 adjoint test tolerance: 1.e-12
 model data:
-  levels_are_top_down: false
+  levels_are_top_down: true
   nLevels: 70

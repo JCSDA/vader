@@ -45,9 +45,13 @@ class AirPressureThickness_A : public RecipeBase
     oops::Variables ingredients() const override;
     size_t productLevels(const atlas::FieldSet &) const override;
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+    bool hasTLAD() const override { return true; }
     void executeNL(atlas::FieldSet &) override;
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 
  private:
+    const VaderConfigVars & configVariables_;
 };
 
 // -------------------------------------------------------------------------------------------------

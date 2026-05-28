@@ -69,16 +69,12 @@ const {
 void SurfaceAirPressure_A::executeNL(atlas::FieldSet & afieldset) {
     oops::Log::trace() << "SurfaceAirPressure_A::executeNL Starting" << std::endl;
 
-    // Get ptop
     const double ptop = configVariables_.getDouble("air_pressure_at_top_of_atmosphere_model");
 
     util::for_each_column(
         [&](const auto delp_col,
             auto ps_col) {
-            // Initialize surface pressure
             ps_col(0) = ptop;
-
-            // Accumulate delp vertically within the column
             for (int k = 0; k < delp_col.shape(0); ++k) {
                 ps_col(0) += delp_col(k);
             }

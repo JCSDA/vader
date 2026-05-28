@@ -76,6 +76,8 @@ void AirPressureAtInterface_B::executeNL(atlas::FieldSet & afieldset) {
     oops::Log::trace() << "AirPressureAtInterface_B::executeNL Starting" << std::endl;
 
     const double ptop = configVariables_.getDouble("air_pressure_at_top_of_atmosphere_model");
+    const int nLevels = configVariables_.getInt("nLevels");
+    const bool topDown = configVariables_.getBool("levels_are_top_down");
 
     // Get the fields
     atlas::Field delp = afieldset.field("air_pressure_thickness");
@@ -91,21 +93,31 @@ void AirPressureAtInterface_B::executeNL(atlas::FieldSet & afieldset) {
                "for pressure at the levels" + prsi_units + "do not match the pressure thickness "
                "units " + delp_units);
 
-    // Get the number of levels
-    const int nLevel = prsi.shape(1);
-
-    util::for_each_column(
-        [&](const auto delp_col,
-            auto prsi_col) {
-            // Set pressure at the top of the atmosphere to ptop
-            prsi_col(0) = ptop;
-            // Compute pressure from pressure thickness starting at the top of the atmosphere
-            for (int level = 1; level < nLevel; ++level) {
-                prsi_col(level) = prsi_col(level-1) + delp_col(level-1);
-            }
-        },
-        delp,
-        prsi);
+    if (topDown) {
+        util::for_each_column(
+            [&](const auto delp_col,
+                auto prsi_col) {
+                // Level 0 = model top;
+                prsi_col(0) = ptop;
+                for (int level = 1; level <= nLevels; ++level) {
+                    prsi_col(level) = prsi_col(level-1) + delp_col(level-1);
+                }
+            },
+            delp,
+            prsi);
+    } else {
+        util::for_each_column(
+            [&](const auto delp_col,
+                auto prsi_col) {
+                // Level 0 = surface;
+                prsi_col(nLevels) = ptop;
+                for (int level = nLevels-1; level >= 0; --level) {
+                    prsi_col(level) = prsi_col(level+1) + delp_col(level);
+                }
+            },
+            delp,
+            prsi);
+    }
 
     oops::Log::trace() << "AirPressureAtInterface_B::executeNL Done" << std::endl;
 }

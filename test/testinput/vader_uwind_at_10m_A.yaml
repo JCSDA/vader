@@ -2,6 +2,8 @@ vader: {}
 trajectory grid:
   type : regular_gaussian
   N : 12
+model data:
+  levels_are_top_down: false
 trajectory filename: testdata/wind_at_10m_A.nc
 trajectory variables: []
 ingredients: [eastward_wind]

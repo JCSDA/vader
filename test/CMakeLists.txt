@@ -24,9 +24,11 @@ testinput/recipe_TotalWater_A.yaml
 testinput/recipe_TotalWaterMixingRatioWrtDryAir_A.yaml
 testinput/recipe_TotalWaterMixingRatioWrtWetAir_A.yaml
 testinput/recipe_uwind_at_10m_A.yaml
+testinput/recipe_uwind_at_10m_A_topdown.yaml
 testinput/recipe_VirtualPotentialTemperature_A.yaml
 testinput/recipe_VirtualPotentialTemperature_B.yaml
 testinput/recipe_vwind_at_10m_A.yaml
+testinput/recipe_vwind_at_10m_A_topdown.yaml
 testinput/recipe_WaterVaporMixingRatioWrtDryAir_B.yaml
 testinput/recipe_WaterVaporMixingRatioWrtWetAir_A.yaml
 testinput/recipe_WaterVaporMixingRatioWrtWetAir2m_A.yaml
@@ -68,6 +70,7 @@ testinput/vader_WaterVaporMixingRatioWrtWetAir2m_A.yaml
 list( APPEND vader_testdata
   AirTemperature_A.nc
   wind_at_10m_A.nc
+  wind_at_10m_A_flipped.nc
   gauss_state_F12.nc
   air_density_levels_minus_one_A.nc
   air_density_levels_minus_one_B.nc
@@ -217,6 +220,11 @@ ecbuild_add_test( TARGET  vader_recipe_uwind_at_10m_A
                   ARGS    "testinput/recipe_uwind_at_10m_A.yaml"
                   LIBS    vader )
 
+ecbuild_add_test( TARGET  vader_recipe_uwind_at_10m_A_topdown
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_uwind_at_10m_A_topdown.yaml"
+                  LIBS    vader )
+
 ecbuild_add_test( TARGET  vader_recipe_VirtualPotentialTemperature_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_VirtualPotentialTemperature_A.yaml"
@@ -230,6 +238,11 @@ ecbuild_add_test( TARGET  vader_recipe_VirtualPotentialTemperature_B
 ecbuild_add_test( TARGET  vader_recipe_vwind_at_10m_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_vwind_at_10m_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_vwind_at_10m_A_topdown
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_vwind_at_10m_A_topdown.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_WaterVaporMixingRatioWrtDryAir_B

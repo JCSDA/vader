@@ -21,7 +21,8 @@ const oops::Variables vwind_at_10m_A::Ingredients{std::vector<std::string>{"nort
 static RecipeMaker<vwind_at_10m_A> makeruwind_at_10m_A_(vwind_at_10m_A::Name);
 
 vwind_at_10m_A::vwind_at_10m_A(const Parameters_ & params,
-                               const VaderConfigVars & configVariables)
+                               const VaderConfigVars & configVariables) :
+    configVariables_(configVariables)
 {
     oops::Log::trace() << "vwind_at_10m_A::vwind_at_10m_A(params)" << std::endl;
 }
@@ -64,10 +65,13 @@ void vwind_at_10m_A::executeNL(atlas::FieldSet & afieldset)
     oops::Log::trace() << "entering vwind_at_10m_A::executeNL function"
       << std::endl;
 
+    const bool topDown = configVariables_.getBool("levels_are_top_down");
+    const int surfLevel = topDown ? configVariables_.getInt("nLevels") - 1 : 0;
+
     util::for_each_column(
-      [](const auto northward_wind_col,
+      [surfLevel](const auto northward_wind_col,
          auto northward_wind_at_10m_col) {
-         northward_wind_at_10m_col(0) = northward_wind_col(0);
+         northward_wind_at_10m_col(0) = northward_wind_col(surfLevel);
       },
       afieldset["northward_wind"],
       afieldset["northward_wind_at_10m"]);
@@ -83,10 +87,13 @@ void vwind_at_10m_A::executeTL(atlas::FieldSet & afieldsetTL,
     oops::Log::trace() << "entering vwind_at_10m_A::executeTL function"
         << std::endl;
 
+    const bool topDown = configVariables_.getBool("levels_are_top_down");
+    const int surfLevel = topDown ? configVariables_.getInt("nLevels") - 1 : 0;
+
     util::for_each_column(
-      [](const auto tl_northward_wind_col,
+      [surfLevel](const auto tl_northward_wind_col,
          auto tl_northward_wind_at_10m_col) {
-         tl_northward_wind_at_10m_col(0) = tl_northward_wind_col(0);
+         tl_northward_wind_at_10m_col(0) = tl_northward_wind_col(surfLevel);
       },
       afieldsetTL["northward_wind"],
       afieldsetTL["northward_wind_at_10m"]);
@@ -102,10 +109,13 @@ void vwind_at_10m_A::executeAD(atlas::FieldSet & afieldsetAD,
     oops::Log::trace() << "entering vwind_at_10m_A::executeAD function"
         << std::endl;
 
+    const bool topDown = configVariables_.getBool("levels_are_top_down");
+    const int surfLevel = topDown ? configVariables_.getInt("nLevels") - 1 : 0;
+
     util::for_each_column(
-      [](auto ad_northward_wind_at_10m_col,
+      [surfLevel](auto ad_northward_wind_at_10m_col,
          auto ad_northward_wind_col) {
-         ad_northward_wind_col(0) += ad_northward_wind_at_10m_col(0);
+         ad_northward_wind_col(surfLevel) += ad_northward_wind_at_10m_col(0);
          ad_northward_wind_at_10m_col(0) = 0.0;
       },
       afieldsetAD["northward_wind_at_10m"],

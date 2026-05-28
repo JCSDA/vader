@@ -58,6 +58,8 @@ class RecipeTestParameters : public oops::Parameters {
   oops::Parameter<bool> runADTest{"run adjoint test", true, this};
   oops::Parameter<double> adTolerance{"adjoint test tolerance",
         "adjoint test tolerance", 1e-12, this};
+  oops::Parameter<eckit::LocalConfiguration> modelData{
+        "model data", eckit::LocalConfiguration(), this};
 };
 
 // -----------------------------------------------------------------------------
@@ -72,7 +74,7 @@ void testRecipeNonlinear() {
   // create recipe
   const auto & recipeParams = params.recipe.value().recipeParams.value();
   std::unique_ptr<RecipeBase> recipe(RecipeFactory::create(
-      recipeParams.name, recipeParams, eckit::LocalConfiguration()));
+      recipeParams.name, recipeParams, params.modelData.value()));
   const oops::Variables ingredientVars = recipe->ingredients();
   const oops::Variable productVar = recipe->product();
   oops::Log::info() << "Testing non-linear vader recipe: " << recipe->name()
@@ -156,7 +158,7 @@ void testRecipeAdjoint() {
   // create recipe
   const auto & recipeParams = params.recipe.value().recipeParams.value();
   std::unique_ptr<RecipeBase> recipe(RecipeFactory::create(
-      recipeParams.name, recipeParams, eckit::LocalConfiguration()));
+      recipeParams.name, recipeParams, params.modelData.value()));
   const oops::Variables ingredientVars = recipe->ingredients();
   const oops::Variables trajectoryVars = recipe->trajectoryVars();
   const oops::Variable productVar = recipe->product();

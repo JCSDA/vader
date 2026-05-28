@@ -54,6 +54,9 @@ class vwind_at_10m_A : public RecipeBase {
     void executeNL(atlas::FieldSet &) override;
     void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
     void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+
+ private:
+    const VaderConfigVars & configVariables_;
 };
 
 }  // namespace vader

@@ -86,8 +86,8 @@ void WindReductionFactorAt10m_A::executeNL(atlas::FieldSet & afieldset)
     atlas::Field f10m = afieldset.field("wind_reduction_factor_at_10m");
     f10m.metadata().set("units", "none");
 
-    // Reduce by 1 since index begins at 0
-    const int nLevel = afieldset.field("eastward_wind").shape(1) - 1;
+    const bool topDown = configVariables_.getBool("levels_are_top_down");
+    const int surfLevel = topDown ? configVariables_.getInt("nLevels") - 1 : 0;
 
     util::for_each_column(
       [&](const auto uu_10m_col,
@@ -97,8 +97,8 @@ void WindReductionFactorAt10m_A::executeNL(atlas::FieldSet & afieldset)
           auto f10m_col) {
         f10m_col(0) = std::sqrt(std::pow(uu_10m_col(0), 2) + std::pow(vv_10m_col(0), 2));
         if (f10m_col(0) > 0) {
-            f10m_col(0) = f10m_col(0) / std::sqrt(std::pow(uu_col(nLevel), 2)
-                                      + std::pow(vv_col(nLevel), 2));
+            f10m_col(0) = f10m_col(0) / std::sqrt(std::pow(uu_col(surfLevel), 2)
+                                      + std::pow(vv_col(surfLevel), 2));
         } else {
             f10m_col(0) = 1.0;
         }
