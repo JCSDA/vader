@@ -554,7 +554,6 @@ bool Vader::planVariable(oops::Variables & ingredientVars,
                     "Trajectory vars for recipe " << recipe->name() << " are: " << std::endl <<
                     trajNeededVars << std::endl;
                 auto trajPlanInitSize = trajPlan.size();
-                auto trajVarsInitSize = trajectoryVars.size();
                 planVariables(trajectoryVars, trajNeededVars, trajPlan);
                 if (trajNeededVars.size() == 0) {
                     oops::Log::debug() <<

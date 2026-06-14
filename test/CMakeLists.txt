@@ -2,6 +2,10 @@ list( APPEND vader_testinput
 testinput/empty.yaml
 testinput/planvariable.yaml
 
+testinput/recipe_AirPressure_A.yaml
+testinput/recipe_AirPressure_A_bottomup.yaml
+testinput/recipe_AirPressure_B.yaml
+testinput/recipe_AirPressureAtInterface_D.yaml
 testinput/recipe_AirPressureExtendedUpByOne_A.yaml
 testinput/recipe_AirTemperature_A.yaml
 testinput/recipe_CloudIceMixingRatioWrtWetAir_A.yaml
@@ -34,6 +38,10 @@ testinput/recipe_WaterVaporMixingRatioWrtWetAir_A.yaml
 testinput/recipe_WaterVaporMixingRatioWrtWetAir2m_A.yaml
 
 testinput/vader_AirTemperature_A.yaml
+testinput/vader_AirPressure_A.yaml
+testinput/vader_AirPressure_A_bottomup.yaml
+testinput/vader_AirPressure_B.yaml
+testinput/vader_AirPressureAtInterface_D.yaml
 testinput/vader_AirVirtualTemperature_A.yaml
 testinput/vader_CloudIceMixingRatioWrtDryAir_A.yaml
 testinput/vader_CloudIceMixingRatioWrtDryAir_B.yaml
@@ -110,6 +118,26 @@ ecbuild_add_executable( TARGET  test_vader.x
                        )
 
 # Test recipes
+ecbuild_add_test( TARGET  vader_recipe_AirPressure_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_AirPressure_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_AirPressure_A_bottomup
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_AirPressure_A_bottomup.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_AirPressure_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_AirPressure_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_AirPressureAtInterface_D
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_AirPressureAtInterface_D.yaml"
+                  LIBS    vader )
+
 ecbuild_add_test( TARGET  vader_recipe_AirPressureExtendedUpByOne_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_AirPressureExtendedUpByOne_A.yaml"
@@ -261,6 +289,26 @@ ecbuild_add_test( TARGET  vader_recipe_WaterVaporMixingRatioWrtWetAir2m_A
                   LIBS    vader )
 
 # Test vader calling recipes
+
+ecbuild_add_test( TARGET  vader_vader_AirPressure_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "testinput/vader_AirPressure_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_AirPressure_A_bottomup
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "testinput/vader_AirPressure_A_bottomup.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_AirPressure_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "testinput/vader_AirPressure_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_AirPressureAtInterface_D
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "testinput/vader_AirPressureAtInterface_D.yaml"
+                  LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_vader_AirTemperature_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x

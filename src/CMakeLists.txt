@@ -10,11 +10,13 @@ vader/recipes/AirPotentialTemperature.h
 vader/recipes/AirPressureAtInterface_A.cc
 vader/recipes/AirPressureAtInterface_B.cc
 vader/recipes/AirPressureAtInterface_C.cc
+vader/recipes/AirPressureAtInterface_D.cc
 vader/recipes/AirPressureAtInterface.h
 vader/recipes/WindReductionFactorAt10m.h
 vader/recipes/WindReductionFactorAt10m_A.cc
 vader/recipes/AirPressure.h
 vader/recipes/AirPressure_A.cc
+vader/recipes/AirPressure_B.cc
 vader/recipes/AirPressureExtendedUpByOne_A.cc
 vader/recipes/AirPressureExtendedUpByOne.h
 vader/recipes/AirPressureThickness_A.cc

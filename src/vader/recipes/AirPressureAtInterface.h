@@ -132,4 +132,44 @@ class AirPressureAtInterface_C : public RecipeBase
 
 // -------------------------------------------------------------------------------------------------
 
+class AirPressureAtInterface_DParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(AirPressureAtInterface_DParameters, RecipeParametersBase)
+
+ public:
+    oops::RequiredParameter<std::string> name{"recipe name", this};
+};
+
+/*! \brief AirPressureAtInterface_D class defines a recipe for pressure edges from pressure
+           at surface.
+ *
+ *  \details This recipe uses surface pressure with hybrid sigma pressure coordinate coefficients
+ *           ak and bk to compute pressure at the layer edges. It provides TL/AD algorithms.
+ */
+class AirPressureAtInterface_D : public RecipeBase
+{
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+
+    typedef AirPressureAtInterface_DParameters Parameters_;
+
+    AirPressureAtInterface_D(const Parameters_ &, const VaderConfigVars &);
+
+    std::string name() const override;
+    oops::Variable product() const override;
+    oops::Variables ingredients() const override;
+    oops::Variables trajectoryVars() const override;
+    size_t productLevels(const atlas::FieldSet &) const override;
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+    void executeNL(atlas::FieldSet &) override;
+    bool hasTLAD() const override { return true; }
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+
+ private:
+    const VaderConfigVars & configVariables_;
+};
+
+// -------------------------------------------------------------------------------------------------
+
 }  // namespace vader

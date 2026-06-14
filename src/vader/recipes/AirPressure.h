@@ -32,7 +32,7 @@ class AirPressure_AParameters : public RecipeParametersBase {
            thickness.
  *
  *  \details This recipe uses pressure at the interfaces, along with the Phillips method to
- *           compute pressure at the mid points. It does not provide TL/AD algorithms.
+ *           compute pressure at the mid points. It provides the TL/AD algorithms.
  */
 class AirPressure_A : public RecipeBase
 {
@@ -47,9 +47,53 @@ class AirPressure_A : public RecipeBase
     std::string name() const override;
     oops::Variable product() const override;
     oops::Variables ingredients() const override;
+    oops::Variables trajectoryVars() const override;
     size_t productLevels(const atlas::FieldSet &) const override;
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
     void executeNL(atlas::FieldSet &) override;
+    bool hasTLAD() const override { return true; }
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+
+ private:
+    const VaderConfigVars & configVariables_;
+};
+
+// -------------------------------------------------------------------------------------------------
+
+class AirPressure_BParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(AirPressure_BParameters, RecipeParametersBase)
+
+ public:
+    oops::RequiredParameter<std::string> name{"recipe name", this};
+};
+
+/*! \brief AirPressure_B class defines a recipe for mid-lev pressures from pressure
+           at surface.
+ *
+ *  \details This recipe uses surface pressure with hybrid sigma pressure coordinate coefficients
+ *           ak and bk to compute pressure at mid-levels. It provides TL/AD algorithms.
+ */
+class AirPressure_B : public RecipeBase
+{
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+
+    typedef AirPressure_BParameters Parameters_;
+
+    AirPressure_B(const Parameters_ &, const VaderConfigVars &);
+
+    std::string name() const override;
+    oops::Variable product() const override;
+    oops::Variables ingredients() const override;
+    oops::Variables trajectoryVars() const override;
+    size_t productLevels(const atlas::FieldSet &) const override;
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+    void executeNL(atlas::FieldSet &) override;
+    bool hasTLAD() const override { return true; }
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 
  private:
     const VaderConfigVars & configVariables_;

@@ -1,0 +1,16 @@
+vader: {}
+cookbook:
+  air_pressure: [AirPressure_A]
+model data:
+  kappa: 0.2857142857142857
+  levels_are_top_down: true
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - air_pressure_levels
+ingredients:
+  - air_pressure_levels
+products: [air_pressure]
+adjoint test tolerance: 1.e-12

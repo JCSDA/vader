@@ -1,0 +1,11 @@
+recipe:
+  recipe name: AirPressure_A
+model data:
+  kappa: 0.2857142857142857
+  levels_are_top_down: false
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+nonlinear test tolerance: 5.e-4  # sort of high. Reference data maybe calculated differently?
+adjoint test tolerance: 1.e-12
