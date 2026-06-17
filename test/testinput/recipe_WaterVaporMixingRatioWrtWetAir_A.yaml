@@ -5,3 +5,6 @@ trajectory grid:
   N : 12
 trajectory filename: testdata/gauss_state_F12.nc
 adjoint test tolerance: 5.e-11
+# TL is a total derivative for the MO DA control-variable space where d(qt_mrd) = d(qv_mrd);
+# the test framework applies independent perturbations that violate this constraint → O(alpha).
+run tangent linear test: false

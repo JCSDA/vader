@@ -9,3 +9,5 @@ trajectory grid:
 trajectory filename: testdata/gauss_state_F12.nc
 nonlinear test tolerance: 5.e-4  # sort of high. Reference data maybe calculated differently?
 adjoint test tolerance: 1.e-12
+# Needed instead of [1e-2, 1e-3, 1e-4, 1e-5] or reaches floating point precision
+tangent linear test alphas: [1e-2, 1e-3, 1e-4]

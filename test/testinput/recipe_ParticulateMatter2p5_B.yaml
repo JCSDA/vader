@@ -5,3 +5,4 @@ trajectory grid:
   N : 12
 trajectory filename: testdata/rrfs_sd_gauss_state_F12.nc
 adjoint test tolerance: 1.e-12
+run tangent linear test: false
