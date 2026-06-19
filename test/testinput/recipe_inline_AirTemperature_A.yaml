@@ -1,0 +1,9 @@
+recipe:
+  recipe name: AirTemperature_A
+columns:
+  air_potential_temperature:   [290.0, 285.0, 280.0]
+  dimensionless_exner_function: [1.0,  0.95,  0.90]
+expected:
+  # 290.0*1.0 ; 285.0*0.95 ; 280.0*0.90
+  air_temperature:             [290.0, 270.75, 252.0]
+nonlinear test tolerance: 1.e-12

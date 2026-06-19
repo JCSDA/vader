@@ -1,0 +1,16 @@
+recipe:
+  recipe name: GeopotentialAtInterface_A
+model data:
+  gas_constant_of_dry_air: 287.0
+columns:
+  geopotential:                 [1000.0, 2000.0, 3000.0]   # only level 0 used
+  virtual_temperature:          [280.0,  270.0,  260.0]
+  ln_air_pressure:              [11.625, 11.4,   11.3]      # only level 0 used
+  ln_air_pressure_at_interface: [11.5,   11.375, 11.25, 11.125]
+expected:
+  # phi_int(0) = 1000 + 287*280*(11.625-11.5)            = 11045.0
+  # phi_int(1) = 11045   - 287*275*(11.375-11.5)         = 20910.625
+  # phi_int(2) = 20910.625 - 287*265*(11.25-11.375)      = 30417.5
+  # phi_int(3) = 30417.5   - 287*260*(11.125-11.25)      = 39745.0
+  geopotential_levels:          [11045.0, 20910.625, 30417.5, 39745.0]
+nonlinear test tolerance: 1.e-12

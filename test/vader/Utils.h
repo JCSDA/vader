@@ -8,6 +8,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "atlas/field.h"
 #include "atlas/functionspace.h"
@@ -42,6 +43,15 @@ void addZeroField(atlas::FieldSet & fieldset,
                     const std::string & name,
                     const atlas::FunctionSpace & fs,
                     size_t levels);
+
+/// \brief Helper function adding a new field to fieldset, initializing every
+///        horizontal node with the same vertical column of values (typically
+///        read from the test yaml), in order to create a legitimate Field
+///        while only requiring the test author to provide one column of values.
+void addFieldFromColumn(atlas::FieldSet & fieldset,
+                        const std::string & name,
+                        const std::vector<double> & column,
+                        const atlas::FunctionSpace & fs);
 
 /// \brief Helper function returning dot product between two fields
 double dotProduct(const atlas::Field & f1, const atlas::Field & f2);

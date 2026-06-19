@@ -10,6 +10,7 @@
 #include <netcdf.h>
 
 #include <string>
+#include <vector>
 
 #include "atlas/field.h"
 #include "atlas/functionspace.h"
@@ -86,6 +87,22 @@ void addZeroField(atlas::FieldSet & fieldset,
   for (atlas::idx_t jnode = 0; jnode < field.shape(0); ++jnode) {
     for (atlas::idx_t jlevel = 0; jlevel < field.shape(1); ++jlevel) {
       view(jnode, jlevel) = 0.0;
+    }
+  }
+  fieldset.add(field);
+}
+
+void addFieldFromColumn(atlas::FieldSet & fieldset,
+                        const std::string & name,
+                        const std::vector<double> & column,
+                        const atlas::FunctionSpace & fs) {
+  const size_t levels = column.size();
+  atlas::Field field = fs.createField<double>(
+        atlas::option::name(name) | atlas::option::levels(levels));
+  auto view = atlas::array::make_view<double, 2>(field);
+  for (atlas::idx_t jnode = 0; jnode < field.shape(0); ++jnode) {
+    for (size_t k = 0; k < levels; ++k) {
+      view(jnode, k) = column[k];
     }
   }
   fieldset.add(field);

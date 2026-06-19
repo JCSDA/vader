@@ -100,6 +100,11 @@ testinput/recipe_WindFromDirectionAtSurface_A.yaml
 testinput/recipe_WindReductionFactorAt10m_A.yaml
 testinput/recipe_WindSpeedAtSurface_A.yaml
 
+testinput/recipe_inline_AirPressureAtInterface_A.yaml
+testinput/recipe_inline_AirTemperature_A.yaml
+testinput/recipe_inline_GeopotentialAtInterface_A.yaml
+
+testinput/vader_AirTemperature_A.yaml
 testinput/vader_AirPressure_A.yaml
 testinput/vader_AirPressure_A_bottomup.yaml
 testinput/vader_AirPressure_B.yaml
@@ -210,6 +215,10 @@ ecbuild_add_executable( TARGET  test_recipe.x
                        )
 ecbuild_add_executable( TARGET  test_vader.x
                         SOURCES vader/TestVader.cc vader/TestUtils.cc
+                        LIBS    vader
+                       )
+ecbuild_add_executable( TARGET  test_recipe_inline.x
+                        SOURCES vader/TestRecipeInline.cc vader/TestUtils.cc
                         LIBS    vader
                        )
 
@@ -697,6 +706,22 @@ ecbuild_add_test( TARGET  vader_recipe_WindReductionFactorAt10m_A
 ecbuild_add_test( TARGET  vader_recipe_WindSpeedAtSurface_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_WindSpeedAtSurface_A.yaml"
+                  LIBS    vader )
+
+# Test recipes (inline yaml data)
+ecbuild_add_test( TARGET  vader_recipe_inline_AirPressureAtInterface_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_AirPressureAtInterface_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_AirTemperature_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_AirTemperature_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialAtInterface_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_GeopotentialAtInterface_A.yaml"
                   LIBS    vader )
 
 # Test vader calling recipes
