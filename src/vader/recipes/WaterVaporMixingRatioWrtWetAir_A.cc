@@ -70,6 +70,7 @@ atlas::FunctionSpace WaterVaporMixingRatioWrtWetAir_A::productFunctionSpace(
 {
     return afieldset["total_water_mixing_ratio_wrt_dry_air"].functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void WaterVaporMixingRatioWrtWetAir_A::executeNL(atlas::FieldSet & afieldset)
 {
@@ -81,6 +82,7 @@ void WaterVaporMixingRatioWrtWetAir_A::executeNL(atlas::FieldSet & afieldset)
         << "leaving WaterVaporMixingRatioWrtWetAir_A::executeNL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void WaterVaporMixingRatioWrtWetAir_A::executeTL(atlas::FieldSet & afieldsetTL,
                                    const atlas::FieldSet & afieldsetTraj)
@@ -94,6 +96,7 @@ void WaterVaporMixingRatioWrtWetAir_A::executeTL(atlas::FieldSet & afieldsetTL,
         << "leaving WaterVaporMixingRatioWrtWetAir_A::executeTL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void WaterVaporMixingRatioWrtWetAir_A::executeAD(atlas::FieldSet & afieldsetAD,
                                    const atlas::FieldSet & afieldsetTraj)

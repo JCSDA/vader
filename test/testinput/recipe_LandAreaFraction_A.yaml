@@ -1,0 +1,11 @@
+recipe:
+  recipe name: LandAreaFraction_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+adjoint test tolerance: 1.e-13
+# TL disabled: same reason as SurfaceSnowAreaFraction_A — the TL differentiates w.r.t.
+# landmask only; surface_snow_thickness is also an ingredient and perturbed by the test,
+# and the NL is piecewise at snow_thick=0 causing O(1) residuals near the kink.
+run tangent linear test: false

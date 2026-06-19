@@ -1,0 +1,13 @@
+recipe:
+  recipe name: MassContentOfSnowInAtmosphereLayer_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+adjoint test tolerance: 1.e-12
+# TL disabled: the TL differentiates w.r.t. the mixing ratio only; air_pressure_thickness
+# is treated as a fixed coefficient in the DA context but is perturbed by the test framework
+# (it is an ingredient), causing O(alpha) rather than O(alpha^2) residuals.
+run tangent linear test: false
+model data:
+  standard_gravitational_acceleration: 9.80665

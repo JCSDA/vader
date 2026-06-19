@@ -68,6 +68,7 @@ atlas::FunctionSpace RelativeHumidity_A::productFunctionSpace
 {
     return afieldset.field("air_temperature").functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void RelativeHumidity_A::executeNL(atlas::FieldSet & afieldset)
 {
@@ -78,6 +79,7 @@ void RelativeHumidity_A::executeNL(atlas::FieldSet & afieldset)
 
     oops::Log::trace() << "leaving RelativeHumidity_A::executeNL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void RelativeHumidity_A::executeTL(atlas::FieldSet & afieldsetTL,
                                    const atlas::FieldSet & afieldsetTraj)
@@ -91,6 +93,7 @@ void RelativeHumidity_A::executeTL(atlas::FieldSet & afieldsetTL,
 
     oops::Log::trace() << "leaving RelativeHumidity_A::executeTL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void RelativeHumidity_A::executeAD(atlas::FieldSet & afieldsetAD,
                                    const atlas::FieldSet & afieldsetTraj)

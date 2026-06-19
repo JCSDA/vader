@@ -58,6 +58,7 @@ atlas::FunctionSpace LogDerivativeSaturationVaporPressure_A::productFunctionSpac
   const atlas::FieldSet & afieldset) const {
   return afieldset.field("air_temperature").functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void LogDerivativeSaturationVaporPressure_A::executeNL(atlas::FieldSet & afieldset) {
   oops::Log::trace() <<

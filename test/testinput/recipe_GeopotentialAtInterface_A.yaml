@@ -1,0 +1,13 @@
+recipe:
+  recipe name: GeopotentialAtInterface_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+adjoint test tolerance: 1.e-10
+# TL disabled: the TL differentiates w.r.t. {geopotential, virtual_temperature} only,
+# but ln_air_pressure and ln_air_pressure_at_interface are ingredients and get perturbed
+# by the test framework, causing O(alpha) (not O(alpha^2)) residuals.
+run tangent linear test: false
+model data:
+  gas_constant_of_dry_air: 287.05

@@ -69,6 +69,7 @@ atlas::FunctionSpace CloudLiquidWaterMixingRatioWrtWetAir_A::productFunctionSpac
 {
     return afieldset["total_water_mixing_ratio_wrt_dry_air"].functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void CloudLiquidWaterMixingRatioWrtWetAir_A::executeNL(atlas::FieldSet & afieldset)
 {
@@ -78,6 +79,7 @@ void CloudLiquidWaterMixingRatioWrtWetAir_A::executeNL(atlas::FieldSet & afields
     oops::Log::trace() << "leaving CloudLiquidWaterMixingRatioWrtWetAir_A::executeNL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void CloudLiquidWaterMixingRatioWrtWetAir_A::executeTL(atlas::FieldSet & afieldsetTL,
                                          const atlas::FieldSet & afieldsetTraj)
@@ -89,6 +91,7 @@ void CloudLiquidWaterMixingRatioWrtWetAir_A::executeTL(atlas::FieldSet & afields
     oops::Log::trace() << "leaving CloudLiquidWaterMixingRatioWrtWetAir_A::executeTL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void CloudLiquidWaterMixingRatioWrtWetAir_A::executeAD(atlas::FieldSet & afieldsetAD,
                                          const atlas::FieldSet & afieldsetTraj)

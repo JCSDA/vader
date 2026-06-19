@@ -1,0 +1,13 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+cookbook:
+  northward_wind_at_surface: [vwind_at_surface_A]
+model data:
+  levels_are_top_down: false
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables: []
+ingredients: [northward_wind]
+products: [northward_wind_at_surface]
+adjoint test tolerance: 1.e-12

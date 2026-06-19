@@ -120,100 +120,127 @@ std::string Test_VarE_from_F::name() const
 {
     return Test_VarE_from_F::Name;
 }
-// ------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarA_from_B::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarA_from_B::executeNL function"
         << std::endl;
 }
-// ------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarA_from_B_C::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarA_from_B_C::executeNL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarA_from_B_C::executeTL(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarA_from_B_C::executeTL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarA_from_B_C::executeAD(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarA_from_B_C::executeAD function"
         << std::endl;
 }
-// ------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarA_from_C_D::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarA_from_C_D::executeNL function"
         << std::endl;
 }
-// ------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarA_from_G::executeTL(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarA_from_G::executeTL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarA_from_G::executeAD(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarA_from_G::executeAD function"
         << std::endl;
 }
-// ------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarB_from_E::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarB_from_E::executeNL function"
         << std::endl;
 }
-// ------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarB_from_A::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarB_from_A::executeNL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarB_from_A::executeTL(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarB_from_A::executeTL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarB_from_A::executeAD(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarB_from_A::executeAD function"
         << std::endl;
 }
-// ------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarC_from_D_E::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarC_from_D_E::executeNL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarC_from_D_E::executeTL(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarC_from_D_E::executeTL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarC_from_D_E::executeAD(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarC_from_D_E::executeAD function"
         << std::endl;
 }
-// ------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarC_from_F::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarC_from_F::executeNL function"
         << std::endl;
 }
-// ------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarE_from_F::executeNL(atlas::FieldSet & afieldset)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarE_from_F::executeNL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarE_from_F::executeTL(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarE_from_F::executeTL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
+
 void Test_VarE_from_F::executeAD(atlas::FieldSet & afieldset, const atlas::FieldSet & afieldset2)
 {
     oops::Log::trace() << "entering/leaving empty Test_VarE_from_F::executeAD function"

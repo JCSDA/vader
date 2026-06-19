@@ -1,0 +1,13 @@
+recipe:
+  recipe name: Graupel_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+adjoint test tolerance: 1.e-12
+# TL disabled: the NL is piecewise linear with conditions on air_temperature and
+# relative_humidity (active only in 258.15-268.15 K and above an RH threshold).
+# Perturbations can cross these condition boundaries, causing O(alpha) residuals.
+run tangent linear test: false
+model data:
+  air_pressure_at_top_of_atmosphere_model: 10.0

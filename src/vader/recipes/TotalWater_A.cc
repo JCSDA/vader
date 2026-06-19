@@ -68,6 +68,7 @@ atlas::FunctionSpace TotalWater_A::productFunctionSpace(const atlas::FieldSet
 {
   return afieldset[specific_humidity_mo].functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void TotalWater_A::executeNL(atlas::FieldSet & afieldset)
 {
@@ -77,6 +78,7 @@ void TotalWater_A::executeNL(atlas::FieldSet & afieldset)
   mo::eval_total_water_tl(afieldset, afieldset);
   oops::Log::trace() << "leaving TotalWater_A::executeNL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void TotalWater_A::executeTL(atlas::FieldSet & afieldsetTL,
                              const atlas::FieldSet & afieldsetTraj)
@@ -85,6 +87,7 @@ void TotalWater_A::executeTL(atlas::FieldSet & afieldsetTL,
   mo::eval_total_water_tl(afieldsetTL, afieldsetTraj);
   oops::Log::trace() << "leaving TotalWater_A::executeTL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void TotalWater_A::executeAD(atlas::FieldSet & afieldsetAD,
                              const atlas::FieldSet & afieldsetTraj)

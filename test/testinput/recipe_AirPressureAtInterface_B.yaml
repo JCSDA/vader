@@ -1,0 +1,10 @@
+recipe:
+  recipe name: AirPressureAtInterface_B
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+run nonlinear test: false
+run adjoint test: false
+model data:
+  levels_are_top_down: false

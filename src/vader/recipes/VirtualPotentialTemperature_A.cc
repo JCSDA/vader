@@ -68,6 +68,7 @@ atlas::FunctionSpace VirtualPotentialTemperature_A::productFunctionSpace(const a
 {
     return afieldset["height_above_mean_sea_level_levels"].functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void VirtualPotentialTemperature_A::executeNL(atlas::FieldSet & afieldset)
 {
@@ -76,6 +77,7 @@ void VirtualPotentialTemperature_A::executeNL(atlas::FieldSet & afieldset)
     mo::eval_hydrobal_virtual_potential_temperature_nl(afieldset);
     oops::Log::trace() << "leaving VirtualPotentialTemperature_A::executeNL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void VirtualPotentialTemperature_A::executeTL(atlas::FieldSet & afieldsetTL,
                                       const atlas::FieldSet & afieldsetTraj)
@@ -85,6 +87,7 @@ void VirtualPotentialTemperature_A::executeTL(atlas::FieldSet & afieldsetTL,
     mo::eval_hydrobal_virtual_potential_temperature_tl(afieldsetTL, afieldsetTraj);
     oops::Log::trace() << "leaving VirtualPotentialTemperature_A::executeTL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void VirtualPotentialTemperature_A::executeAD(atlas::FieldSet & afieldsetAD,
                                       const atlas::FieldSet & afieldsetTraj)

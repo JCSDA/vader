@@ -1,0 +1,10 @@
+recipe:
+  recipe name: LnAirPressureAtInterface_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+adjoint test tolerance: 1.e-12
+# alpha=0.1 causes NaN because unit-normal perturbations can push near-zero top interface
+# pressures negative; smaller alphas keep p+alpha*dp > 0 and the TL converges as O(alpha^2).
+tangent linear test alphas: [0.01, 0.001, 0.0001]

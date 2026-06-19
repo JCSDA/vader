@@ -69,6 +69,7 @@ atlas::FunctionSpace TotalWaterMixingRatioWrtWetAir_A::productFunctionSpace(
 {
   return afieldset["water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water"].functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void TotalWaterMixingRatioWrtWetAir_A::executeNL(atlas::FieldSet & afieldset)
 {

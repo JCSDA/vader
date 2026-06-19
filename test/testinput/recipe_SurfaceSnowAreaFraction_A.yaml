@@ -1,0 +1,12 @@
+recipe:
+  recipe name: SurfaceSnowAreaFraction_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+adjoint test tolerance: 1.e-13
+# TL disabled: the TL differentiates w.r.t. landmask only; surface_snow_thickness is
+# also an ingredient and gets perturbed by the test framework. Since the NL is piecewise
+# (indicator of snow_thick > 0), perturbations crossing the kink at snow_thick=0 give
+# O(1) (not O(alpha^2)) residuals.
+run tangent linear test: false

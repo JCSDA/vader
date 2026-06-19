@@ -92,6 +92,7 @@ atlas::FunctionSpace DryAirDensityLevelsMinusOne_A::productFunctionSpace(const a
 {
     return afieldset.field("air_pressure_levels_minus_one").functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void DryAirDensityLevelsMinusOne_A::executeNL(atlas::FieldSet & afieldset)
 {
@@ -100,6 +101,7 @@ void DryAirDensityLevelsMinusOne_A::executeNL(atlas::FieldSet & afieldset)
     mo::eval_dry_air_density_from_pressure_levels_minus_one_nl(afieldset);
     oops::Log::trace() << "leaving DryAirDensityLevelsMinusOne_A::executeNL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void DryAirDensityLevelsMinusOne_A::executeTL(atlas::FieldSet & afieldsetTL,
                                       const atlas::FieldSet & afieldsetTraj)
@@ -109,6 +111,7 @@ void DryAirDensityLevelsMinusOne_A::executeTL(atlas::FieldSet & afieldsetTL,
     mo::eval_dry_air_density_from_pressure_levels_minus_one_tl(afieldsetTL, afieldsetTraj);
     oops::Log::trace() << "leaving DryAirDensityLevelsMinusOne_A::executeTL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void DryAirDensityLevelsMinusOne_A::executeAD(atlas::FieldSet & afieldsetAD,
                                       const atlas::FieldSet & afieldsetTraj)

@@ -1,0 +1,15 @@
+vader: {}
+model data:
+  levels_are_top_down: false
+  nLevels: 70
+cookbook:
+  air_pressure_thickness: [AirPressureThickness_A]
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables: []
+ingredients:
+  - air_pressure_levels
+products: [air_pressure_thickness]
+adjoint test tolerance: 1.e-12

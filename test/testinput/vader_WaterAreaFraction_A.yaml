@@ -1,0 +1,13 @@
+vader: {}
+cookbook:
+  water_area_fraction: [WaterAreaFraction_A]
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - landmask
+  - seaice_fraction
+ingredients: [landmask, seaice_fraction]
+products: [water_area_fraction]
+adjoint test tolerance: 1.e-12

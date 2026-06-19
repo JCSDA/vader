@@ -1,0 +1,12 @@
+recipe:
+  recipe name: TropopausePressure_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+adjoint test tolerance: 1.e-12
+run nonlinear test: false
+model data:
+  kappa: 0.285714
+  levels_are_top_down: false
+  reference_pressure: 100000.0

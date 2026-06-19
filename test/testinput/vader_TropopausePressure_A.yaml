@@ -1,0 +1,23 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+cookbook:
+  geopotential_height: [GeopotentialHeight_A]
+  tropopause_pressure: [TropopausePressure_A]
+model data:
+  standard_gravitational_acceleration: 9.80665
+  kappa: 0.285714
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - air_pressure
+  - air_temperature
+  - geopotential
+ingredients:
+  - air_pressure
+  - air_temperature
+  - geopotential
+products:
+  - geopotential_height
+  - tropopause_pressure
+adjoint test tolerance: 1.e-12

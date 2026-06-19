@@ -69,6 +69,7 @@ atlas::FunctionSpace VirtualPotentialTemperature_B::productFunctionSpace(const a
 {
     return afieldset["air_potential_temperature"].functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void VirtualPotentialTemperature_B::executeNL(atlas::FieldSet & afieldset)
 {
@@ -77,6 +78,7 @@ void VirtualPotentialTemperature_B::executeNL(atlas::FieldSet & afieldset)
     mo::eval_virtual_potential_temperature_nl(afieldset);
     oops::Log::trace() << "leaving VirtualPotentialTemperature_B::executeNL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void VirtualPotentialTemperature_B::executeTL(atlas::FieldSet & afieldsetTL,
                                       const atlas::FieldSet & afieldsetTraj)
@@ -86,6 +88,7 @@ void VirtualPotentialTemperature_B::executeTL(atlas::FieldSet & afieldsetTL,
     mo::eval_virtual_potential_temperature_tl(afieldsetTL, afieldsetTraj);
     oops::Log::trace() << "leaving VirtualPotentialTemperature_B::executeTL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void VirtualPotentialTemperature_B::executeAD(atlas::FieldSet & afieldsetAD,
                                       const atlas::FieldSet & afieldsetTraj)

@@ -1,0 +1,12 @@
+recipe:
+  recipe name: SkinTemperature_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+# TL disabled: the NL is piecewise with conditions on sea_surface_temperature vs T_freeze
+# and air_temperature vs T_freeze. Perturbations can cross these thresholds, causing
+# O(alpha) residuals.
+run tangent linear test: false
+model data:
+  levels_are_top_down: false

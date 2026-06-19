@@ -1,0 +1,12 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+cookbook:
+  effective_radius_of_cloud_liquid_water_particle: [EffectiveRadiusOfCloudLiquidWaterParticle_A]
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - air_temperature
+ingredients: [air_temperature]
+products: [effective_radius_of_cloud_liquid_water_particle]
+adjoint test tolerance: 1.e-12

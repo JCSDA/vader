@@ -70,6 +70,7 @@ atlas::FunctionSpace HydrostaticExnerLevels_A::productFunctionSpace(
 {
     return afieldset["air_pressure_levels"].functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void HydrostaticExnerLevels_A::executeNL(atlas::FieldSet & afieldset)
 {
@@ -78,6 +79,7 @@ void HydrostaticExnerLevels_A::executeNL(atlas::FieldSet & afieldset)
     mo::eval_hydrobal_hydrostatic_exner_levels_nl(afieldset);
     oops::Log::trace() << "leaving HydrostaticExnerLevels_A::executeNL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void HydrostaticExnerLevels_A::executeTL(atlas::FieldSet & afieldsetTL,
                                          const atlas::FieldSet & afieldsetTraj)
@@ -87,6 +89,7 @@ void HydrostaticExnerLevels_A::executeTL(atlas::FieldSet & afieldsetTL,
     mo::eval_hydrobal_hydrostatic_exner_levels_tl(afieldsetTL, afieldsetTraj);
     oops::Log::trace() << "leaving HydrostaticExnerLevels_A::executeTL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void HydrostaticExnerLevels_A::executeAD(atlas::FieldSet & afieldsetAD,
                                          const atlas::FieldSet & afieldsetTraj)

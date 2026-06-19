@@ -1,0 +1,13 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+cookbook:
+  land_area_fraction: [LandAreaFraction_A]
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - landmask
+  - surface_snow_thickness
+ingredients: [landmask, surface_snow_thickness]
+products: [land_area_fraction]
+adjoint test tolerance: 1.e-12

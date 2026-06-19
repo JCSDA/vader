@@ -1,0 +1,10 @@
+recipe:
+  recipe name: AirPressureThickness_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+adjoint test tolerance: 1.e-12
+model data:
+  levels_are_top_down: false
+  nLevels: 70

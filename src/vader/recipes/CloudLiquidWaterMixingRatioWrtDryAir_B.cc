@@ -78,6 +78,7 @@ atlas::FunctionSpace CloudLiquidWaterMixingRatioWrtDryAir_B::productFunctionSpac
     return afieldset
         ["cloud_liquid_water_mixing_ratio_wrt_moist_air_and_condensed_water"].functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void CloudLiquidWaterMixingRatioWrtDryAir_B::executeNL(atlas::FieldSet & afieldset)
 {
@@ -89,6 +90,7 @@ void CloudLiquidWaterMixingRatioWrtDryAir_B::executeNL(atlas::FieldSet & afields
         << "exiting CloudLiquidWaterMixingRatioWrtDryAir_B::executeNL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void CloudLiquidWaterMixingRatioWrtDryAir_B::executeTL(atlas::FieldSet & afieldsetTL,
     const atlas::FieldSet & afieldsetTraj)
@@ -101,6 +103,7 @@ void CloudLiquidWaterMixingRatioWrtDryAir_B::executeTL(atlas::FieldSet & afields
         << "exiting CloudLiquidWaterMixingRatioWrtDryAir_B::executeTL function"
         << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void CloudLiquidWaterMixingRatioWrtDryAir_B::executeAD(
     atlas::FieldSet & afieldsetAD, const atlas::FieldSet & afieldsetTraj)

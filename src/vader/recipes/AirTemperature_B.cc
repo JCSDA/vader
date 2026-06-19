@@ -66,12 +66,13 @@ void AirTemperature_B::executeNL(atlas::FieldSet & afieldset)
         << std::endl;
 
     const double epsilon = configVariables_.getDouble("epsilon");
+    const double epsilon_star = 1.0 / epsilon - 1.0;
 
     util::for_each_value(
         [&](const double vTemp,
             const double spechum,
             double& temp) {
-            temp = vTemp / (1.0 + epsilon * spechum);
+            temp = vTemp / (1.0 + epsilon_star * spechum);
         },
         afieldset["virtual_temperature"],
         afieldset["water_vapor_mixing_ratio_wrt_moist_air"],

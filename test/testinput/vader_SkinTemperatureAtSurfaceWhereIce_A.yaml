@@ -1,0 +1,34 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+cookbook:
+  water_area_fraction: [WaterAreaFraction_A]
+  land_area_fraction: [LandAreaFraction_A]
+  ice_area_fraction: [IceAreaFraction_A]
+  surface_snow_area_fraction: [SurfaceSnowAreaFraction_A]
+  skin_temperature: [SkinTemperature_A]
+  skin_temperature_at_surface_where_ice: [SkinTemperatureAtSurfaceWhereIce_A]
+model data:
+  levels_are_top_down: false
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - air_temperature
+  - sea_surface_temperature
+  - landmask
+  - seaice_fraction
+  - surface_snow_thickness
+ingredients:
+  - air_temperature
+  - sea_surface_temperature
+  - landmask
+  - seaice_fraction
+  - surface_snow_thickness
+products:
+  - water_area_fraction
+  - land_area_fraction
+  - ice_area_fraction
+  - surface_snow_area_fraction
+  - skin_temperature
+  - skin_temperature_at_surface_where_ice
+adjoint test tolerance: 1.e-7

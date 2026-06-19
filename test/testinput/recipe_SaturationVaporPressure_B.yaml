@@ -1,0 +1,11 @@
+recipe:
+  recipe name: SaturationVaporPressure_B
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_state_F12.nc
+adjoint test tolerance: 1.e-12
+run nonlinear test: false
+# TL disabled: the NL is piecewise (Murphy & Koop formula with separate branches above/below
+# T=273.15 K). Perturbations that cross the ice/liquid transition cause O(alpha) residuals.
+run tangent linear test: false

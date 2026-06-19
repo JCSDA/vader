@@ -187,7 +187,7 @@ void GeopotentialAtInterface_A::executeTL(atlas::FieldSet & afieldsetTL,
     oops::Log::trace() << "leaving GeopotentialAtInterface_A::executeTL function" << std::endl;
 }
 
-// ------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 void GeopotentialAtInterface_A::executeAD(atlas::FieldSet & afieldsetAD,
                                     const atlas::FieldSet & afieldsetTraj) {

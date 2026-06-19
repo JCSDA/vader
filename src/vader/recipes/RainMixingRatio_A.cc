@@ -64,6 +64,7 @@ atlas::FunctionSpace RainMixingRatio_A::productFunctionSpace(const atlas::FieldS
 {
     return afieldset["total_water_mixing_ratio_wrt_dry_air"].functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void RainMixingRatio_A::executeNL(atlas::FieldSet & afieldset)
 {
@@ -72,6 +73,7 @@ void RainMixingRatio_A::executeNL(atlas::FieldSet & afieldset)
     mo::eval_rain_mixing_ratio_wrt_moist_air_and_condensed_water_nl(afieldset);
     oops::Log::trace() << "leaving RainMixingRatio_A::executeNL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void RainMixingRatio_A::executeTL(atlas::FieldSet & afieldsetTL,
                                   const atlas::FieldSet & afieldsetTraj)
@@ -82,6 +84,7 @@ void RainMixingRatio_A::executeTL(atlas::FieldSet & afieldsetTL,
                                                                     afieldsetTraj);
     oops::Log::trace() << "leaving RainMixingRatio_A::executeTL function" << std::endl;
 }
+// -------------------------------------------------------------------------------------------------
 
 void RainMixingRatio_A::executeAD(atlas::FieldSet & afieldsetAD,
                                   const atlas::FieldSet & afieldsetTraj)

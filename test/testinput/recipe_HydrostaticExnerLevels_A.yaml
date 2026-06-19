@@ -5,4 +5,7 @@ trajectory grid:
   N : 12
 trajectory filename: testdata/gauss_state_F12.nc
 adjoint test tolerance: 1.e-12
+# TL disabled: the TL differentiates w.r.t. {air_pressure_levels, virtual_potential_temperature}
+# only; height_above_mean_sea_level_levels is an ingredient that also gets perturbed by the test
+# framework, causing O(alpha) residuals from the unaccounted height perturbation.
 run tangent linear test: false

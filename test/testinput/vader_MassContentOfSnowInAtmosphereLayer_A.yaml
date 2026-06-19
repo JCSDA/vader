@@ -1,0 +1,31 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+cookbook:
+  snow_water: [SnowWater_A]
+  air_pressure_at_surface: [SurfaceAirPressure_A]
+  mass_content_of_snow_in_atmosphere_layer: [MassContentOfSnowInAtmosphereLayer_A]
+  air_pressure_thickness: [AirPressureThickness_A]
+model data:
+  air_pressure_at_top_of_atmosphere_model: 10
+  standard_gravitational_acceleration: 9.80665
+  levels_are_top_down: false
+  nLevels: 70
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - air_temperature
+  - air_pressure
+  - relative_humidity
+  - air_pressure_levels
+ingredients:
+  - air_temperature
+  - air_pressure
+  - relative_humidity
+  - air_pressure_levels
+products:
+  - snow_water
+  - air_pressure_at_surface
+  - mass_content_of_snow_in_atmosphere_layer
+  - air_pressure_thickness
+adjoint test tolerance: 1.e-7

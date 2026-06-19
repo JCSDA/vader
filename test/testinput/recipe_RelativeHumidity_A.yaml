@@ -3,6 +3,9 @@ recipe:
 trajectory grid:
   type : regular_gaussian
   N : 12
-trajectory filename: testdata/gauss_state_F12.nc
+trajectory filename: testdata/relative_humidity_A.nc
 adjoint test tolerance: 1.e-12
+# TL disabled: the TL uses dlsvpdT (derivative of log saturation vapor pressure) from the
+# trajectory; this is a precomputed diagnostic not in ingredients, so the test framework
+# cannot properly validate the full TL via the Taylor remainder test.
 run tangent linear test: false

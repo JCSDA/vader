@@ -56,6 +56,7 @@ atlas::FunctionSpace SulfateMassFraction_A::productFunctionSpace
 {
     return afieldset.field("sulfate_ppmv").functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void SulfateMassFraction_A::executeNL(atlas::FieldSet & afieldset)
 {

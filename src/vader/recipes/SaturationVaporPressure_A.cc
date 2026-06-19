@@ -54,6 +54,7 @@ atlas::FunctionSpace SaturationVaporPressure_A::productFunctionSpace(
   const atlas::FieldSet & afieldset) const {
   return afieldset.field("air_temperature").functionspace();
 }
+// -------------------------------------------------------------------------------------------------
 
 void SaturationVaporPressure_A::executeNL(atlas::FieldSet & afieldset) {
   oops::Log::trace() << "SatVaporPressure_A::executeNL starting ..." << std::endl;

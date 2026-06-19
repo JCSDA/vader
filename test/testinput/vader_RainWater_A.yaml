@@ -1,0 +1,28 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+cookbook:
+  rain_water: [RainWater_A]
+  air_pressure_at_surface: [SurfaceAirPressure_A]
+  air_pressure_thickness: [AirPressureThickness_A]
+model data:
+  air_pressure_at_top_of_atmosphere_model: 10
+  levels_are_top_down: false
+  nLevels: 70
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - air_temperature
+  - air_pressure
+  - relative_humidity
+  - air_pressure_levels
+ingredients:
+  - air_temperature
+  - air_pressure
+  - relative_humidity
+  - air_pressure_levels
+products:
+  - rain_water
+  - air_pressure_at_surface
+  - air_pressure_thickness
+adjoint test tolerance: 1.e-7
