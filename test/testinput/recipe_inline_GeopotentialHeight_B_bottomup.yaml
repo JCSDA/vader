@@ -1,0 +1,18 @@
+recipe:
+  recipe name: GeopotentialHeight_B
+model data:
+  standard_gravitational_acceleration: 9.80665
+  levels_are_top_down: false
+# 3-level column with level 0 adjacent to the surface and level 2 at the model top.
+# air_pressure_levels has N+1 = 4 interfaces, with level 0 = surface and level 3 = top.
+# virtual_temperature uses Tv = T * (1 + 0.61*q).
+columns:
+  air_pressure:                          [100000.0, 85000.0, 70000.0]
+  air_pressure_levels:                   [101325.0, 92500.0, 77500.0, 65000.0]
+  air_temperature:                       [   290.0,   280.0,   265.0]
+  water_vapor_mixing_ratio_wrt_dry_air:  [   0.010,   0.005,   0.002]
+  virtual_temperature:                   [ 291.769, 280.854, 265.3233]
+  geopotential_height_at_surface:        [   100.0]
+expected:
+  geopotential_height:                   [212.4161400097613, 1574.4183785074592, 3126.4100695467932]
+nonlinear test tolerance: 1.e-12

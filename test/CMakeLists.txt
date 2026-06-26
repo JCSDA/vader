@@ -104,6 +104,8 @@ testinput/recipe_WindSpeedAtSurface_A.yaml
 testinput/recipe_inline_AirPressureAtInterface_A.yaml
 testinput/recipe_inline_AirTemperature_A.yaml
 testinput/recipe_inline_GeopotentialAtInterface_A.yaml
+testinput/recipe_inline_GeopotentialHeight_B.yaml
+testinput/recipe_inline_GeopotentialHeight_B_bottomup.yaml
 testinput/recipe_inline_HeightAboveMeanSeaLevel_A.yaml
 
 testinput/vader_AirTemperature_A.yaml
@@ -729,6 +731,16 @@ ecbuild_add_test( TARGET  vader_recipe_inline_AirTemperature_A
 ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialAtInterface_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_GeopotentialAtInterface_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialHeight_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_GeopotentialHeight_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialHeight_B_bottomup
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_GeopotentialHeight_B_bottomup.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_inline_HeightAboveMeanSeaLevel_A

@@ -1,0 +1,19 @@
+recipe:
+  recipe name: GeopotentialHeight_B
+model data:
+  standard_gravitational_acceleration: 9.80665
+  levels_are_top_down: true
+# Same physical column as recipe_inline_GeopotentialHeight_B_bottomup.yaml, but
+# every multi-level column is reversed so level 0 is the model top and level 2 is
+# the layer adjacent to the surface. The expected geopotential_height column is
+# correspondingly reversed.
+columns:
+  air_pressure:                          [ 70000.0, 85000.0, 100000.0]
+  air_pressure_levels:                   [ 65000.0, 77500.0,  92500.0, 101325.0]
+  air_temperature:                       [   265.0,   280.0,    290.0]
+  water_vapor_mixing_ratio_wrt_dry_air:  [   0.002,   0.005,     0.010]
+  virtual_temperature:                   [265.3233, 280.854,  291.769]
+  geopotential_height_at_surface:        [   100.0]
+expected:
+  geopotential_height:                   [3126.4100695467932, 1574.4183785074592, 212.4161400097613]
+nonlinear test tolerance: 1.e-12

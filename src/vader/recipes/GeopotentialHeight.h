@@ -72,4 +72,54 @@ class GeopotentialHeight_A : public RecipeBase {
     const VaderConfigVars & configVariables_;
 };
 
+class GeopotentialHeight_B_Parameters
+  : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(
+      GeopotentialHeight_B_Parameters,
+      RecipeParametersBase)
+
+ public:
+  oops::RequiredParameter<std::string> name{
+      "recipe name",
+      this};
+};
+
+// -------------------------------------------------------------------------------------------------
+/*! \brief GeopotentialHeight_B calculates geopotential_height
+ *         using the FV3 hydrostatic integration with the
+ *         Picard compressibility correction.
+ *
+ * Ingredients:
+ *   air_pressure
+ *   air_pressure_levels
+ *   air_temperature
+ *   water_vapor_mixing_ratio_wrt_dry_air
+ *   virtual_temperature
+ *   geopotential_height_at_surface
+ *
+ * This version consumes the dry-air mixing ratio and virtual
+ * temperature produced by other Vader recipes.
+ *
+ * This recipe currently implements the nonlinear transform only.
+ */
+class GeopotentialHeight_B : public RecipeBase {
+ public:
+  static const char Name[];
+  static const oops::Variables Ingredients;
+
+  typedef GeopotentialHeight_B_Parameters Parameters_;
+
+  GeopotentialHeight_B(const Parameters_ &, const VaderConfigVars &);
+
+  std::string name() const override;
+  oops::Variable product() const override;
+  oops::Variables ingredients() const override;
+  size_t productLevels(const atlas::FieldSet &) const override;
+  atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+  void executeNL(atlas::FieldSet &) override;
+
+ private:
+  const VaderConfigVars & configVariables_;
+};
+
 }  // namespace vader

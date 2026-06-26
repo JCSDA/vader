@@ -120,6 +120,7 @@ vader/recipes/EastwardWindAt10m.h
 vader/recipes/GeopotentialAtInterface_A.cc
 vader/recipes/GeopotentialAtInterface.h
 vader/recipes/GeopotentialHeight_A.cc
+vader/recipes/GeopotentialHeight_B.cc
 vader/recipes/GeopotentialHeight.h
 vader/recipes/GeopotentialHeightAtInterface_A.cc
 vader/recipes/GeopotentialHeightAtInterface.h
