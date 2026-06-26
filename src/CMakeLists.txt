@@ -125,6 +125,8 @@ vader/recipes/GeopotentialHeightAtInterface_A.cc
 vader/recipes/GeopotentialHeightAtInterface.h
 vader/recipes/GeopotentialHeightAtSurface_A.cc
 vader/recipes/GeopotentialHeightAtSurface.h
+vader/recipes/HeightAboveMeanSeaLevel_A.cc
+vader/recipes/HeightAboveMeanSeaLevel.h
 vader/recipes/HeightAboveMeanSeaLevelAtSurface_A.cc
 vader/recipes/HeightAboveMeanSeaLevelAtSurface.h
 vader/recipes/HydrostaticExnerLevels.h
