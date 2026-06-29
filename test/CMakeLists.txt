@@ -107,6 +107,7 @@ testinput/recipe_inline_GeopotentialAtInterface_A.yaml
 testinput/recipe_inline_GeopotentialHeight_B.yaml
 testinput/recipe_inline_GeopotentialHeight_B_bottomup.yaml
 testinput/recipe_inline_HeightAboveMeanSeaLevel_A.yaml
+testinput/recipe_inline_MoleFractionOfOzoneInAir_A.yaml
 
 testinput/vader_AirTemperature_A.yaml
 testinput/vader_AirPressure_A.yaml
@@ -746,6 +747,11 @@ ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialHeight_B_bottomup
 ecbuild_add_test( TARGET  vader_recipe_inline_HeightAboveMeanSeaLevel_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_HeightAboveMeanSeaLevel_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_MoleFractionOfOzoneInAir_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_MoleFractionOfOzoneInAir_A.yaml"
                   LIBS    vader )
 
 # Test vader calling recipes

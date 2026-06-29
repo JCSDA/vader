@@ -1,0 +1,9 @@
+recipe:
+  recipe name: MoleFractionOfOzoneInAir_A
+model data:
+  constoz: 603447.6
+columns:
+  ozone_mass_mixing_ratio:       [0.000001, 0.000005, 0.000010]
+expected:
+  mole_fraction_of_ozone_in_air: [0.6034476, 3.017238, 6.034476]
+nonlinear test tolerance: 1.e-12

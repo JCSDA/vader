@@ -140,6 +140,8 @@ vader/recipes/LnAirPressureAtInterface_A.cc
 vader/recipes/LnAirPressureAtInterface.h
 vader/recipes/LogDerivativeSaturationVaporPressure_A.cc
 vader/recipes/LogDerivativeSaturationVaporPressure.h
+vader/recipes/MoleFractionOfOzoneInAir.h
+vader/recipes/MoleFractionOfOzoneInAir_A.cc
 vader/recipes/NorthwardWindAt10m_A.cc
 vader/recipes/NorthwardWindAt10m.h
 vader/recipes/ParticulateMatter2p5.h
