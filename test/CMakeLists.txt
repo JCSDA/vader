@@ -37,9 +37,10 @@ testinput/recipe_EffectiveRadiusOfGraupelParticle_A.yaml
 testinput/recipe_EffectiveRadiusOfHailParticle_A.yaml
 testinput/recipe_EffectiveRadiusOfRainParticle_A.yaml
 testinput/recipe_EffectiveRadiusOfSnowParticle_A.yaml
-testinput/recipe_GeopotentialAtInterface_A.yaml
+testinput/recipe_GeopotentialLevels_A.yaml
 testinput/recipe_GeopotentialHeight_A.yaml
-testinput/recipe_GeopotentialHeightAtInterface_A.yaml
+testinput/recipe_GeopotentialHeightLevels_A.yaml
+testinput/recipe_GeopotentialHeightLevels_B.yaml
 testinput/recipe_GeopotentialHeightAtSurface_A.yaml
 testinput/recipe_Graupel_A.yaml
 testinput/recipe_Hail_A.yaml
@@ -103,7 +104,8 @@ testinput/recipe_WindSpeedAtSurface_A.yaml
 
 testinput/recipe_inline_AirPressureAtInterface_A.yaml
 testinput/recipe_inline_AirTemperature_A.yaml
-testinput/recipe_inline_GeopotentialAtInterface_A.yaml
+testinput/recipe_inline_GeopotentialLevels_A.yaml
+testinput/recipe_inline_GeopotentialHeightLevels_B.yaml
 testinput/recipe_inline_GeopotentialHeight_B.yaml
 testinput/recipe_inline_GeopotentialHeight_B_bottomup.yaml
 testinput/recipe_inline_HeightAboveMeanSeaLevel_A.yaml
@@ -134,9 +136,9 @@ testinput/vader_EffectiveRadiusOfGraupelParticle_A.yaml
 testinput/vader_EffectiveRadiusOfHailParticle_A.yaml
 testinput/vader_EffectiveRadiusOfRainParticle_A.yaml
 testinput/vader_EffectiveRadiusOfSnowParticle_A.yaml
-testinput/vader_GeopotentialAtInterface_A.yaml
+testinput/vader_GeopotentialLevels_A.yaml
 testinput/vader_GeopotentialHeight_A.yaml
-testinput/vader_GeopotentialHeightAtInterface_A.yaml
+testinput/vader_GeopotentialHeightLevels_A.yaml
 testinput/vader_GeopotentialHeightAtSurface_A.yaml
 testinput/vader_Graupel_A.yaml
 testinput/vader_Hail_A.yaml
@@ -403,9 +405,9 @@ ecbuild_add_test( TARGET  vader_recipe_EffectiveRadiusOfSnowParticle_A
                   ARGS    "testinput/recipe_EffectiveRadiusOfSnowParticle_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_recipe_GeopotentialAtInterface_A
+ecbuild_add_test( TARGET  vader_recipe_GeopotentialLevels_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_GeopotentialAtInterface_A.yaml"
+                  ARGS    "testinput/recipe_GeopotentialLevels_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_GeopotentialHeight_A
@@ -413,9 +415,14 @@ ecbuild_add_test( TARGET  vader_recipe_GeopotentialHeight_A
                   ARGS    "testinput/recipe_GeopotentialHeight_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_recipe_GeopotentialHeightAtInterface_A
+ecbuild_add_test( TARGET  vader_recipe_GeopotentialHeightLevels_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_GeopotentialHeightAtInterface_A.yaml"
+                  ARGS    "testinput/recipe_GeopotentialHeightLevels_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_GeopotentialHeightLevels_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_GeopotentialHeightLevels_B.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_GeopotentialHeightAtSurface_A
@@ -729,9 +736,14 @@ ecbuild_add_test( TARGET  vader_recipe_inline_AirTemperature_A
                   ARGS    "testinput/recipe_inline_AirTemperature_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialAtInterface_A
+ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialLevels_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
-                  ARGS    "testinput/recipe_inline_GeopotentialAtInterface_A.yaml"
+                  ARGS    "testinput/recipe_inline_GeopotentialLevels_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialHeightLevels_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_GeopotentialHeightLevels_B.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialHeight_B
@@ -875,9 +887,9 @@ ecbuild_add_test( TARGET  vader_vader_EffectiveRadiusOfSnowParticle_A
                   ARGS    "testinput/vader_EffectiveRadiusOfSnowParticle_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_vader_GeopotentialAtInterface_A
+ecbuild_add_test( TARGET  vader_vader_GeopotentialLevels_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
-                  ARGS    "testinput/vader_GeopotentialAtInterface_A.yaml"
+                  ARGS    "testinput/vader_GeopotentialLevels_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_vader_GeopotentialHeight_A
@@ -885,9 +897,9 @@ ecbuild_add_test( TARGET  vader_vader_GeopotentialHeight_A
                   ARGS    "testinput/vader_GeopotentialHeight_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_vader_GeopotentialHeightAtInterface_A
+ecbuild_add_test( TARGET  vader_vader_GeopotentialHeightLevels_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
-                  ARGS    "testinput/vader_GeopotentialHeightAtInterface_A.yaml"
+                  ARGS    "testinput/vader_GeopotentialHeightLevels_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_vader_GeopotentialHeightAtSurface_A

@@ -20,7 +20,7 @@ namespace vader
 // Static attribute initialization
 const char GeopotentialHeightAtSurface_A::Name[] = "GeopotentialHeightAtSurface_A";
 const oops::Variables GeopotentialHeightAtSurface_A::Ingredients{std::vector<std::string>{
-                                                        "surface_geopotential"}};
+                                                        "geopotential_at_surface"}};
 
 // Register the maker
 static RecipeMaker<GeopotentialHeightAtSurface_A> makerGeopotentialHeightAtSurface_A_(
@@ -57,7 +57,7 @@ size_t GeopotentialHeightAtSurface_A::productLevels(const atlas::FieldSet & afie
 atlas::FunctionSpace GeopotentialHeightAtSurface_A::productFunctionSpace(const atlas::FieldSet &
                                                                                   afieldset) const
 {
-    return afieldset.field("surface_geopotential").functionspace();
+    return afieldset.field("geopotential_at_surface").functionspace();
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ void GeopotentialHeightAtSurface_A::executeNL(atlas::FieldSet & afieldset)
           double& z_surf) {
           z_surf = phi_surf * inv_g;
       },
-      afieldset["surface_geopotential"],
+      afieldset["geopotential_at_surface"],
       afieldset["geopotential_height_at_surface"]);
 
     oops::Log::trace() << "leaving GeopotentialHeightAtSurface_A::executeNL" << std::endl;
@@ -97,7 +97,7 @@ void GeopotentialHeightAtSurface_A::executeTL(atlas::FieldSet & afieldsetTL,
           double& z_surf_tl) {
           z_surf_tl = phi_surf_tl * inv_g;
       },
-      afieldsetTL["surface_geopotential"],
+      afieldsetTL["geopotential_at_surface"],
       afieldsetTL["geopotential_height_at_surface"]);
 
     oops::Log::trace() << "leaving GeopotentialHeightAtSurface_A::executeTL function" << std::endl;
@@ -120,7 +120,7 @@ void GeopotentialHeightAtSurface_A::executeAD(atlas::FieldSet & afieldsetAD,
           phi_surf_ad += z_surf_ad * inv_g;
           z_surf_ad = 0.0;
       },
-      afieldsetAD["surface_geopotential"],
+      afieldsetAD["geopotential_at_surface"],
       afieldsetAD["geopotential_height_at_surface"]);
 
     oops::Log::trace() << "leaving GeopotentialHeightAtSurface_A::executeAD function" << std::endl;

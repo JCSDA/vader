@@ -1,0 +1,18 @@
+recipe:
+  recipe name: GeopotentialHeightLevels_B
+model data:
+  gas_constant_of_dry_air: 287.052
+  standard_gravitational_acceleration: 9.80665
+columns:
+  geopotential_height_at_surface:   [100.0]                       # single level
+  virtual_temperature:              [280.0, 270.0, 260.0]
+  ln_air_pressure_at_interface:     [11.5,  11.375, 11.25, 11.125]
+expected:
+  # rovg = 287.052/9.80665 = 29.27116
+  # Bottom-up: index 0 = surface; integrate upward with increasing index.
+  # z_int(0) = z_surf = 100.0
+  # z_int(1) = 100.0      - rovg * 280.0 * (11.375 - 11.5)   = 1124.4905242870911
+  # z_int(2) = 1124.49... - rovg * 270.0 * (11.25  - 11.375) = 2112.392101278215
+  # z_int(3) = 2112.39... - rovg * 260.0 * (11.125 - 11.25)  = 3063.7047309733707
+  geopotential_height_levels:       [100.0, 1124.4905242870911, 2112.392101278215, 3063.7047309733707]
+nonlinear test tolerance: 1.e-12

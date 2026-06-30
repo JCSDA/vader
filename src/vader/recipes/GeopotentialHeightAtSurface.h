@@ -30,7 +30,7 @@ class GeopotentialHeightAtSurface_A_Parameters : public RecipeParametersBase {
 
 // ------------------------------------------------------------------------------------------------
 /*! \brief GeopotentialHeightAtSurface_A class defines a recipe for geopotential_height_at_surface
- *         from surface_geopotential
+ *         from geopotential_at_surface
  *
  *         NL:
  *             z_surf(j) = phi_surf(j) / g
@@ -41,7 +41,7 @@ class GeopotentialHeightAtSurface_A_Parameters : public RecipeParametersBase {
  *             z_surf_ad(j) = 0
  *
  *         where:
- *         - phi_surf is surface_geopotential (m^2 s^-2)
+ *         - phi_surf is geopotential_at_surface (m^2 s^-2)
  *         - g is standard_gravitational_acceleration (m s^-2)
  *         - z_surf is geopotential_height_at_surface (m)
  *         - j indexes horizontal points (0..npoint-1)

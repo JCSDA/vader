@@ -11,15 +11,15 @@
 #include "oops/util/abor1_cpp.h"
 #include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
-#include "vader/recipes/GeopotentialAtInterface.h"
+#include "vader/recipes/GeopotentialLevels.h"
 
 namespace vader
 {
 // ------------------------------------------------------------------------------------------------
 
 // Static attribute initialization
-const char GeopotentialAtInterface_A::Name[] = "GeopotentialAtInterface_A";
-const oops::Variables GeopotentialAtInterface_A::Ingredients{
+const char GeopotentialLevels_A::Name[] = "GeopotentialLevels_A";
+const oops::Variables GeopotentialLevels_A::Ingredients{
     std::vector<std::string>{
     "geopotential",
     "virtual_temperature",
@@ -27,43 +27,43 @@ const oops::Variables GeopotentialAtInterface_A::Ingredients{
     "ln_air_pressure_at_interface"}};
 
 // Register the maker
-static RecipeMaker<GeopotentialAtInterface_A> makerGeopotentialAtInterface_A_(
-    GeopotentialAtInterface_A::Name);
+static RecipeMaker<GeopotentialLevels_A> makerGeopotentialLevels_A_(
+    GeopotentialLevels_A::Name);
 
-GeopotentialAtInterface_A::GeopotentialAtInterface_A(const Parameters_ & params,
+GeopotentialLevels_A::GeopotentialLevels_A(const Parameters_ & params,
                                                      const VaderConfigVars & configVariables) :
     configVariables_{configVariables}
 {
-    oops::Log::trace() << "GeopotentialAtInterface_A::GeopotentialAtInterface_A(params)"
+    oops::Log::trace() << "GeopotentialLevels_A::GeopotentialLevels_A(params)"
         << std::endl;
 }
 
-std::string GeopotentialAtInterface_A::name() const
+std::string GeopotentialLevels_A::name() const
 {
-    return GeopotentialAtInterface_A::Name;
+    return GeopotentialLevels_A::Name;
 }
 
-oops::Variable GeopotentialAtInterface_A::product() const
+oops::Variable GeopotentialLevels_A::product() const
 {
     return oops::Variable{"geopotential_levels"};
 }
 
-oops::Variables GeopotentialAtInterface_A::ingredients() const
+oops::Variables GeopotentialLevels_A::ingredients() const
 {
-    return GeopotentialAtInterface_A::Ingredients;
+    return GeopotentialLevels_A::Ingredients;
 }
 
-oops::Variables GeopotentialAtInterface_A::trajectoryVars() const
+oops::Variables GeopotentialLevels_A::trajectoryVars() const
 {
     return oops::Variables{std::vector<std::string>{"ln_air_pressure",
                                                     "ln_air_pressure_at_interface"}};
 }
 
-size_t GeopotentialAtInterface_A::productLevels(const atlas::FieldSet & afieldset) const
+size_t GeopotentialLevels_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return afieldset.field("ln_air_pressure_at_interface").shape(1);
 }
-atlas::FunctionSpace GeopotentialAtInterface_A::productFunctionSpace(const atlas::FieldSet &
+atlas::FunctionSpace GeopotentialLevels_A::productFunctionSpace(const atlas::FieldSet &
                                                                                     afieldset) const
 {
     return afieldset.field("geopotential").functionspace();
@@ -71,9 +71,9 @@ atlas::FunctionSpace GeopotentialAtInterface_A::productFunctionSpace(const atlas
 
 // -------------------------------------------------------------------------------------------------
 
-void GeopotentialAtInterface_A::executeNL(atlas::FieldSet & afieldset)
+void GeopotentialLevels_A::executeNL(atlas::FieldSet & afieldset)
 {
-    oops::Log::trace() << "entering GeopotentialAtInterface_A::executeNL function" << std::endl;
+    oops::Log::trace() << "entering GeopotentialLevels_A::executeNL function" << std::endl;
 
     const double rdry = configVariables_.getDouble("gas_constant_of_dry_air");
 
@@ -87,15 +87,15 @@ void GeopotentialAtInterface_A::executeNL(atlas::FieldSet & afieldset)
     const int nint = ln_p_int.shape(1);
 
     if (nlev < 2 || nint < 2) {
-        oops::Log::error() << "GeopotentialAtInterface_A::executeNL: need at least 2 full levels "
+        oops::Log::error() << "GeopotentialLevels_A::executeNL: need at least 2 full levels "
                "and 2 interfaces" << std::endl;
-        ABORT("GeopotentialAtInterface_A::executeNL: need at least 2 full levels and 2 interfaces");
+        ABORT("GeopotentialLevels_A::executeNL: need at least 2 full levels and 2 interfaces");
     }
 
     if (nint != nlev + 1) {
-        oops::Log::error() << "GeopotentialAtInterface_A::executeTL: number of interfaces "
+        oops::Log::error() << "GeopotentialLevels_A::executeTL: number of interfaces "
                "must be one more than the number of full levels" << std::endl;
-        ABORT("GeopotentialAtInterface_A::executeTL: number of interfaces "
+        ABORT("GeopotentialLevels_A::executeTL: number of interfaces "
               "must be one more than the number of full levels");
     }
 
@@ -125,14 +125,14 @@ void GeopotentialAtInterface_A::executeNL(atlas::FieldSet & afieldset)
     ln_p_int,
     phi_int);
 
-    oops::Log::trace() << "leaving GeopotentialAtInterface_A::executeNL function" << std::endl;
+    oops::Log::trace() << "leaving GeopotentialLevels_A::executeNL function" << std::endl;
 }
 
 // -------------------------------------------------------------------------------------------------
 
-void GeopotentialAtInterface_A::executeTL(atlas::FieldSet & afieldsetTL,
+void GeopotentialLevels_A::executeTL(atlas::FieldSet & afieldsetTL,
                                     const atlas::FieldSet & afieldsetTraj) {
-    oops::Log::trace() << "entering GeopotentialAtInterface_A::executeTL function" << std::endl;
+    oops::Log::trace() << "entering GeopotentialLevels_A::executeTL function" << std::endl;
 
     const double rdry = configVariables_.getDouble("gas_constant_of_dry_air");
 
@@ -146,15 +146,15 @@ void GeopotentialAtInterface_A::executeTL(atlas::FieldSet & afieldsetTL,
     const int nint = ln_p_int.shape(1);
 
     if (nlev < 2 || nint < 2) {
-        oops::Log::error() << "GeopotentialAtInterface_A::executeTL: need at least 2 full levels "
+        oops::Log::error() << "GeopotentialLevels_A::executeTL: need at least 2 full levels "
                "and 2 interfaces" << std::endl;
-        ABORT("GeopotentialAtInterface_A::executeTL: need at least 2 full levels and 2 interfaces");
+        ABORT("GeopotentialLevels_A::executeTL: need at least 2 full levels and 2 interfaces");
     }
 
     if (nint != nlev + 1) {
-        oops::Log::error() << "GeopotentialAtInterface_A::executeTL: number of interfaces "
+        oops::Log::error() << "GeopotentialLevels_A::executeTL: number of interfaces "
                "must be one more than the number of full levels" << std::endl;
-        ABORT("GeopotentialAtInterface_A::executeTL: number of interfaces "
+        ABORT("GeopotentialLevels_A::executeTL: number of interfaces "
               "must be one more than the number of full levels");
     }
 
@@ -184,14 +184,14 @@ void GeopotentialAtInterface_A::executeTL(atlas::FieldSet & afieldsetTL,
     ln_p_int,
     phi_int_tl);
 
-    oops::Log::trace() << "leaving GeopotentialAtInterface_A::executeTL function" << std::endl;
+    oops::Log::trace() << "leaving GeopotentialLevels_A::executeTL function" << std::endl;
 }
 
 // -------------------------------------------------------------------------------------------------
 
-void GeopotentialAtInterface_A::executeAD(atlas::FieldSet & afieldsetAD,
+void GeopotentialLevels_A::executeAD(atlas::FieldSet & afieldsetAD,
                                     const atlas::FieldSet & afieldsetTraj) {
-    oops::Log::trace() << "entering GeopotentialAtInterface_A::executeAD function" << std::endl;
+    oops::Log::trace() << "entering GeopotentialLevels_A::executeAD function" << std::endl;
 
     const double rdry = configVariables_.getDouble("gas_constant_of_dry_air");
 
@@ -205,15 +205,15 @@ void GeopotentialAtInterface_A::executeAD(atlas::FieldSet & afieldsetAD,
     const int nint = ln_p_int.shape(1);
 
     if (nlev < 2 || nint < 2) {
-        oops::Log::error() << "GeopotentialAtInterface_A::executeAD: need at least 2 full levels "
+        oops::Log::error() << "GeopotentialLevels_A::executeAD: need at least 2 full levels "
                "and 2 interfaces" << std::endl;
-        ABORT("GeopotentialAtInterface_A::executeAD: need at least 2 full levels and 2 interfaces");
+        ABORT("GeopotentialLevels_A::executeAD: need at least 2 full levels and 2 interfaces");
     }
 
     if (nint != nlev + 1) {
-        oops::Log::error() << "GeopotentialAtInterface_A::executeTL: number of interfaces "
+        oops::Log::error() << "GeopotentialLevels_A::executeTL: number of interfaces "
                "must be one more than the number of full levels" << std::endl;
-        ABORT("GeopotentialAtInterface_A::executeTL: number of interfaces "
+        ABORT("GeopotentialLevels_A::executeTL: number of interfaces "
               "must be one more than the number of full levels");
     }
 
@@ -251,7 +251,7 @@ void GeopotentialAtInterface_A::executeAD(atlas::FieldSet & afieldsetAD,
         tv_ad,
         phi_int_ad);
 
-    oops::Log::trace() << "leaving GeopotentialAtInterface_A::executeAD function" << std::endl;
+    oops::Log::trace() << "leaving GeopotentialLevels_A::executeAD function" << std::endl;
 }
 
 // ------------------------------------------------------------------------------------------------

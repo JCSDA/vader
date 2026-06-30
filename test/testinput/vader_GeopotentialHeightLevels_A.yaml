@@ -1,7 +1,7 @@
 vader: {}
 cookbook:
-  geopotential_height_levels: [GeopotentialHeightAtInterface_A]
-  geopotential_levels: [GeopotentialAtInterface_A]
+  geopotential_height_levels: [GeopotentialHeightLevels_A]
+  geopotential_levels: [GeopotentialLevels_A]
   ln_air_pressure: [LnAirPressure_A]
   ln_air_pressure_at_interface: [LnAirPressureAtInterface_A]
   virtual_temperature: [AirVirtualTemperature_A]

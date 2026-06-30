@@ -11,50 +11,50 @@
 
 #include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
-#include "vader/recipes/GeopotentialHeightAtInterface.h"
+#include "vader/recipes/GeopotentialHeightLevels.h"
 
 namespace vader
 {
 // ------------------------------------------------------------------------------------------------
 
 // Static attribute initialization
-const char GeopotentialHeightAtInterface_A::Name[] = "GeopotentialHeightAtInterface_A";
-const oops::Variables GeopotentialHeightAtInterface_A::Ingredients{std::vector<std::string>{
+const char GeopotentialHeightLevels_A::Name[] = "GeopotentialHeightLevels_A";
+const oops::Variables GeopotentialHeightLevels_A::Ingredients{std::vector<std::string>{
                                                         "geopotential_levels"}};
 
 // Register the maker
-static RecipeMaker<GeopotentialHeightAtInterface_A> makerGeopotentialHeightAtInterface_A_(
-                                                            GeopotentialHeightAtInterface_A::Name);
+static RecipeMaker<GeopotentialHeightLevels_A> makerGeopotentialHeightLevels_A_(
+                                                            GeopotentialHeightLevels_A::Name);
 
-GeopotentialHeightAtInterface_A::GeopotentialHeightAtInterface_A(const Parameters_ & params,
+GeopotentialHeightLevels_A::GeopotentialHeightLevels_A(const Parameters_ & params,
                                    const VaderConfigVars & configVariables) :
     configVariables_{configVariables}
 {
-    oops::Log::trace() << "GeopotentialHeightAtInterface_A::GeopotentialHeightAtInterface_A(params)"
+    oops::Log::trace() << "GeopotentialHeightLevels_A::GeopotentialHeightLevels_A(params)"
       << std::endl;
 }
 
-std::string GeopotentialHeightAtInterface_A::name() const
+std::string GeopotentialHeightLevels_A::name() const
 {
-    return GeopotentialHeightAtInterface_A::Name;
+    return GeopotentialHeightLevels_A::Name;
 }
 
-oops::Variable GeopotentialHeightAtInterface_A::product() const
+oops::Variable GeopotentialHeightLevels_A::product() const
 {
     return oops::Variable{"geopotential_height_levels"};
 }
 
-oops::Variables GeopotentialHeightAtInterface_A::ingredients() const
+oops::Variables GeopotentialHeightLevels_A::ingredients() const
 {
-    return GeopotentialHeightAtInterface_A::Ingredients;
+    return GeopotentialHeightLevels_A::Ingredients;
 }
 
-size_t GeopotentialHeightAtInterface_A::productLevels(const atlas::FieldSet & afieldset) const
+size_t GeopotentialHeightLevels_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return afieldset.field("geopotential_levels").shape(1);
 }
 
-atlas::FunctionSpace GeopotentialHeightAtInterface_A::productFunctionSpace(const atlas::FieldSet &
+atlas::FunctionSpace GeopotentialHeightLevels_A::productFunctionSpace(const atlas::FieldSet &
                                                                                     afieldset) const
 {
     return afieldset.field("geopotential_levels").functionspace();
@@ -62,9 +62,9 @@ atlas::FunctionSpace GeopotentialHeightAtInterface_A::productFunctionSpace(const
 
 // -------------------------------------------------------------------------------------------------
 
-void GeopotentialHeightAtInterface_A::executeNL(atlas::FieldSet & afieldset)
+void GeopotentialHeightLevels_A::executeNL(atlas::FieldSet & afieldset)
 {
-    oops::Log::trace() << "entering GeopotentialHeightAtInterface_A::executeNL function"
+    oops::Log::trace() << "entering GeopotentialHeightLevels_A::executeNL function"
       << std::endl;
 
     // Extract values from client config
@@ -79,15 +79,15 @@ void GeopotentialHeightAtInterface_A::executeNL(atlas::FieldSet & afieldset)
       afieldset["geopotential_levels"],
       afieldset["geopotential_height_levels"]);
 
-  oops::Log::trace() << "leaving GeopotentialHeightAtInterface_A::executeNL function" << std::endl;
+  oops::Log::trace() << "leaving GeopotentialHeightLevels_A::executeNL function" << std::endl;
 }
 
 // -------------------------------------------------------------------------------------------------
 
-void GeopotentialHeightAtInterface_A::executeTL(atlas::FieldSet & afieldsetTL,
+void GeopotentialHeightLevels_A::executeTL(atlas::FieldSet & afieldsetTL,
                                           const atlas::FieldSet & /*afieldsetTraj*/)
 {
-    oops::Log::trace() << "entering GeopotentialHeightAtInterface_A::executeTL function"
+    oops::Log::trace() << "entering GeopotentialHeightLevels_A::executeTL function"
       << std::endl;
 
     // Extract values from client config
@@ -102,16 +102,16 @@ void GeopotentialHeightAtInterface_A::executeTL(atlas::FieldSet & afieldsetTL,
       afieldsetTL["geopotential_levels"],
       afieldsetTL["geopotential_height_levels"]);
 
-    oops::Log::trace() << "leaving GeopotentialHeightAtInterface_A::executeTL function"
+    oops::Log::trace() << "leaving GeopotentialHeightLevels_A::executeTL function"
       << std::endl;
 }
 
 // -------------------------------------------------------------------------------------------------
 
-void GeopotentialHeightAtInterface_A::executeAD(atlas::FieldSet & afieldsetAD,
+void GeopotentialHeightLevels_A::executeAD(atlas::FieldSet & afieldsetAD,
                                           const atlas::FieldSet & /*afieldsetTraj*/)
 {
-    oops::Log::trace() << "entering GeopotentialHeightAtInterface_A::executeAD function"
+    oops::Log::trace() << "entering GeopotentialHeightLevels_A::executeAD function"
       << std::endl;
 
     // Extract values from client config
@@ -127,7 +127,7 @@ void GeopotentialHeightAtInterface_A::executeAD(atlas::FieldSet & afieldsetAD,
       afieldsetAD["geopotential_levels"],
       afieldsetAD["geopotential_height_levels"]);
 
-    oops::Log::trace() << "leaving GeopotentialHeightAtInterface_A::executeAD function"
+    oops::Log::trace() << "leaving GeopotentialHeightLevels_A::executeAD function"
       << std::endl;
 }
 

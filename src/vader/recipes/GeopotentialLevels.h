@@ -19,8 +19,8 @@
 
 namespace vader {
 
-class GeopotentialAtInterface_A_Parameters : public RecipeParametersBase {
-  OOPS_CONCRETE_PARAMETERS(GeopotentialAtInterface_A_Parameters, RecipeParametersBase)
+class GeopotentialLevels_A_Parameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(GeopotentialLevels_A_Parameters, RecipeParametersBase)
 
  public:
   oops::RequiredParameter<std::string> name{
@@ -29,7 +29,7 @@ class GeopotentialAtInterface_A_Parameters : public RecipeParametersBase {
 };
 
 // ------------------------------------------------------------------------------------------------
-/*! \brief GeopotentialAtInterface_A computes geopotential at model interfaces
+/*! \brief GeopotentialLevels_A computes geopotential at model interfaces
  *
  *  Uses hydrostatic integration with layer-averaged virtual temperature.
  *  Inputs: geopotential at full levels, virtual_temperature, ln_air_pressure at full levels
@@ -37,14 +37,14 @@ class GeopotentialAtInterface_A_Parameters : public RecipeParametersBase {
  *  Full TL/AD support.
  */
 
-class GeopotentialAtInterface_A : public RecipeBase {
+class GeopotentialLevels_A : public RecipeBase {
  public:
     static const char Name[];
     static const oops::Variables Ingredients;
 
-    typedef GeopotentialAtInterface_A_Parameters Parameters_;
+    typedef GeopotentialLevels_A_Parameters Parameters_;
 
-    GeopotentialAtInterface_A(const Parameters_ &, const VaderConfigVars &);
+    GeopotentialLevels_A(const Parameters_ &, const VaderConfigVars &);
 
     // Recipe base class overrides
     std::string name() const override;

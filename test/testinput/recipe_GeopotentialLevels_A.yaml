@@ -1,5 +1,5 @@
 recipe:
-  recipe name: GeopotentialAtInterface_A
+  recipe name: GeopotentialLevels_A
 trajectory grid:
   type : regular_gaussian
   N : 12

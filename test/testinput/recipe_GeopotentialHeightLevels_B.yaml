@@ -1,10 +1,12 @@
 recipe:
-  recipe name: GeopotentialHeightAtInterface_A
+  recipe name: GeopotentialHeightLevels_B
 trajectory grid:
   type : regular_gaussian
   N : 12
 trajectory filename: testdata/gauss_state_F12.nc
-adjoint test tolerance: 1.e-12
+nonlinear test tolerance: 1.e-2
+run tangent linear test: false
+run adjoint test: false
 model data:
   standard_gravitational_acceleration: 9.80665
   gas_constant_of_dry_air: 287.05
