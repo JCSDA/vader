@@ -1,5 +1,6 @@
 recipe:
   recipe name: SkinTemperatureAtSurfaceWhereSnow_A
+  maximum snow temperature: 500.0  # Set high to accomodate test data.
 trajectory grid:
   type : regular_gaussian
   N : 12

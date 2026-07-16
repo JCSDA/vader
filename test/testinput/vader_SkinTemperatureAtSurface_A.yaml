@@ -3,7 +3,7 @@ trajectory grid:
   type : regular_gaussian
   N : 12
 cookbook:
-  skin_temperature: [SkinTemperature_A]
+  skin_temperature_at_surface: [SkinTemperatureAtSurface_A]
   water_area_fraction: [WaterAreaFraction_A]
   land_area_fraction: [LandAreaFraction_A]
   ice_area_fraction: [IceAreaFraction_A]
@@ -24,7 +24,7 @@ ingredients:
   - seaice_fraction
   - surface_snow_thickness
 products:
-  - skin_temperature
+  - skin_temperature_at_surface
   - water_area_fraction
   - land_area_fraction
   - ice_area_fraction

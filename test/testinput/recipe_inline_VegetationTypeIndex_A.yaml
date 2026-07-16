@@ -1,0 +1,9 @@
+recipe:
+  recipe name: VegetationTypeIndex_A
+columns:
+  # sfc_type = 1 (land), vtype = 5 -> kMwaveVege[4] = 3.
+  gsi_surface_type_index: [1.0]
+  vtype: [5.0]
+expected:
+  vegetation_type_index: [3.0]
+nonlinear test tolerance: 1.e-12

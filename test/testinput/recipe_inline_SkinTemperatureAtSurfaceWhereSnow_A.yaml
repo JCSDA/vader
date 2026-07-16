@@ -1,0 +1,9 @@
+recipe:
+  recipe name: SkinTemperatureAtSurfaceWhereSnow_A
+columns:
+  # Warm input (285 K) is clamped down by the snow ceiling of 280 K.
+  skin_temperature_at_surface: [285.0]
+expected:
+  # min(285.0, 280.0) = 280.0
+  skin_temperature_at_surface_where_snow: [280.0]
+nonlinear test tolerance: 1.e-12

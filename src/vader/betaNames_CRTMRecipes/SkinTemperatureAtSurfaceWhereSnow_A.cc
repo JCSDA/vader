@@ -20,7 +20,7 @@ namespace vader
 // Static attribute initialization
 const char SkinTemperatureAtSurfaceWhereSnow_A::Name[] = "SkinTemperatureAtSurfaceWhereSnow_A";
 const oops::Variables SkinTemperatureAtSurfaceWhereSnow_A::Ingredients{std::vector<std::string>{
-                            "skin_temperature"}};
+                            "skin_temperature_at_surface"}};
 
 // Register the maker
 static RecipeMaker<SkinTemperatureAtSurfaceWhereSnow_A> makerSkinTemperatureAtSurfaceWhereSnow_A_(
@@ -31,6 +31,7 @@ SkinTemperatureAtSurfaceWhereSnow_A::SkinTemperatureAtSurfaceWhereSnow_A(const P
   oops::Log::trace()
     << "SkinTemperatureAtSurfaceWhereSnow_A::SkinTemperatureAtSurfaceWhereSnow_A(params)"
     << std::endl;
+  maxSnowTemperature_ = params.maxSnowTemperature;
 }
 
 std::string SkinTemperatureAtSurfaceWhereSnow_A::name() const {
@@ -45,13 +46,17 @@ oops::Variables SkinTemperatureAtSurfaceWhereSnow_A::ingredients() const {
   return SkinTemperatureAtSurfaceWhereSnow_A::Ingredients;
 }
 
+oops::Variables SkinTemperatureAtSurfaceWhereSnow_A::trajectoryVars() const {
+  return oops::Variables{std::vector<std::string>{"skin_temperature_at_surface"}};
+}
+
 size_t SkinTemperatureAtSurfaceWhereSnow_A::productLevels(const atlas::FieldSet & afieldset) const {
   return 1;
 }
 
 atlas::FunctionSpace SkinTemperatureAtSurfaceWhereSnow_A::productFunctionSpace(
        const atlas::FieldSet & afieldset) const {
-  return afieldset.field("skin_temperature").functionspace();
+  return afieldset.field("skin_temperature_at_surface").functionspace();
 }
 // -------------------------------------------------------------------------------------------------
 
@@ -59,9 +64,10 @@ void SkinTemperatureAtSurfaceWhereSnow_A::executeNL(atlas::FieldSet & afieldset)
   oops::Log::trace() << "entering SkinTemperatureAtSurfaceWhereSnow_A::executeNL" << std::endl;
 
   util::for_each_value(
-      [](const double tskin,
-         double& tskinsnow) { tskinsnow = tskin; },
-      afieldset.field("skin_temperature"),
+      [this](const double tskin, double& tskin_snow) {
+          tskin_snow = std::min(tskin, maxSnowTemperature_);
+      },
+      afieldset.field("skin_temperature_at_surface"),
       afieldset.field("skin_temperature_at_surface_where_snow"));
 
   oops::Log::trace() << "leaving SkinTemperatureAtSurfaceWhereSnow_A::executeNL" << std::endl;
@@ -73,9 +79,11 @@ void SkinTemperatureAtSurfaceWhereSnow_A::executeTL(atlas::FieldSet & afieldsetT
   oops::Log::trace() << "entering SkinTemperatureAtSurfaceWhereSnow_A::executeTL" << std::endl;
 
   util::for_each_value(
-      [](const double tskin_tl,
-         double& tskinsnow_tl) { tskinsnow_tl = tskin_tl; },
-      afieldsetTL.field("skin_temperature"),
+      [this](const double tskin, const double tskin_tl, double& tskin_snow_tl) {
+          tskin_snow_tl = (tskin <= maxSnowTemperature_) ? tskin_tl : 0.0;
+      },
+      afieldsetTraj.field("skin_temperature_at_surface"),
+      afieldsetTL.field("skin_temperature_at_surface"),
       afieldsetTL.field("skin_temperature_at_surface_where_snow"));
 
   oops::Log::trace() << "leaving SkinTemperatureAtSurfaceWhereSnow_A::executeTL" << std::endl;
@@ -87,12 +95,14 @@ void SkinTemperatureAtSurfaceWhereSnow_A::executeAD(atlas::FieldSet & afieldsetA
   oops::Log::trace() << "entering SkinTemperatureAtSurfaceWhereSnow_A::executeAD" << std::endl;
 
   util::for_each_value(
-      [](double& tskin_ad,
-         double& tskinsnow_ad) {
-          tskin_ad += tskinsnow_ad;
-          tskinsnow_ad = 0.0;
+      [this](const double tskin, double& tskin_ad, double& tskin_snow_ad) {
+          if (tskin <= maxSnowTemperature_) {
+              tskin_ad += tskin_snow_ad;
+          }
+          tskin_snow_ad = 0.0;
       },
-      afieldsetAD.field("skin_temperature"),
+      afieldsetTraj.field("skin_temperature_at_surface"),
+      afieldsetAD.field("skin_temperature_at_surface"),
       afieldsetAD.field("skin_temperature_at_surface_where_snow"));
 
   oops::Log::trace() << "leaving SkinTemperatureAtSurfaceWhereSnow_A::executeAD" << std::endl;

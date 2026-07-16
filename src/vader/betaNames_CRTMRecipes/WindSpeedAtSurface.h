@@ -58,4 +58,13 @@ class WindSpeedAtSurface_A : public RecipeBase {
   void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 };
 
+class WindSpeedAtSurface_B_Parameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(WindSpeedAtSurface_B_Parameters, RecipeParametersBase)
+
+ public:
+  oops::RequiredParameter<std::string> name{
+     "recipe name",
+     this};
+};
+
 }  // namespace vader

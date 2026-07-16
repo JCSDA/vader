@@ -19,8 +19,8 @@
 
 namespace vader {
 
-class SkinTemperature_AParameters : public RecipeParametersBase {
-  OOPS_CONCRETE_PARAMETERS(SkinTemperature_AParameters, RecipeParametersBase)
+class SkinTemperatureAtSurface_AParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(SkinTemperatureAtSurface_AParameters, RecipeParametersBase)
 
  public:
   oops::RequiredParameter<std::string> name{
@@ -29,9 +29,10 @@ class SkinTemperature_AParameters : public RecipeParametersBase {
 };
 
 // ------------------------------------------------------------------------------------------------
-/*! \brief SkinTemperature_A class defines an area-fraction-based recipe for skin temperature
+/*! \brief SkinTemperatureAtSurface_A class defines an area-fraction-based recipe for skin
+ *         temperature at the surface
  *
- *  \details This instantiation of RecipeBase produces skin temperature
+ *  \details This instantiation of RecipeBase produces skin_temperature_at_surface
  *           using a weighted blend based on surface type area fractions:
  *           - water_area_fraction: uses SST
  *           - ice_area_fraction: uses SST capped at 273.15 K
@@ -40,14 +41,14 @@ class SkinTemperature_AParameters : public RecipeParametersBase {
  *           Formula: Tskin = water_frac*SST + ice_frac*min(SST,273.15) +
  *                           snow_frac*min(Tair,273.15) + land_frac*Tair
  */
-class SkinTemperature_A : public RecipeBase {
+class SkinTemperatureAtSurface_A : public RecipeBase {
  public:
     static const char Name[];
     static const oops::Variables Ingredients;
 
-    typedef SkinTemperature_AParameters Parameters_;
+    typedef SkinTemperatureAtSurface_AParameters Parameters_;
 
-    SkinTemperature_A(const Parameters_ &, const VaderConfigVars &);
+    SkinTemperatureAtSurface_A(const Parameters_ &, const VaderConfigVars &);
 
     // Recipe base class overrides
     std::string name() const override;

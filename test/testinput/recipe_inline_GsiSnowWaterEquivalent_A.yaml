@@ -1,0 +1,9 @@
+recipe:
+  recipe name: GsiSnowWaterEquivalent_A
+columns:
+  # 0.05 kg/m^2 = realistic light-snow value, well below the |x| > 1e10 fill-value guard.
+  sheleg: [0.05]
+expected:
+  # Pure passthrough when |sheleg| <= 1.0e10.
+  gsi_snow_water_equivalent: [0.05]
+nonlinear test tolerance: 1.e-12

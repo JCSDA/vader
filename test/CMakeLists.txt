@@ -69,7 +69,7 @@ testinput/recipe_SaturationSpecificHumidity_A.yaml
 testinput/recipe_SaturationSpecificHumidity_B.yaml
 testinput/recipe_SaturationVaporPressure_A.yaml
 testinput/recipe_SaturationVaporPressure_B.yaml
-testinput/recipe_SkinTemperature_A.yaml
+testinput/recipe_SkinTemperatureAtSurface_A.yaml
 testinput/recipe_SkinTemperatureAtSurfaceWhereIce_A.yaml
 testinput/recipe_SkinTemperatureAtSurfaceWhereLand_A.yaml
 testinput/recipe_SkinTemperatureAtSurfaceWhereSea_A.yaml
@@ -104,7 +104,31 @@ testinput/recipe_WindSpeedAtSurface_A.yaml
 
 testinput/recipe_inline_AirPressureAtInterface_A.yaml
 testinput/recipe_inline_AirTemperature_A.yaml
+testinput/recipe_inline_AverageSurfaceTemperatureWithinFieldOfView_A.yaml
 testinput/recipe_inline_GeopotentialLevels_A.yaml
+testinput/recipe_inline_GsiSnowWaterEquivalent_A.yaml
+testinput/recipe_inline_GsiSurfaceTypeIndex_A.yaml
+testinput/recipe_inline_IceAreaFraction_B.yaml
+testinput/recipe_inline_LandAreaFraction_B.yaml
+testinput/recipe_inline_LandTypeIndexIgbp_A.yaml
+testinput/recipe_inline_LandTypeIndexNpoess_A.yaml
+testinput/recipe_inline_SkinTemperatureAtSurfaceWhereIce_A.yaml
+testinput/recipe_inline_SkinTemperatureAtSurfaceWhereLand_A.yaml
+testinput/recipe_inline_SkinTemperatureAtSurfaceWhereSea_A.yaml
+testinput/recipe_inline_SkinTemperatureAtSurfaceWhereSnow_A.yaml
+testinput/recipe_inline_SoilTemperature_A.yaml
+testinput/recipe_inline_SoilType_A.yaml
+testinput/recipe_inline_SurfaceSnowAreaFraction_B.yaml
+testinput/recipe_inline_SurfaceSnowThickness_A.yaml
+testinput/recipe_inline_VegetationAreaFraction_A.yaml
+testinput/recipe_inline_VegetationTypeIndex_A.yaml
+testinput/recipe_inline_VolumeFractionOfCondensedWaterInSoil_A.yaml
+testinput/recipe_inline_WaterAreaFraction_B.yaml
+testinput/recipe_inline_WindSpeedAt10m_A.yaml
+testinput/recipe_inline_WindSpeedAt10m_B.yaml
+testinput/recipe_inline_WindFromDirectionAtSurface_A.yaml
+testinput/recipe_inline_WindToDirectionAtSurface_A.yaml
+testinput/recipe_inline_WindSpeedAtSurface_B.yaml
 testinput/recipe_inline_GeopotentialHeightLevels_B.yaml
 testinput/recipe_inline_GeopotentialHeight_B.yaml
 testinput/recipe_inline_GeopotentialHeight_B_bottomup.yaml
@@ -159,7 +183,7 @@ testinput/vader_ParticulateMatter2p5_A.yaml
 testinput/vader_ParticulateMatter2p5_B.yaml
 testinput/vader_RainMixingRatio_A.yaml
 testinput/vader_RainWater_A.yaml
-testinput/vader_SkinTemperature_A.yaml
+testinput/vader_SkinTemperatureAtSurface_A.yaml
 testinput/vader_SkinTemperatureAtSurfaceWhereIce_A.yaml
 testinput/vader_SkinTemperatureAtSurfaceWhereLand_A.yaml
 testinput/vader_SkinTemperatureAtSurfaceWhereSea_A.yaml
@@ -180,6 +204,7 @@ testinput/vader_WaterVaporMixingRatioWrtMoistAir_A.yaml
 testinput/vader_WaterVaporMixingRatioWrtWetAir_A.yaml
 testinput/vader_WaterVaporMixingRatioWrtWetAir2m_A.yaml
 testinput/vader_WindFromDirectionAtSurface_A.yaml
+testinput/vader_WindToDirectionAtSurface_A.yaml
 testinput/vader_WindSpeedAtSurface_A.yaml
 )
 
@@ -565,9 +590,9 @@ ecbuild_add_test( TARGET  vader_recipe_SaturationVaporPressure_B
                   ARGS    "testinput/recipe_SaturationVaporPressure_B.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_recipe_SkinTemperature_A
+ecbuild_add_test( TARGET  vader_recipe_SkinTemperatureAtSurface_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_SkinTemperature_A.yaml"
+                  ARGS    "testinput/recipe_SkinTemperatureAtSurface_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_SkinTemperatureAtSurfaceWhereIce_A
@@ -736,6 +761,11 @@ ecbuild_add_test( TARGET  vader_recipe_inline_AirTemperature_A
                   ARGS    "testinput/recipe_inline_AirTemperature_A.yaml"
                   LIBS    vader )
 
+ecbuild_add_test( TARGET  vader_recipe_inline_AverageSurfaceTemperatureWithinFieldOfView_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_AverageSurfaceTemperatureWithinFieldOfView_A.yaml"
+                  LIBS    vader )
+
 ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialLevels_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_GeopotentialLevels_A.yaml"
@@ -745,6 +775,117 @@ ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialHeightLevels_B
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_GeopotentialHeightLevels_B.yaml"
                   LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_GsiSnowWaterEquivalent_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_GsiSnowWaterEquivalent_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_GsiSurfaceTypeIndex_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_GsiSurfaceTypeIndex_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_IceAreaFraction_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_IceAreaFraction_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_LandAreaFraction_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_LandAreaFraction_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_LandTypeIndexIgbp_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_LandTypeIndexIgbp_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_LandTypeIndexNpoess_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_LandTypeIndexNpoess_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_SkinTemperatureAtSurfaceWhereIce_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_SkinTemperatureAtSurfaceWhereIce_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_SkinTemperatureAtSurfaceWhereLand_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_SkinTemperatureAtSurfaceWhereLand_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_SkinTemperatureAtSurfaceWhereSea_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_SkinTemperatureAtSurfaceWhereSea_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_SkinTemperatureAtSurfaceWhereSnow_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_SkinTemperatureAtSurfaceWhereSnow_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_SoilTemperature_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_SoilTemperature_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_SoilType_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_SoilType_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_SurfaceSnowAreaFraction_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_SurfaceSnowAreaFraction_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_SurfaceSnowThickness_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_SurfaceSnowThickness_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_VegetationAreaFraction_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_VegetationAreaFraction_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_VegetationTypeIndex_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_VegetationTypeIndex_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_VolumeFractionOfCondensedWaterInSoil_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_VolumeFractionOfCondensedWaterInSoil_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_WaterAreaFraction_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_WaterAreaFraction_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_WindFromDirectionAtSurface_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_WindFromDirectionAtSurface_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_WindToDirectionAtSurface_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_WindToDirectionAtSurface_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_WindSpeedAt10m_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_WindSpeedAt10m_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_WindSpeedAt10m_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_WindSpeedAt10m_B.yaml"
+                  LIBS    vader )
+
 
 ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialHeight_B
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
@@ -1002,9 +1143,9 @@ ecbuild_add_test( TARGET  vader_vader_RainWater_A
                   ARGS    "testinput/vader_RainWater_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_vader_SkinTemperature_A
+ecbuild_add_test( TARGET  vader_vader_SkinTemperatureAtSurface_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
-                  ARGS    "testinput/vader_SkinTemperature_A.yaml"
+                  ARGS    "testinput/vader_SkinTemperatureAtSurface_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_vader_SkinTemperatureAtSurfaceWhereIce_A
@@ -1105,6 +1246,11 @@ ecbuild_add_test( TARGET  vader_vader_WaterVaporMixingRatioWrtWetAir2m_A
 ecbuild_add_test( TARGET  vader_vader_WindFromDirectionAtSurface_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
                   ARGS    "testinput/vader_WindFromDirectionAtSurface_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_WindToDirectionAtSurface_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "testinput/vader_WindToDirectionAtSurface_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_vader_WindSpeedAtSurface_A

@@ -1,0 +1,16 @@
+recipe:
+  recipe name: WindSpeedAt10m_A
+model data:
+  # levels_are_top_down: true means the surface is the last (highest-index) level.
+  levels_are_top_down: true
+columns:
+  # 3 levels; surface is index 2. Non-zero values only at the surface level to
+  # verify that the recipe uses the correct level.
+  eastward_wind:  [0.0, 0.0, 3.0]
+  northward_wind: [0.0, 0.0, 4.0]
+  # ratio is a single-level scalar field
+  ratio_of_wind_at_surface_adjacent_layer_to_wind_at_10m: [0.8]
+expected:
+  # spd = ratio * sqrt(u^2 + v^2) = 0.8 * sqrt(9 + 16) = 0.8 * 5 = 4.0
+  wind_speed_at_10m: [4.0]
+nonlinear test tolerance: 1.e-12

@@ -26,15 +26,17 @@ class SkinTemperatureAtSurfaceWhereSnow_A_Parameters : public RecipeParametersBa
   oops::RequiredParameter<std::string> name{
      "recipe name",
      this};
+  oops::Parameter<double> maxSnowTemperature{
+     "maximum snow temperature",
+     "Upper bound on skin temperature for snow surfaces (K).",
+     280.0,
+     this};
 };
 
 // -------------------------------------------------------------------------------------------------
 
-/*! \brief SkinTemperatureAtSurfaceWhereSnow_A computes skin temperature at surface where snow
- *
- *  \details Formula: tskin_snow = tskin
- *           where tskin is skin_temperature_at_surface (K),
- *           and tskin_snow is skin_temperature_at_surface_where_snow (K).
+/*! \brief SkinTemperatureAtSurfaceWhereSnow_A creates skin_temperature_at_surface_where_snow from
+ *         skin_temperature_at_surface, with a configurable maximum allowed temperature.
  */
 class SkinTemperatureAtSurfaceWhereSnow_A : public RecipeBase {
  public:
@@ -45,16 +47,19 @@ class SkinTemperatureAtSurfaceWhereSnow_A : public RecipeBase {
 
   SkinTemperatureAtSurfaceWhereSnow_A(const Parameters_ &, const VaderConfigVars &);
 
-  // Recipe base class overrides
   std::string name() const override;
   oops::Variable product() const override;
   oops::Variables ingredients() const override;
+  oops::Variables trajectoryVars() const override;
   size_t productLevels(const atlas::FieldSet &) const override;
   atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
   bool hasTLAD() const override { return true; }
   void executeNL(atlas::FieldSet &) override;
   void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
   void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+
+ private:
+  double maxSnowTemperature_;
 };
 
 }  // namespace vader

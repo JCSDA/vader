@@ -1,0 +1,16 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+cookbook:
+  wind_to_direction_at_surface: [WindToDirectionAtSurface_A]
+  eastward_wind_at_surface: [uwind_at_surface_A]
+  northward_wind_at_surface: [vwind_at_surface_A]
+model data:
+  levels_are_top_down: false
+  radians_to_degrees: 57.29577951308232
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables: [eastward_wind, northward_wind]
+ingredients: [eastward_wind, northward_wind]
+products: [wind_to_direction_at_surface, eastward_wind_at_surface, northward_wind_at_surface]
+adjoint test tolerance: 1.e-12

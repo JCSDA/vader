@@ -1,5 +1,6 @@
 recipe:
   recipe name: SkinTemperatureAtSurfaceWhereSea_A
+  minimum ocean temperature: 0.0  # Set low to accomodate test data.
 trajectory grid:
   type : regular_gaussian
   N : 12

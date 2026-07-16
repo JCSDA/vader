@@ -1,5 +1,6 @@
 recipe:
   recipe name: SkinTemperatureAtSurfaceWhereIce_A
+  maximum ice temperature: 1000.0  # Set high to accomodate test data.
 trajectory grid:
   type : regular_gaussian
   N : 12

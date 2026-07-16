@@ -1,0 +1,8 @@
+recipe:
+  recipe name: WaterAreaFraction_B
+columns:
+  # sfc_type = 0 (open water) -> full water cover.
+  gsi_surface_type_index: [0.0]
+expected:
+  water_area_fraction: [1.0]
+nonlinear test tolerance: 1.e-12

@@ -1,0 +1,9 @@
+recipe:
+  recipe name: SoilType_A
+columns:
+  # sfc_type = 1 (land), stype = 4 -> kMwaveSoil[3] = 2.
+  gsi_surface_type_index: [1.0]
+  stype: [4.0]
+expected:
+  soil_type: [2.0]
+nonlinear test tolerance: 1.e-12

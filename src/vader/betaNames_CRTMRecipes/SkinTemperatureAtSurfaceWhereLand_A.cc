@@ -20,7 +20,7 @@ namespace vader
 // Static attribute initialization
 const char SkinTemperatureAtSurfaceWhereLand_A::Name[] = "SkinTemperatureAtSurfaceWhereLand_A";
 const oops::Variables SkinTemperatureAtSurfaceWhereLand_A::Ingredients{std::vector<std::string>{
-                            "skin_temperature"}};
+                            "skin_temperature_at_surface"}};
 
 // Register the maker
 static RecipeMaker<SkinTemperatureAtSurfaceWhereLand_A> makerSkinTemperatureAtSurfaceWhereLand_A_(
@@ -51,7 +51,7 @@ size_t SkinTemperatureAtSurfaceWhereLand_A::productLevels(const atlas::FieldSet 
 
 atlas::FunctionSpace SkinTemperatureAtSurfaceWhereLand_A::productFunctionSpace(
        const atlas::FieldSet & afieldset) const {
-  return afieldset.field("skin_temperature").functionspace();
+  return afieldset.field("skin_temperature_at_surface").functionspace();
 }
 // -------------------------------------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ void SkinTemperatureAtSurfaceWhereLand_A::executeNL(atlas::FieldSet & afieldset)
   util::for_each_value(
       [](const double tskin,
          double& tskinland) { tskinland = tskin; },
-      afieldset.field("skin_temperature"),
+      afieldset.field("skin_temperature_at_surface"),
       afieldset.field("skin_temperature_at_surface_where_land"));
 
   oops::Log::trace() << "leaving SkinTemperatureAtSurfaceWhereLand_A::executeNL" << std::endl;
@@ -75,7 +75,7 @@ void SkinTemperatureAtSurfaceWhereLand_A::executeTL(atlas::FieldSet & afieldsetT
   util::for_each_value(
       [](const double tskin_tl,
          double& tskinland_tl) { tskinland_tl = tskin_tl; },
-      afieldsetTL.field("skin_temperature"),
+      afieldsetTL.field("skin_temperature_at_surface"),
       afieldsetTL.field("skin_temperature_at_surface_where_land"));
 
   oops::Log::trace() << "leaving SkinTemperatureAtSurfaceWhereLand_A::executeTL" << std::endl;
@@ -92,7 +92,7 @@ void SkinTemperatureAtSurfaceWhereLand_A::executeAD(atlas::FieldSet & afieldsetA
           tskin_ad += tskinland_ad;
           tskinland_ad = 0.0;
       },
-      afieldsetAD.field("skin_temperature"),
+      afieldsetAD.field("skin_temperature_at_surface"),
       afieldsetAD.field("skin_temperature_at_surface_where_land"));
 
   oops::Log::trace() << "leaving SkinTemperatureAtSurfaceWhereLand_A::executeAD" << std::endl;

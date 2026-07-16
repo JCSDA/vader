@@ -12,60 +12,60 @@
 
 #include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
-#include "vader/betaNames_CRTMRecipes/SkinTemperature.h"
+#include "vader/betaNames_CRTMRecipes/SkinTemperatureAtSurface.h"
 
 namespace vader {
 
 // Static attribute initialization
-const char SkinTemperature_A::Name[] = "SkinTemperature_A";
-const oops::Variables SkinTemperature_A::Ingredients{
+const char SkinTemperatureAtSurface_A::Name[] = "SkinTemperatureAtSurface_A";
+const oops::Variables SkinTemperatureAtSurface_A::Ingredients{
     std::vector<std::string>{"air_temperature", "sea_surface_temperature",
                              "water_area_fraction", "land_area_fraction",
                              "ice_area_fraction", "surface_snow_area_fraction"}};
 
 // Register the maker
-static RecipeMaker<SkinTemperature_A> makerSkinTemperature_A_(
-    SkinTemperature_A::Name);
+static RecipeMaker<SkinTemperatureAtSurface_A> makerSkinTemperatureAtSurface_A_(
+    SkinTemperatureAtSurface_A::Name);
 
-SkinTemperature_A::SkinTemperature_A(const Parameters_ & params,
+SkinTemperatureAtSurface_A::SkinTemperatureAtSurface_A(const Parameters_ & params,
                                        const VaderConfigVars & configVariables) :
   configVariables_(configVariables) {
-  oops::Log::trace() << "SkinTemperature_A::SkinTemperature_A(params)"
+  oops::Log::trace() << "SkinTemperatureAtSurface_A::SkinTemperatureAtSurface_A(params)"
                      << std::endl;
 }
 
-std::string SkinTemperature_A::name() const {
-  return SkinTemperature_A::Name;
+std::string SkinTemperatureAtSurface_A::name() const {
+  return SkinTemperatureAtSurface_A::Name;
 }
 
-oops::Variable SkinTemperature_A::product() const {
-  return oops::Variable{"skin_temperature"};
+oops::Variable SkinTemperatureAtSurface_A::product() const {
+  return oops::Variable{"skin_temperature_at_surface"};
 }
 
-oops::Variables SkinTemperature_A::ingredients() const {
-  return SkinTemperature_A::Ingredients;
+oops::Variables SkinTemperatureAtSurface_A::ingredients() const {
+  return SkinTemperatureAtSurface_A::Ingredients;
 }
 
-oops::Variables SkinTemperature_A::trajectoryVars() const {
+oops::Variables SkinTemperatureAtSurface_A::trajectoryVars() const {
   return oops::Variables{std::vector<std::string>{
       "water_area_fraction", "land_area_fraction",
       "ice_area_fraction", "surface_snow_area_fraction",
       "air_temperature", "sea_surface_temperature"}};
 }
 
-size_t SkinTemperature_A::productLevels(const atlas::FieldSet & afieldset) const {
+size_t SkinTemperatureAtSurface_A::productLevels(const atlas::FieldSet & afieldset) const {
   return 1;
 }
 
-atlas::FunctionSpace SkinTemperature_A::productFunctionSpace(
+atlas::FunctionSpace SkinTemperatureAtSurface_A::productFunctionSpace(
     const atlas::FieldSet & afieldset) const {
   return afieldset.field("air_temperature").functionspace();
 }
 
 // -------------------------------------------------------------------------------------------------
 
-void SkinTemperature_A::executeNL(atlas::FieldSet & afieldset) {
-  oops::Log::trace() << "SkinTemperature_A::executeNL starting" << std::endl;
+void SkinTemperatureAtSurface_A::executeNL(atlas::FieldSet & afieldset) {
+  oops::Log::trace() << "SkinTemperatureAtSurface_A::executeNL starting" << std::endl;
 
   const double T_freeze = 273.15;
   const bool topDown = configVariables_.getBool("levels_are_top_down");
@@ -96,16 +96,16 @@ void SkinTemperature_A::executeNL(atlas::FieldSet & afieldset) {
       afieldset.field("land_area_fraction"),
       afieldset.field("ice_area_fraction"),
       afieldset.field("surface_snow_area_fraction"),
-      afieldset.field("skin_temperature"));
+      afieldset.field("skin_temperature_at_surface"));
 
-  oops::Log::trace() << "SkinTemperature_A::executeNL done" << std::endl;
+  oops::Log::trace() << "SkinTemperatureAtSurface_A::executeNL done" << std::endl;
 }
 
 // -------------------------------------------------------------------------------------------------
 
-void SkinTemperature_A::executeTL(atlas::FieldSet & afieldsetTL,
+void SkinTemperatureAtSurface_A::executeTL(atlas::FieldSet & afieldsetTL,
                                    const atlas::FieldSet & afieldsetTraj) {
-  oops::Log::trace() << "SkinTemperature_A::executeTL starting" << std::endl;
+  oops::Log::trace() << "SkinTemperatureAtSurface_A::executeTL starting" << std::endl;
 
   const double T_freeze = 273.15;
   const bool topDown = configVariables_.getBool("levels_are_top_down");
@@ -144,16 +144,16 @@ void SkinTemperature_A::executeTL(atlas::FieldSet & afieldsetTL,
       afieldsetTraj.field("surface_snow_area_fraction"),
       afieldsetTL.field("air_temperature"),
       afieldsetTL.field("sea_surface_temperature"),
-      afieldsetTL.field("skin_temperature"));
+      afieldsetTL.field("skin_temperature_at_surface"));
 
-  oops::Log::trace() << "SkinTemperature_A::executeTL done" << std::endl;
+  oops::Log::trace() << "SkinTemperatureAtSurface_A::executeTL done" << std::endl;
 }
 
 // -------------------------------------------------------------------------------------------------
 
-void SkinTemperature_A::executeAD(atlas::FieldSet & afieldsetAD,
+void SkinTemperatureAtSurface_A::executeAD(atlas::FieldSet & afieldsetAD,
                                    const atlas::FieldSet & afieldsetTraj) {
-  oops::Log::trace() << "SkinTemperature_A::executeAD starting" << std::endl;
+  oops::Log::trace() << "SkinTemperatureAtSurface_A::executeAD starting" << std::endl;
 
   const double T_freeze = 273.15;
   const bool topDown = configVariables_.getBool("levels_are_top_down");
@@ -187,9 +187,9 @@ void SkinTemperature_A::executeAD(atlas::FieldSet & afieldsetAD,
       afieldsetTraj.field("surface_snow_area_fraction"),
       afieldsetAD.field("air_temperature"),
       afieldsetAD.field("sea_surface_temperature"),
-      afieldsetAD.field("skin_temperature"));
+      afieldsetAD.field("skin_temperature_at_surface"));
 
-  oops::Log::trace() << "SkinTemperature_A::executeAD done" << std::endl;
+  oops::Log::trace() << "SkinTemperatureAtSurface_A::executeAD done" << std::endl;
 }
 
 }  // namespace vader

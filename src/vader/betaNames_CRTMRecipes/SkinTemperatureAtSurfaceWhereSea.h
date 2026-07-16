@@ -26,6 +26,11 @@ class SkinTemperatureAtSurfaceWhereSea_A_Parameters : public RecipeParametersBas
   oops::RequiredParameter<std::string> name{
      "recipe name",
      this};
+  oops::Parameter<double> minOceanTemperature{
+     "minimum ocean temperature",
+     "Lower bound on skin temperature for ocean surfaces (K).",
+     270.0,
+     this};
 };
 
 // -------------------------------------------------------------------------------------------------
@@ -35,6 +40,7 @@ class SkinTemperatureAtSurfaceWhereSea_A_Parameters : public RecipeParametersBas
  *  \details Formula: tskin_sea = tskin
  *           where tskin is skin_temperature_at_surface (K),
  *           and tskin_sea is skin_temperature_at_surface_where_sea (K).
+ *           Lower bound on skin temperature for ocean surfaces defaults to 270 K.
  */
 class SkinTemperatureAtSurfaceWhereSea_A : public RecipeBase {
  public:
@@ -50,11 +56,15 @@ class SkinTemperatureAtSurfaceWhereSea_A : public RecipeBase {
   oops::Variable product() const override;
   oops::Variables ingredients() const override;
   size_t productLevels(const atlas::FieldSet &) const override;
+  oops::Variables trajectoryVars() const override;
   atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
   bool hasTLAD() const override { return true; }
   void executeNL(atlas::FieldSet &) override;
   void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
   void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+
+ private:
+  double minOceanTemperature_;
 };
 
 }  // namespace vader

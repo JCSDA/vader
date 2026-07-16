@@ -58,4 +58,36 @@ class LandAreaFraction_A : public RecipeBase {
     void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 };
 
+class LandAreaFraction_BParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(LandAreaFraction_BParameters, RecipeParametersBase)
+
+ public:
+  oops::RequiredParameter<std::string> name{
+     "recipe name",
+     this};
+};
+
+// ------------------------------------------------------------------------------------------------
+/*! \brief LandAreaFraction_B mirrors the fv3-jedi crtm_surface land-coverage helper.
+ *
+ *  \details Produces land_area_fraction = 1 where gsi_surface_type_index == 1 (land), else 0.
+ *           For cells with vtype == 15 (glacial land ice) or stype == 16, reassigned to 0.
+ */
+class LandAreaFraction_B : public RecipeBase {
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+
+    typedef LandAreaFraction_BParameters Parameters_;
+
+    LandAreaFraction_B(const Parameters_ &, const VaderConfigVars &);
+
+    std::string name() const override;
+    oops::Variable product() const override;
+    oops::Variables ingredients() const override;
+    size_t productLevels(const atlas::FieldSet &) const override;
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+    void executeNL(atlas::FieldSet &) override;
+};
+
 }  // namespace vader

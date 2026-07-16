@@ -13,7 +13,6 @@
 
 #include "atlas/field/FieldSet.h"
 #include "atlas/functionspace/FunctionSpace.h"
-#include "oops/util/parameters/Parameter.h"
 #include "oops/util/parameters/RequiredParameter.h"
 #include "vader/RecipeBase.h"
 
@@ -30,12 +29,13 @@ class WindFromDirectionAtSurface_A_Parameters : public RecipeParametersBase {
 
 // -------------------------------------------------------------------------------------------------
 
-/*! \brief WindFromDirectionAtSurface_A computes wind direction at surface
+/*! \brief WindFromDirectionAtSurface_A computes the meteorological wind-from direction at surface.
  *
- *  \details Formula: direction = atan2(-u, -v) * 180/pi
- *           where u is eastward_wind, v is northward_wind
- *           Result is in degrees (0-360), where 0 is North, 90 is East
+ *  \details Formula: direction = atan2(-u, -v) * radToDeg, normalized to [0, 360).
+ *           0 degrees = wind coming from north, 90 = from east.
+ *           radToDeg is read from configVariables ("radians_to_degrees").
  *           Full TL/AD support.
+ *           Note that CRTM uses WindToDirection, not WindFromDirection
  */
 class WindFromDirectionAtSurface_A : public RecipeBase {
  public:
@@ -57,6 +57,9 @@ class WindFromDirectionAtSurface_A : public RecipeBase {
   void executeNL(atlas::FieldSet &) override;
   void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
   void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+
+ private:
+  double radToDeg_;
 };
 
 }  // namespace vader

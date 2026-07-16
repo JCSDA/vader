@@ -1,5 +1,5 @@
 recipe:
-  recipe name: SkinTemperature_A
+  recipe name: SkinTemperatureAtSurface_A
 trajectory grid:
   type : regular_gaussian
   N : 12

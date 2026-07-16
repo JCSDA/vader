@@ -8,6 +8,7 @@ cookbook:
   northward_wind_at_surface: [vwind_at_surface_A]
 model data:
   levels_are_top_down: false
+  radians_to_degrees: 57.29577951308232
 trajectory filename: testdata/gauss_state_F12.nc
 trajectory variables: [eastward_wind, northward_wind]
 ingredients: [eastward_wind, northward_wind]

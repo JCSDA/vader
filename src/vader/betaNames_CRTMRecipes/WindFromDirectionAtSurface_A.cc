@@ -6,16 +6,13 @@
  */
 
 #include <cmath>
-#include <iostream>
 #include <vector>
 
 #include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
 #include "vader/betaNames_CRTMRecipes/WindFromDirectionAtSurface.h"
 
-namespace vader
-{
-// ------------------------------------------------------------------------------------------------
+namespace vader {
 
 // Static attribute initialization
 const char WindFromDirectionAtSurface_A::Name[] = "WindFromDirectionAtSurface_A";
@@ -24,7 +21,6 @@ const oops::Variables WindFromDirectionAtSurface_A::Ingredients{std::vector<std:
                             "northward_wind_at_surface"}};
 
 // Constants
-static constexpr double rad_to_deg = 180.0 / M_PI;
 static constexpr double epsilon = 1.0e-10;  // Tolerance for zero wind checks
 
 // Register the maker
@@ -35,6 +31,7 @@ WindFromDirectionAtSurface_A::WindFromDirectionAtSurface_A(const Parameters_ & p
                    const VaderConfigVars & configVariables) {
   oops::Log::trace() << "WindFromDirectionAtSurface_A::WindFromDirectionAtSurface_A(params)"
                      << std::endl;
+  radToDeg_ = configVariables.getDouble("radians_to_degrees");
 }
 
 std::string WindFromDirectionAtSurface_A::name() const {
@@ -68,12 +65,10 @@ void WindFromDirectionAtSurface_A::executeNL(atlas::FieldSet & afieldset) {
   oops::Log::trace() << "WindFromDirectionAtSurface_A::executeNL starting" << std::endl;
 
   util::for_each_value(
-    [&](const double uu,
-        const double vv,
-        double& dir) {
-        // Wind direction: atan2(-uu, -vv) gives direction wind is coming FROM
-        // Convert to degrees and ensure 0-360 range
-        dir = std::atan2(-uu, -vv) * rad_to_deg;
+    [this](const double uu,
+           const double vv,
+           double& dir) {
+        dir = std::atan2(-uu, -vv) * radToDeg_;
         if (dir < 0.0) {
           dir += 360.0;
         }
@@ -92,19 +87,16 @@ void WindFromDirectionAtSurface_A::executeTL(atlas::FieldSet & afieldsetTL,
   oops::Log::trace() << "WindFromDirectionAtSurface_A::executeTL starting" << std::endl;
 
   util::for_each_value(
-    [&](const double uu,
-        const double vv,
-        const double uu_tl,
-        const double vv_tl,
-        double& dir_tl) {
-        double speed_sq = uu * uu + vv * vv;
+    [this](const double uu,
+          const double vv,
+          const double uu_tl,
+          const double vv_tl,
+          double& dir_tl) {
+        const double speed_sq = uu * uu + vv * vv;
         if (speed_sq > epsilon) {
-          // TL derivatives of direction = atan2(-u, -v) * 180/pi with respect to u and v:
-          // Using chain rule: d(direction)/du = d(atan2(-uu,-vv))/du * 180/pi
-          //                   d(direction)/dv = d(atan2(-uu,-vv))/dv * 180/pi
-          // Derivatives: d(atan2(-uu,-vv))/du = vv/speed_sq
-          //              d(atan2(-uu,-vv))/dv = -uu/speed_sq
-          dir_tl = (vv * uu_tl / speed_sq - uu * vv_tl / speed_sq) * rad_to_deg;
+          // d(atan2(-uu,-vv))/du = vv/speed_sq
+          // d(atan2(-uu,-vv))/dv = -uu/speed_sq
+          dir_tl = (vv * uu_tl / speed_sq - uu * vv_tl / speed_sq) * radToDeg_;
         } else {
           dir_tl = 0.0;
         }
@@ -125,18 +117,17 @@ void WindFromDirectionAtSurface_A::executeAD(atlas::FieldSet & afieldsetAD,
   oops::Log::trace() << "WindFromDirectionAtSurface_A::executeAD starting" << std::endl;
 
   util::for_each_value(
-    [&](const double uu,
-        const double vv,
-        double& uu_ad,
-        double& vv_ad,
-        double& dir_ad) {
-        double speed_sq = uu * uu + vv * vv;
+    [this](const double uu,
+          const double vv,
+          double& uu_ad,
+          double& vv_ad,
+          double& dir_ad) {
+        const double speed_sq = uu * uu + vv * vv;
         if (speed_sq > epsilon) {
-          // AD: Apply adjoint of the TL operation
-          double du_contrib = vv / speed_sq;
-          double dv_contrib = -uu / speed_sq;
-          uu_ad += du_contrib * dir_ad * rad_to_deg;
-          vv_ad += dv_contrib * dir_ad * rad_to_deg;
+          const double du_contrib = vv / speed_sq;
+          const double dv_contrib = -uu / speed_sq;
+          uu_ad += du_contrib * dir_ad * radToDeg_;
+          vv_ad += dv_contrib * dir_ad * radToDeg_;
         }
         dir_ad = 0.0;
     },

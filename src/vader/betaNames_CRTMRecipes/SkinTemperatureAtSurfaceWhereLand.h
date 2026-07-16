@@ -57,4 +57,13 @@ class SkinTemperatureAtSurfaceWhereLand_A : public RecipeBase {
   void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 };
 
+class SkinTemperatureAtSurfaceWhereLand_B_Parameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(SkinTemperatureAtSurfaceWhereLand_B_Parameters, RecipeParametersBase)
+
+ public:
+  oops::RequiredParameter<std::string> name{
+     "recipe name",
+     this};
+};
+
 }  // namespace vader

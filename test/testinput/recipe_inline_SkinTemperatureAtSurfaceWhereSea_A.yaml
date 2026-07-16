@@ -1,0 +1,9 @@
+recipe:
+  recipe name: SkinTemperatureAtSurfaceWhereSea_A
+columns:
+  # Cold input (265 K) is clamped up by the sea floor of 270 K.
+  skin_temperature_at_surface: [265.0]
+expected:
+  # max(265.0, 270.0) = 270.0
+  skin_temperature_at_surface_where_sea: [270.0]
+nonlinear test tolerance: 1.e-12

@@ -7,7 +7,7 @@ cookbook:
   land_area_fraction: [LandAreaFraction_A]
   ice_area_fraction: [IceAreaFraction_A]
   surface_snow_area_fraction: [SurfaceSnowAreaFraction_A]
-  skin_temperature: [SkinTemperature_A]
+  skin_temperature_at_surface: [SkinTemperatureAtSurface_A]
   skin_temperature_at_surface_where_sea: [SkinTemperatureAtSurfaceWhereSea_A]
 model data:
   levels_are_top_down: false
@@ -29,6 +29,6 @@ products:
   - land_area_fraction
   - ice_area_fraction
   - surface_snow_area_fraction
-  - skin_temperature
+  - skin_temperature_at_surface
   - skin_temperature_at_surface_where_sea
 adjoint test tolerance: 1.e-7

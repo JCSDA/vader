@@ -1,0 +1,11 @@
+recipe:
+  recipe name: WindSpeedAt10m_B
+columns:
+  # 3-4-5 right triangle scaled by ratio reduction factor 0.8.
+  eastward_wind_at_surface:  [3.0]
+  northward_wind_at_surface: [4.0]
+  ratio_of_wind_at_surface_adjacent_layer_to_wind_at_10m: [0.8]
+expected:
+  # spd = ratio * sqrt(u^2 + v^2) = 0.8 * sqrt(9 + 16) = 0.8 * 5 = 4.0
+  wind_speed_at_10m: [4.0]
+nonlinear test tolerance: 1.e-12

@@ -1,0 +1,13 @@
+recipe:
+  recipe name: WindFromDirectionAtSurface_A
+model data:
+  radians_to_degrees: 57.29577951308232
+columns:
+  # Wind with -u, +v components (blowing toward NNW) exercises the no-wrap path.
+  eastward_wind_at_surface: [-3.0]
+  northward_wind_at_surface: [4.0]
+expected:
+  # dir = atan2(-(-3.0), -(4.0)) * (180/pi) = atan2(3.0, -4.0) * (180/pi)
+  #     = 143.13010235415598 (wind coming FROM SSE, no normalization needed)
+  wind_from_direction_at_surface: [143.13010235415598]
+nonlinear test tolerance: 1.e-12

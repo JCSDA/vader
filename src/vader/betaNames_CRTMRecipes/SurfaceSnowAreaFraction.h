@@ -57,4 +57,35 @@ class SurfaceSnowAreaFraction_A : public RecipeBase {
     void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 };
 
+class SurfaceSnowAreaFraction_BParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(SurfaceSnowAreaFraction_BParameters, RecipeParametersBase)
+
+ public:
+  oops::RequiredParameter<std::string> name{
+     "recipe name",
+     this};
+};
+
+// ------------------------------------------------------------------------------------------------
+/*! \brief SurfaceSnowAreaFraction_B mirrors the fv3-jedi crtm_surface snow-coverage helper.
+ *
+ *  \details Produces surface_snow_area_fraction = 1 where gsi_surface_type_index == 3, else 0.
+ */
+class SurfaceSnowAreaFraction_B : public RecipeBase {
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+
+    typedef SurfaceSnowAreaFraction_BParameters Parameters_;
+
+    SurfaceSnowAreaFraction_B(const Parameters_ &, const VaderConfigVars &);
+
+    std::string name() const override;
+    oops::Variable product() const override;
+    oops::Variables ingredients() const override;
+    size_t productLevels(const atlas::FieldSet &) const override;
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+    void executeNL(atlas::FieldSet &) override;
+};
+
 }  // namespace vader

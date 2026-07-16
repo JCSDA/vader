@@ -1,0 +1,9 @@
+recipe:
+  recipe name: SurfaceSnowThickness_A
+columns:
+  # sfc_type = 3 (snow-covered land) -> thickness = swe.
+  gsi_surface_type_index: [3.0]
+  gsi_snow_water_equivalent: [25.0]
+expected:
+  surface_snow_thickness: [25.0]
+nonlinear test tolerance: 1.e-12

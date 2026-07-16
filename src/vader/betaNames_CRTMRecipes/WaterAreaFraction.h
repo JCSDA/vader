@@ -57,4 +57,35 @@ class WaterAreaFraction_A : public RecipeBase {
     void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
 };
 
+class WaterAreaFraction_BParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(WaterAreaFraction_BParameters, RecipeParametersBase)
+
+ public:
+  oops::RequiredParameter<std::string> name{
+     "recipe name",
+     this};
+};
+
+// ------------------------------------------------------------------------------------------------
+/*! \brief WaterAreaFraction_B mirrors the fv3-jedi crtm_surface water-coverage helper.
+ *
+ *  \details Produces water_area_fraction = 1 where gsi_surface_type_index == 0 (sea), else 0.
+ */
+class WaterAreaFraction_B : public RecipeBase {
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+
+    typedef WaterAreaFraction_BParameters Parameters_;
+
+    WaterAreaFraction_B(const Parameters_ &, const VaderConfigVars &);
+
+    std::string name() const override;
+    oops::Variable product() const override;
+    oops::Variables ingredients() const override;
+    size_t productLevels(const atlas::FieldSet &) const override;
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+    void executeNL(atlas::FieldSet &) override;
+};
+
 }  // namespace vader
