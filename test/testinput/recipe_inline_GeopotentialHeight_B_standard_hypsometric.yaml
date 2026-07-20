@@ -1,0 +1,20 @@
+recipe:
+  recipe name: GeopotentialHeight_B
+  use empirical formula: false
+model data:
+  standard_gravitational_acceleration: 9.80665
+  levels_are_top_down: false
+# Standard hypsometric equation without the empirical compressibility correction.
+# Level 0 is adjacent to the surface and level 2 is at the model top.
+columns:
+  air_pressure:                          [100000.0, 85000.0, 70000.0]
+  air_pressure_levels:                   [101325.0, 92500.0, 77500.0, 65000.0]
+  air_temperature:                       [   290.0,   280.0,   265.0]
+  water_vapor_mixing_ratio_wrt_dry_air:  [   0.010,   0.005,   0.002]
+  virtual_temperature:                   [ 291.769, 280.854, 265.3233]
+  geopotential_height_at_surface:        [   100.0]
+expected:
+  geopotential_height:                   [212.41660341722178,
+                                          1574.4244854683886,
+                                          3126.4232619886400]
+nonlinear test tolerance: 1.e-12

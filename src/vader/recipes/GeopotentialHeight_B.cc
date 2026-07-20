@@ -92,9 +92,10 @@ const oops::Variables GeopotentialHeight_B::Ingredients{std::vector<std::string>
 // Register the maker
 static RecipeMaker<GeopotentialHeight_B> makerGeopotentialHeight_B_(GeopotentialHeight_B::Name);
 
-GeopotentialHeight_B::GeopotentialHeight_B(const Parameters_ & /*params*/,
+GeopotentialHeight_B::GeopotentialHeight_B(const Parameters_ & params,
                                            const VaderConfigVars & configVariables) :
-    configVariables_{configVariables}
+    configVariables_{configVariables},
+    useEmpiricalFormula_{params.useEmpiricalFormula.value()}
 {
     oops::Log::trace() << "GeopotentialHeight_B::GeopotentialHeight_B(params)" << std::endl;
 }
@@ -132,6 +133,7 @@ void GeopotentialHeight_B::executeNL(atlas::FieldSet & afieldset)
   oops::Log::trace() << "entering GeopotentialHeight_B::executeNL" << std::endl;
 
   // Extract values from client config
+  const bool useEmpiricalFormula = useEmpiricalFormula_;
   const bool levelsAreTopDown = configVariables_.getBool("levels_are_top_down");
   const double grav = configVariables_.getDouble("standard_gravitational_acceleration");
   const double dryAirGasConstantOverGravity = mo::constants::rd / grav;
@@ -179,29 +181,32 @@ void GeopotentialHeight_B::executeNL(atlas::FieldSet & afieldset)
 
         double layerTemperature;
         double layerVirtualTemperature;
-        double representativePressure;
-        double pressureRatio;
+        double pressureBelow;
 
         if (atSurface) {
-          const double surfacePressure = pressureLevels(level + surfacePressureLevelOffset);
+          pressureBelow = pressureLevels(level + surfacePressureLevelOffset);
           layerTemperature = temperature(level);
           layerVirtualTemperature = virtualTemperature(level);
-          representativePressure =
-              std::exp(0.5 * (std::log(surfacePressure * 0.01) +
-                              std::log(pressure(level) * 0.01)));
-          pressureRatio = surfacePressure / pressure(level);
         } else {
+          pressureBelow = pressure(previousLevel);
           layerTemperature = 0.5 * (temperature(previousLevel) + temperature(level));
           layerVirtualTemperature =
               0.5 * (virtualTemperature(previousLevel) + virtualTemperature(level));
-          representativePressure =
-              std::exp(0.5 * (std::log(pressure(previousLevel) * 0.01) +
-                              std::log(pressure(level) * 0.01)));
-          pressureRatio = pressure(previousLevel) / pressure(level);
         }
 
-        const double compressibility =
-            compressibilityFactor(representativePressure, layerTemperature, mixingRatio(level));
+        const double pressureRatio = pressureBelow / pressure(level);
+
+        double compressibility = 1.0;
+
+        if (useEmpiricalFormula) {
+          const double representativePressure =
+              std::exp(0.5 * (std::log(pressureBelow * 0.01) +
+                              std::log(pressure(level) * 0.01)));
+
+          compressibility =
+              compressibilityFactor(representativePressure, layerTemperature, mixingRatio(level));
+        }
+
         const double heightIncrement = dryAirGasConstantOverGravity * layerVirtualTemperature *
                                        compressibility * std::log(pressureRatio);
 

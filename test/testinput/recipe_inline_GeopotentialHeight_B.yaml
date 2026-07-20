@@ -1,5 +1,6 @@
 recipe:
   recipe name: GeopotentialHeight_B
+  use empirical formula: true
 model data:
   standard_gravitational_acceleration: 9.80665
   levels_are_top_down: true

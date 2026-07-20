@@ -132,6 +132,7 @@ testinput/recipe_inline_WindSpeedAtSurface_B.yaml
 testinput/recipe_inline_GeopotentialHeightLevels_B.yaml
 testinput/recipe_inline_GeopotentialHeight_B.yaml
 testinput/recipe_inline_GeopotentialHeight_B_bottomup.yaml
+testinput/recipe_inline_GeopotentialHeight_B_standard_hypsometric.yaml
 testinput/recipe_inline_HeightAboveMeanSeaLevel_A.yaml
 testinput/recipe_inline_MoleFractionOfOzoneInAir_A.yaml
 
@@ -895,6 +896,11 @@ ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialHeight_B
 ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialHeight_B_bottomup
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_GeopotentialHeight_B_bottomup.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialHeight_B_standard_hypsometric
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_GeopotentialHeight_B_standard_hypsometric.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_inline_HeightAboveMeanSeaLevel_A

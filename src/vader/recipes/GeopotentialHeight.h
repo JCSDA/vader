@@ -82,12 +82,18 @@ class GeopotentialHeight_B_Parameters
   oops::RequiredParameter<std::string> name{
       "recipe name",
       this};
+
+  oops::Parameter<bool> useEmpiricalFormula{
+      "use empirical formula",
+      true,
+      this};
 };
 
 // -------------------------------------------------------------------------------------------------
 /*! \brief GeopotentialHeight_B calculates geopotential_height
- *         using the FV3 hydrostatic integration with the
- *         Picard compressibility correction.
+ *         using hydrostatic integration. By default, the empirical
+ *         compressibility correction is applied; it may be disabled
+ *         to use the standard hypsometric formula.
  *
  * Ingredients:
  *   air_pressure
@@ -120,6 +126,7 @@ class GeopotentialHeight_B : public RecipeBase {
 
  private:
   const VaderConfigVars & configVariables_;
+  const bool useEmpiricalFormula_;
 };
 
 }  // namespace vader
