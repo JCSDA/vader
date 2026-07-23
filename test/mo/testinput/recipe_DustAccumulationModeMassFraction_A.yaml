@@ -1,0 +1,9 @@
+recipe:
+  recipe name: DustAccumulationModeMassFraction_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/dust_gauss_state_F12_um2lfric.nc
+nonlinear test tolerance: 1.e-12
+adjoint test tolerance: 1.e-12
+run tangent linear test: false

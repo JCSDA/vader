@@ -1,0 +1,15 @@
+vader: {}
+cookbook:
+  mass_fraction_of_dust_accumulation_aerosol_particles_in_air:
+    - DustAccumulationModeMassFraction_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/dust_gauss_state_F12_um2lfric.nc
+trajectory variables:
+  - mass_fraction_of_dust001_in_air
+  - mass_fraction_of_dust_accumulation_aerosol_particles_in_air
+ingredients:
+  - mass_fraction_of_dust001_in_air
+products: [mass_fraction_of_dust_accumulation_aerosol_particles_in_air]
+adjoint test tolerance: 1.e-12

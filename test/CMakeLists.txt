@@ -29,8 +29,12 @@ testinput/recipe_CloudLiquidWaterMixingRatioWrtDryAir_B.yaml
 testinput/recipe_CloudLiquidWaterMixingRatioWrtWetAir_A.yaml
 testinput/recipe_DryAirDensity_A.yaml
 testinput/recipe_DryAirDensityLevelsMinusOne_A.yaml
-testinput/recipe_DustBin1MassConcentration_A.yaml
-testinput/recipe_DustBin2MassConcentration_A.yaml
+mo/testinput/recipe_DustAccumulationModeMassFraction_A.yaml
+mo/testinput/recipe_DustAccumulationModeNumberFraction_A.yaml
+mo/testinput/recipe_DustBin1MassConcentration_A.yaml
+mo/testinput/recipe_DustBin2MassConcentration_A.yaml
+mo/testinput/recipe_DustCoarseModeMassFraction_A.yaml
+mo/testinput/recipe_DustCoarseModeNumberFraction_A.yaml
 testinput/recipe_EffectiveRadiusOfCloudIceParticle_A.yaml
 testinput/recipe_EffectiveRadiusOfCloudLiquidWaterParticle_A.yaml
 testinput/recipe_EffectiveRadiusOfGraupelParticle_A.yaml
@@ -154,6 +158,10 @@ testinput/vader_CloudLiquidWaterMixingRatioWrtDryAir_B.yaml
 testinput/vader_CloudLiquidWaterMixingRatioWrtWetAir_A.yaml
 testinput/vader_DryAirDensity_A.yaml
 testinput/vader_DryAirDensityLevelsMinusOne_A.yaml
+mo/testinput/vader_DustAccumulationModeMassFraction_A.yaml
+mo/testinput/vader_DustAccumulationModeNumberFraction_A.yaml
+mo/testinput/vader_DustCoarseModeMassFraction_A.yaml
+mo/testinput/vader_DustCoarseModeNumberFraction_A.yaml
 testinput/vader_EastwardWindAtSurface_A.yaml
 testinput/vader_EffectiveRadiusOfCloudIceParticle_A.yaml
 testinput/vader_EffectiveRadiusOfCloudLiquidWaterParticle_A.yaml
@@ -219,11 +227,13 @@ list( APPEND vader_testdata
   aero6_gauss_state_F12.nc
   rrfs_sd_gauss_state_F12.nc
   dust_gauss_state_F12_lfric2um.nc
+  dust_gauss_state_F12_um2lfric.nc
   relative_humidity_A.nc
 )
 
 # Create data directory for test input and symlink all files
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testinput)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mo/testinput)
 foreach(FILENAME ${vader_testinput})
     execute_process( COMMAND ${CMAKE_COMMAND} -E create_symlink
            ${CMAKE_CURRENT_SOURCE_DIR}/${FILENAME}
@@ -391,14 +401,34 @@ ecbuild_add_test( TARGET  vader_recipe_DryAirDensityLevelsMinusOne_A
                   ARGS    "testinput/recipe_DryAirDensityLevelsMinusOne_A.yaml"
                   LIBS    vader )
 
+ecbuild_add_test( TARGET  vader_recipe_DustAccumulationModeMassFraction_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "mo/testinput/recipe_DustAccumulationModeMassFraction_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_DustAccumulationModeNumberFraction_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "mo/testinput/recipe_DustAccumulationModeNumberFraction_A.yaml"
+                  LIBS    vader )
+
 ecbuild_add_test( TARGET  vader_recipe_DustBin1MassConcentration_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_DustBin1MassConcentration_A.yaml"
+                  ARGS    "mo/testinput/recipe_DustBin1MassConcentration_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_DustBin2MassConcentration_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_DustBin2MassConcentration_A.yaml"
+                  ARGS    "mo/testinput/recipe_DustBin2MassConcentration_A.yaml"
+		  LIBS    vader )
+		
+ecbuild_add_test( TARGET  vader_recipe_DustCoarseModeMassFraction_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "mo/testinput/recipe_DustCoarseModeMassFraction_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_DustCoarseModeNumberFraction_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "mo/testinput/recipe_DustCoarseModeNumberFraction_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_EffectiveRadiusOfCloudIceParticle_A
@@ -997,6 +1027,26 @@ ecbuild_add_test( TARGET  vader_vader_DryAirDensity_A
 ecbuild_add_test( TARGET  vader_vader_DryAirDensityLevelsMinusOne_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
                   ARGS    "testinput/vader_DryAirDensityLevelsMinusOne_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_DustAccumulationModeMassFraction_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "mo/testinput/vader_DustAccumulationModeMassFraction_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_DustAccumulationModeNumberFraction_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "mo/testinput/vader_DustAccumulationModeNumberFraction_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_DustCoarseModeMassFraction_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "mo/testinput/vader_DustCoarseModeMassFraction_A.yaml"
+                  LIBS    vader )
+                  
+ecbuild_add_test( TARGET  vader_vader_DustCoarseModeNumberFraction_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "mo/testinput/vader_DustCoarseModeNumberFraction_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_vader_EastwardWindAtSurface_A

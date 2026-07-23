@@ -9,6 +9,7 @@
 
 #include <cmath>
 #include <string>
+#include <vector>
 
 namespace mo {
 namespace constants {
@@ -49,7 +50,8 @@ namespace constants {
   static constexpr double grav           = 9.80665e+0;
   static constexpr double t0c            = 2.7315e+2;     // temperature at zero celsius (K)
   static constexpr double ttp            = 2.7316e+2;     // temperature at h2o triple point (K)
-  static constexpr double rd             = 2.8705e2;      // specific gas constant (J kg-1 K-1)
+  static constexpr double rd             = 2.8705e2;      // specific gas constant for dry air
+                                                          //      (J kg-1 K-1)
   static constexpr double rv             = 4.6150e2;
   static constexpr double cp             = 1.0046e3;      // heat capacity at constant pressure
                                                           //      for air
@@ -119,14 +121,28 @@ namespace constants {
   static constexpr double icao_pressure_l   = 226.32;    // Assumed pressure at 11,000 gpm [hPa]
   static constexpr double icao_pressure_u   = 54.7487;   // Assumed pressure at 20,000 gpm [hPa]
 
-  // Constants for transforms between CLASSIC 2-bin dust and UKCA/GLOMAP 2-mode dust variables
+  // Constants for transforms from CLASSIC dust 2 bin to 6 bin, 6 bin to the GLOMAP/UKCA dust model
+  // and vice versa
   static constexpr double glomap_dust_density = 2650;  // assumed density of dust (kg m-3)
-  static constexpr double sigma_acc = 1.59;  // modal width of the accumulation mode (unitless)
-  static constexpr double sigma_coarse = 2.0;  // modal width of the coarse mode (unitless)
+  static constexpr double sigma_acc = 1.59;  // unitless modal width of the accumulation mode
+  static constexpr double sigma_coarse = 2.0;  // unitless modal width of the coarse mode
   static constexpr double Dmin_bin1 = 0.2e-6;  // minimum diameter of 2-bin dust in bin 1 (m)
   static constexpr double Dmax_bin1 = 4e-6;  // maximum diameter of 2-bin dust in bin 1 (m)
   static constexpr double Dmin_bin2 = 4e-6;  // minimum diameter of 2-bin dust in bin 2 (m)
   static constexpr double Dmax_bin2 = 2e-5;   // maximum diameter of 2-bin dust in bin 2 (m)
+  // volume constant for converting mass to number concentration for dust:
+  static constexpr double volconst     = 6 * k_B / (glomap_dust_density * rd * M_PI);  // (m3)
+  // representative diameters of the 6 bins of dust (m):
+  const std::vector<double> drep6c = {1.42261347e-21, 4.49873508e-20, 1.42261347e-18,
+                                      4.49873508e-17, 1.42261347e-15, 4.49873508e-14};
+  // fractions of bin 1 dust in each of the 6 bins (sums to 1):
+  const std::vector<double> p1 = {0.000, 0.035, 0.220, 0.745, 0.000, 0.000};
+  // fractions of bin 2 dust in each of the 6 bins (sums to 1):
+  const std::vector<double> p2 = {0.000, 0.000, 0.000, 0.219, 0.781, 0.000};
+  // Scaling factors for p1 and p2 (if set to 1 then mass is conserved in the transforms).
+  // Current scaling factors are calculated to preserve AOD between 2-bin and 6-bin dust:
+  const double p1_scale =  1.3068470377196797;
+  const double p2_scale = 1.2016073133266727;
 
 }  // namespace constants
 }  // namespace mo
