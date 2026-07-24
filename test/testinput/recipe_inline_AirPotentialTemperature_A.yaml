@@ -1,0 +1,13 @@
+recipe:
+  recipe name: AirPotentialTemperature_A
+model data:
+  reference_pressure: 100000.0
+  kappa: 0.285714
+columns:
+  air_temperature:          [280.0, 250.0, 220.0]
+  air_pressure_at_surface:  [85000.0]
+expected:
+  # factor = (p0/ps)^kappa = (100000/85000)^0.285714 = 1.04752887013511
+  # apt[k] = T[k] * factor  (same factor for all levels since ps is constant with height)
+  air_potential_temperature: [293.30808363783, 261.882217533777, 230.456351429723]
+nonlinear test tolerance: 1.e-12

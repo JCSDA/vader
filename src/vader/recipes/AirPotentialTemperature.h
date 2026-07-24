@@ -30,11 +30,9 @@ class AirPotentialTemperature_AParameters : public RecipeParametersBase {
 
 /*! \brief AirPotentialTemperature_A class defines a recipe for potential temperature
  *
- *  \details This instantiation of RecipeBase produces potential temperature
- *           using temperature and surface pressure as inputs. The parameters
- *           p0 and kappa can be specified via the constructor configuration.
- *           If they are not, the code will attempt to provide default values.
- *           (See https://glossary.ametsoc.org/wiki/Potential_temperature)
+ *  \details Computes air_potential_temperature as theta_sigma = T * (p0/ps)^kappa, where ps
+ *           is the surface pressure. This sigma-coordinate convention stays bounded near T
+ *           and differs substantially from standard theta above the boundary layer.
  */
 class AirPotentialTemperature_A : public RecipeBase {
  public:
@@ -68,8 +66,8 @@ class AirPotentialTemperature_BParameters : public RecipeParametersBase {
 
 /*! \brief AirPotentialTemperature_B class defines a recipe for potential temperature
  *
- *  \details This instantiation of RecipeBase produces potential temperature
- *           using temperature and pressure to the kappa.
+ *  \details Computes air_potential_temperature as the standard meteorological potential
+ *           temperature theta = T * (p0/p)^kappa, where p is the level pressure.
  *           (See https://glossary.ametsoc.org/wiki/Potential_temperature)
  */
 class AirPotentialTemperature_B : public RecipeBase {

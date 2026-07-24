@@ -1,0 +1,15 @@
+recipe:
+  recipe name: AirPotentialTemperature_B
+model data:
+  reference_pressure: 100000.0
+  kappa: 0.285714
+columns:
+  air_temperature:          [280.0,               250.0,               220.0              ]
+  air_pressure_to_kappa:    [26.826869708151726,   22.00703407092491,   16.93809187341614  ]
+expected:
+  # apt = T * p0^kappa / (p^kappa) = T * (p0/p)^kappa
+  # k=0: p=p0  -> apt = T = 280
+  # k=1: p=50000 Pa -> apt = 304.7533531971336
+  # k=2: p=20000 Pa -> apt = 348.44015370209814
+  air_potential_temperature: [280.0, 304.7533531971336, 348.44015370209814]
+nonlinear test tolerance: 1.e-12

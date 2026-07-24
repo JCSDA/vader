@@ -3,7 +3,6 @@ testinput/empty.yaml
 testinput/planvariable.yaml
 
 testinput/recipe_AirDensityLevelsMinusOne_A.yaml
-testinput/recipe_AirPotentialTemperature_A.yaml
 testinput/recipe_AirPotentialTemperature_B.yaml
 testinput/recipe_AirPressure_A.yaml
 testinput/recipe_AirPressure_A_bottomup.yaml
@@ -106,6 +105,8 @@ testinput/recipe_WindFromDirectionAtSurface_A.yaml
 testinput/recipe_WindReductionFactorAt10m_A.yaml
 testinput/recipe_WindSpeedAtSurface_A.yaml
 
+testinput/recipe_inline_AirPotentialTemperature_A.yaml
+testinput/recipe_inline_AirPotentialTemperature_B.yaml
 testinput/recipe_inline_AirPressureAtInterface_A.yaml
 testinput/recipe_inline_AirTemperature_A.yaml
 testinput/recipe_inline_AverageSurfaceTemperatureWithinFieldOfView_A.yaml
@@ -269,11 +270,6 @@ ecbuild_add_executable( TARGET  test_recipe_inline.x
 ecbuild_add_test( TARGET  vader_recipe_AirDensityLevelsMinusOne_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_AirDensityLevelsMinusOne_A.yaml"
-                  LIBS    vader )
-
-ecbuild_add_test( TARGET  vader_recipe_AirPotentialTemperature_A
-                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_AirPotentialTemperature_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_AirPotentialTemperature_B
@@ -782,6 +778,16 @@ ecbuild_add_test( TARGET  vader_recipe_WindSpeedAtSurface_A
                   LIBS    vader )
 
 # Test recipes (inline yaml data)
+ecbuild_add_test( TARGET  vader_recipe_inline_AirPotentialTemperature_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_AirPotentialTemperature_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_AirPotentialTemperature_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_AirPotentialTemperature_B.yaml"
+                  LIBS    vader )
+
 ecbuild_add_test( TARGET  vader_recipe_inline_AirPressureAtInterface_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_AirPressureAtInterface_A.yaml"

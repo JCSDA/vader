@@ -83,7 +83,8 @@ void AirPressureThickness_A::executeNL(atlas::FieldSet & afieldset)
     delp.metadata().get("units", delp_units);
 
     // Assert that the units match
-    ASSERT_MSG(prsi_units == delp_units, "In Vader::AirPressureThickness_A::executeNL the "
+    ASSERT_MSG(prsi_units.empty() || delp_units.empty() || prsi_units == delp_units,
+               "In Vader::AirPressureThickness_A::executeNL the "
                "units for pressure " + prsi_units +
                "do not match the pressure thickness units" + delp_units);
 

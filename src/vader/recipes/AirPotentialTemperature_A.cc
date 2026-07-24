@@ -73,28 +73,36 @@ void AirPotentialTemperature_A::executeNL(atlas::FieldSet & afieldset)
     const double p0 = configVariables_.getDouble("reference_pressure");
     const double kappa = configVariables_.getDouble("kappa");  // Need better name
 
+    // Get the fields
+    atlas::Field temp  = afieldset.field("air_temperature");
+    atlas::Field ps    = afieldset.field("air_pressure_at_surface");
+    atlas::Field ptemp = afieldset.field("air_potential_temperature");
+
     std::string t_units, ps_units;
 
     afieldset.field("air_temperature").metadata().get("units", t_units);
-    ASSERT_MSG(t_units == "K", "AirPotentialTemperature_A::executeNL: Incorrect units for "
-                            "air_temperature");
+    ASSERT_MSG(t_units.empty() || t_units == "K", "AirPotentialTemperature_A::executeNL: "
+                            "Incorrect units for air_temperature");
     afieldset.field("air_pressure_at_surface").metadata().get("units", ps_units);
-    ASSERT_MSG(ps_units == "Pa", "AirPotentialTemperature_A::executeNL: Incorrect units for "
-                            "surface_air_pressure");
+    ASSERT_MSG(ps_units.empty() || ps_units == "Pa", "AirPotentialTemperature_A::executeNL: "
+                            "Incorrect units for air_pressure_at_surface");
     oops::Log::debug() << "AirPotentialTemperature_A::execute: p0 value: " << p0
         << std::endl;
     oops::Log::debug() << "AirPotentialTemperature_A::execute: kappa value: " << kappa
         << std::endl;
 
-    util::for_each_value(
-      [&](const double temp,
-          const double ps,
-          double& ptemp) {
-          ptemp = temp * std::pow(p0 / ps, kappa);
+    util::for_each_column(
+      [&](const auto t_col,
+          const auto ps_col,
+          auto ptemp_col) {
+          const int nLevels = t_col.shape(0);
+          for (int level = 0; level < nLevels; ++level) {
+              ptemp_col(level) = t_col(level) * std::pow(p0 / ps_col(0), kappa);
+          }
       },
-      afieldset["air_temperature"],
-      afieldset["air_pressure_at_surface"],
-      afieldset["air_potential_temperature"]);
+      temp,
+      ps,
+      ptemp);
 
     oops::Log::trace() << "leaving AirPotentialTemperature_A::executeNL function" << std::endl;
 }

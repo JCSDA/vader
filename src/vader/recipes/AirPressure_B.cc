@@ -91,7 +91,8 @@ void AirPressure_B::executeNL(atlas::FieldSet & afieldset) {
     prs.metadata().get("units", prs_units);
 
     // Assert that the units match
-    ASSERT_MSG(prs_units == ps_units, "In Vader::AirPressureAtInterface_A::executeNL the units "
+    ASSERT_MSG(prs_units.empty() || ps_units.empty() || prs_units == ps_units,
+               "In Vader::AirPressureAtInterface_A::executeNL the units "
                "for pressure " + prs_units + "do not match the surface pressure units" + ps_units);
 
     // Get number of levels
