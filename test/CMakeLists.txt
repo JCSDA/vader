@@ -109,6 +109,16 @@ testinput/recipe_inline_AirPotentialTemperature_A.yaml
 testinput/recipe_inline_AirPotentialTemperature_B.yaml
 testinput/recipe_inline_AirPressureAtInterface_A.yaml
 testinput/recipe_inline_AirTemperature_A.yaml
+testinput/recipe_inline_MassContentOfCloudLiquidWaterInAtmosphereLayer_B.yaml
+testinput/recipe_inline_MassContentOfCloudIceInAtmosphereLayer_B.yaml
+testinput/recipe_inline_EffectiveRadiusOfCloudLiquidWaterParticle_B.yaml
+testinput/recipe_inline_EffectiveRadiusOfCloudIceParticle_B.yaml
+testinput/recipe_inline_EffectiveRadiusOfCloudIceParticle_A.yaml
+testinput/recipe_inline_EffectiveRadiusOfCloudLiquidWaterParticle_A.yaml
+testinput/recipe_inline_EffectiveRadiusOfGraupelParticle_A.yaml
+testinput/recipe_inline_EffectiveRadiusOfHailParticle_A.yaml
+testinput/recipe_inline_EffectiveRadiusOfRainParticle_A.yaml
+testinput/recipe_inline_EffectiveRadiusOfSnowParticle_A.yaml
 testinput/recipe_inline_AverageSurfaceTemperatureWithinFieldOfView_A.yaml
 testinput/recipe_inline_GeopotentialLevels_A.yaml
 testinput/recipe_inline_GsiSnowWaterEquivalent_A.yaml
@@ -947,6 +957,56 @@ ecbuild_add_test( TARGET  vader_recipe_inline_HeightAboveMeanSeaLevel_A
 ecbuild_add_test( TARGET  vader_recipe_inline_MoleFractionOfOzoneInAir_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_MoleFractionOfOzoneInAir_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_MassContentOfCloudLiquidWaterInAtmosphereLayer_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_MassContentOfCloudLiquidWaterInAtmosphereLayer_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_MassContentOfCloudIceInAtmosphereLayer_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_MassContentOfCloudIceInAtmosphereLayer_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_EffectiveRadiusOfCloudLiquidWaterParticle_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_EffectiveRadiusOfCloudLiquidWaterParticle_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_EffectiveRadiusOfCloudIceParticle_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_EffectiveRadiusOfCloudIceParticle_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_EffectiveRadiusOfCloudIceParticle_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_EffectiveRadiusOfCloudIceParticle_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_EffectiveRadiusOfCloudLiquidWaterParticle_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_EffectiveRadiusOfCloudLiquidWaterParticle_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_EffectiveRadiusOfGraupelParticle_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_EffectiveRadiusOfGraupelParticle_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_EffectiveRadiusOfHailParticle_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_EffectiveRadiusOfHailParticle_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_EffectiveRadiusOfRainParticle_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_EffectiveRadiusOfRainParticle_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_EffectiveRadiusOfSnowParticle_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_EffectiveRadiusOfSnowParticle_A.yaml"
                   LIBS    vader )
 
 # Test vader calling recipes

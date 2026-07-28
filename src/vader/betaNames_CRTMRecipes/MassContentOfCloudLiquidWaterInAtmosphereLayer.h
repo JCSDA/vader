@@ -65,4 +65,52 @@ class MassContentOfCloudLiquidWaterInAtmosphereLayer_A : public RecipeBase
 
 // -------------------------------------------------------------------------------------------------
 
+class MassContentOfCloudLiquidWaterInAtmosphereLayer_BParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(MassContentOfCloudLiquidWaterInAtmosphereLayer_BParameters,
+                           RecipeParametersBase)
+
+ public:
+  oops::RequiredParameter<std::string> name{"recipe name", this};
+  // Apply a land/sea mask to the output (matching fv3-jedi crtm_ade_efr "use_mask" option).
+  //   "land": zero where slmsk != 0 (i.e. not ocean)
+  //   "sea":  zero where slmsk == 0 (i.e. ocean)
+  //   "none": no masking (default)
+  oops::Parameter<std::string> maskOver{"mask over", std::string("none"), this};
+};
+
+/*! \brief 'MassContentOfCloudLiquidWaterInAtmosphereLayer_B' reproduces the fv3-jedi
+ *         GSI-flavor mass content calculation from `crtm_ade_efr`.
+ *
+ *  \details Inputs: cloud_liquid_water (kg/kg), air_pressure_thickness (Pa), slmsk
+ *           Output: kg m-2.
+ *           - Cells with cloud_liquid_water < 1e-8 are set to 0 (matching min_qx
+ *             threshold in `hydro_mixr_to_wpath`).
+ *           - The land/sea mask follows the fv3-jedi rule `seamask = slmsk == 0`.
+ */
+class MassContentOfCloudLiquidWaterInAtmosphereLayer_B : public RecipeBase
+{
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+
+    typedef MassContentOfCloudLiquidWaterInAtmosphereLayer_BParameters Parameters_;
+
+    MassContentOfCloudLiquidWaterInAtmosphereLayer_B(const Parameters_ &, const VaderConfigVars &);
+
+    std::string name() const override;
+    oops::Variable product() const override;
+    oops::Variables ingredients() const override;
+    size_t productLevels(const atlas::FieldSet &) const override;
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+
+    bool hasTLAD() const override { return false; }
+    void executeNL(atlas::FieldSet &) override;
+
+ private:
+    const VaderConfigVars & configVariables_;
+    std::string maskOver_;
+};
+
+// -------------------------------------------------------------------------------------------------
+
 }  // namespace vader

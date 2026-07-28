@@ -63,7 +63,7 @@ void EffectiveRadiusOfGraupelParticle_A::executeNL(
   oops::Log::trace() << "EffectiveRadiusOfGraupelParticle_A::"
                      << "executeNL starting" << std::endl;
 
-  const double r_graupel = 750.0e-6;  // 750 micrometers (m)
+  const double r_graupel = 750.0;  // microns
   util::for_each_value(
       [=](double& reff) { reff = r_graupel; },
       afieldset.field("effective_radius_of_graupel_particle"));

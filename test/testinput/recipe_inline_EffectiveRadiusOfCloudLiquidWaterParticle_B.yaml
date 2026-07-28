@@ -1,0 +1,14 @@
+recipe:
+  recipe name: EffectiveRadiusOfCloudLiquidWaterParticle_B
+model data:
+  tice: 273.16
+columns:
+  air_temperature:   [250.0,  270.0,  280.0]
+  cloud_liquid_water: [1.0e-4, 2.0e-5, 5.0e-9]   # 3rd level below min_qx (1e-8)
+expected:
+  # tem1 = (tice - T)*0.05; reff = 5 + 5*min(1, tem1); out = max(1, reff); zero if q<min_qx
+  # k=0: tem1 = (273.16-250)*0.05 = 1.158 -> min(1,1.158)=1 -> reff=10 -> out=10
+  # k=1: tem1 = (273.16-270)*0.05 = 0.158 -> reff=5+5*0.158=5.79 -> out=5.79
+  # k=2: ql < 1e-8 -> 0
+  effective_radius_of_cloud_liquid_water_particle: [10.0, 5.790000000000006, 0.0]
+nonlinear test tolerance: 1.e-12

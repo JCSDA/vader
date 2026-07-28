@@ -1,0 +1,17 @@
+recipe:
+  recipe name: MassContentOfCloudIceInAtmosphereLayer_B
+  mask over: land
+model data:
+  standard_gravitational_acceleration: 9.80665
+columns:
+  cloud_liquid_ice:       [2.0e-5, 1.0e-9, 8.0e-5]   # 2nd level below min_qx (1e-8)
+  air_pressure_thickness: [4000.0, 3500.0, 3000.0]
+  slmsk:                  [0.0]                       # ocean (not masked when mask=land)
+expected:
+  # kgkg_to_kgm2 = delp / grav ; out = q * kgkg_to_kgm2
+  # k=0: 2e-5 * (4000/9.80665) = 0.008157729703823427
+  # k=1: q < 1e-8 -> 0
+  # k=2: 8e-5 * (3000/9.80665) = 0.02447318911147028
+  mass_content_of_cloud_ice_in_atmosphere_layer:
+    [0.008157729703823427, 0.0, 0.02447318911147028]
+nonlinear test tolerance: 1.e-12

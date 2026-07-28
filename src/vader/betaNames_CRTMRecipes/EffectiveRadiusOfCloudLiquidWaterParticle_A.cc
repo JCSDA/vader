@@ -65,8 +65,8 @@ void EffectiveRadiusOfCloudLiquidWaterParticle_A::executeNL(
                      << "executeNL starting" << std::endl;
 
   const double T_freeze = 273.15;  // K
-  const double r_min = 4.0e-6;     // minimum radius (m)
-  const double r_max = 15.0e-6;    // maximum radius (m)
+  const double r_min = 4.0;        // minimum radius (microns)
+  const double r_max = 15.0;       // maximum radius (microns)
 
   util::for_each_value(
       [=](const double temp,
@@ -101,8 +101,8 @@ void EffectiveRadiusOfCloudLiquidWaterParticle_A::executeTL(
 
   const double T_freeze = 273.15;
   const double T_range  = 30.0;
-  const double r_min    = 4.0e-6;
-  const double r_max    = 15.0e-6;
+  const double r_min    = 4.0;   // microns
+  const double r_max    = 15.0;  // microns
 
   util::for_each_value(
       [=](const double temp_traj,
@@ -131,8 +131,8 @@ void EffectiveRadiusOfCloudLiquidWaterParticle_A::executeAD(
 
   const double T_freeze = 273.15;
   const double T_range  = 30.0;
-  const double r_min    = 4.0e-6;
-  const double r_max    = 15.0e-6;
+  const double r_min    = 4.0;   // microns
+  const double r_max    = 15.0;  // microns
 
   util::for_each_value(
       [=](const double temp_traj,

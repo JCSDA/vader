@@ -66,4 +66,44 @@ class EffectiveRadiusOfCloudLiquidWaterParticle_A : public RecipeBase
 
 // -------------------------------------------------------------------------------------------------
 
+class EffectiveRadiusOfCloudLiquidWaterParticle_BParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(EffectiveRadiusOfCloudLiquidWaterParticle_BParameters,
+                           RecipeParametersBase)
+
+ public:
+  oops::RequiredParameter<std::string> name{"recipe name", this};
+};
+
+/*! \brief 'EffectiveRadiusOfCloudLiquidWaterParticle_B' reproduces the fv3-jedi
+ *         GSI-flavor cloud-water effective radius from `crtm_ade_efr`.
+ *
+ *  \details Inputs: air_temperature (K), cloud_liquid_water (kg/kg)
+ *           Output units: microns. Computed only where ql >= 1e-8 (else 0).
+ *           Formula: reff = max(1, 5 + 5*min(1, (tice - T)*0.05))
+ */
+class EffectiveRadiusOfCloudLiquidWaterParticle_B : public RecipeBase
+{
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+
+    typedef EffectiveRadiusOfCloudLiquidWaterParticle_BParameters Parameters_;
+
+    EffectiveRadiusOfCloudLiquidWaterParticle_B(const Parameters_ &, const VaderConfigVars &);
+
+    std::string name() const override;
+    oops::Variable product() const override;
+    oops::Variables ingredients() const override;
+    size_t productLevels(const atlas::FieldSet &) const override;
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+
+    bool hasTLAD() const override { return false; }
+    void executeNL(atlas::FieldSet &) override;
+
+ private:
+    const VaderConfigVars & configVariables_;
+};
+
+// -------------------------------------------------------------------------------------------------
+
 }  // namespace vader

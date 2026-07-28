@@ -64,4 +64,49 @@ class MassContentOfCloudIceInAtmosphereLayer_A : public RecipeBase
 
 // -------------------------------------------------------------------------------------------------
 
+class MassContentOfCloudIceInAtmosphereLayer_BParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(MassContentOfCloudIceInAtmosphereLayer_BParameters,
+                           RecipeParametersBase)
+
+ public:
+  oops::RequiredParameter<std::string> name{"recipe name", this};
+  // Apply a land/sea mask to the output (matching fv3-jedi crtm_ade_efr "use_mask" option).
+  //   "land": zero where slmsk != 0 (i.e. not ocean)
+  //   "sea":  zero where slmsk == 0 (i.e. ocean)
+  //   "none": no masking (default)
+  oops::Parameter<std::string> maskOver{"mask over", std::string("none"), this};
+};
+
+/*! \brief 'MassContentOfCloudIceInAtmosphereLayer_B' reproduces the fv3-jedi
+ *         GSI-flavor mass content calculation from `crtm_ade_efr`.
+ *
+ *  \details Inputs: cloud_liquid_ice (kg/kg), air_pressure_thickness (Pa), slmsk
+ *           Output: kg m-2 with `min_qx = 1e-8` threshold and optional land/sea mask.
+ */
+class MassContentOfCloudIceInAtmosphereLayer_B : public RecipeBase
+{
+ public:
+    static const char Name[];
+    static const oops::Variables Ingredients;
+
+    typedef MassContentOfCloudIceInAtmosphereLayer_BParameters Parameters_;
+
+    MassContentOfCloudIceInAtmosphereLayer_B(const Parameters_ &, const VaderConfigVars &);
+
+    std::string name() const override;
+    oops::Variable product() const override;
+    oops::Variables ingredients() const override;
+    size_t productLevels(const atlas::FieldSet &) const override;
+    atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+
+    bool hasTLAD() const override { return false; }
+    void executeNL(atlas::FieldSet &) override;
+
+ private:
+    const VaderConfigVars & configVariables_;
+    std::string maskOver_;
+};
+
+// -------------------------------------------------------------------------------------------------
+
 }  // namespace vader

@@ -63,7 +63,7 @@ void EffectiveRadiusOfRainParticle_A::executeNL(
   oops::Log::trace() << "EffectiveRadiusOfRainParticle_A::"
                      << "executeNL starting" << std::endl;
 
-  const double r_rain = 250.0e-6;  // 250 micrometers (m)
+  const double r_rain = 250.0;  // microns
   util::for_each_value(
       [=](double& reff) { reff = r_rain; },
       afieldset.field("effective_radius_of_rain_particle"));

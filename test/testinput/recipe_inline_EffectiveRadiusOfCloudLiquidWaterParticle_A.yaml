@@ -1,0 +1,11 @@
+recipe:
+  recipe name: EffectiveRadiusOfCloudLiquidWaterParticle_A
+columns:
+  air_temperature: [260.0,   288.15,  310.0]
+expected:
+  # T_freeze=273.15 K, T_range=30 K; r_min=4, r_max=15 microns
+  # k=0: T=260 < T_freeze -> r_min=4
+  # k=1: T=288.15 midpoint (288.15-273.15=15=T_range/2) -> 4 + 11*0.5 = 9.5
+  # k=2: T=310 > T_freeze+T_range -> clamped at r_max=15
+  effective_radius_of_cloud_liquid_water_particle: [4.0, 9.5, 15.0]
+nonlinear test tolerance: 1.e-12

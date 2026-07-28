@@ -63,7 +63,7 @@ void EffectiveRadiusOfHailParticle_A::executeNL(
   oops::Log::trace() << "EffectiveRadiusOfHailParticle_A::"
                      << "executeNL starting" << std::endl;
 
-  const double r_hail = 5.0e-3;  // 5 mm (m)
+  const double r_hail = 5000.0;  // 5 mm in microns
   util::for_each_value(
       [=](double& reff) { reff = r_hail; },
       afieldset.field("effective_radius_of_hail_particle"));

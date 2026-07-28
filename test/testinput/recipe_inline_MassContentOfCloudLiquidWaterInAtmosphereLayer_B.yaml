@@ -1,0 +1,17 @@
+recipe:
+  recipe name: MassContentOfCloudLiquidWaterInAtmosphereLayer_B
+  mask over: sea
+model data:
+  standard_gravitational_acceleration: 9.80665
+columns:
+  cloud_liquid_water:     [1.0e-4, 5.0e-9, 2.0e-5]   # 2nd level below min_qx (1e-8)
+  air_pressure_thickness: [3000.0, 2500.0, 2000.0]
+  slmsk:                  [1.0]                      # land
+expected:
+  # kgkg_to_kgm2 = delp / grav ; out = q * kgkg_to_kgm2
+  # k=0: 1e-4 * (3000/9.80665)  = 0.03059148638933785
+  # k=1: q < 1e-8 -> 0
+  # k=2: 2e-5 * (2000/9.80665)  = 0.004078864851911714
+  mass_content_of_cloud_liquid_water_in_atmosphere_layer:
+    [0.03059148638933785, 0.0, 0.004078864851911714]
+nonlinear test tolerance: 1.e-12

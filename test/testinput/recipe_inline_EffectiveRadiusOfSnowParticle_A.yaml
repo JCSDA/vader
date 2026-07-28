@@ -1,0 +1,11 @@
+recipe:
+  recipe name: EffectiveRadiusOfSnowParticle_A
+columns:
+  air_temperature: [220.0,   253.15,  280.0]
+expected:
+  # T_cold=233.15 K, T_freeze=273.15 K; r_min=100, r_max=1000 microns
+  # k=0: T=220 < T_cold  -> clamped at r_min=100
+  # k=1: T=253.15 midpoint -> 100 + 900*0.5 = 550
+  # k=2: T=280 > T_freeze -> r_min=100
+  effective_radius_of_snow_particle: [100.0, 550.0, 100.0]
+nonlinear test tolerance: 1.e-12

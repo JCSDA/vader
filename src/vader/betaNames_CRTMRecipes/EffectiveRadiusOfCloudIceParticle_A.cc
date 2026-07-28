@@ -65,8 +65,8 @@ void EffectiveRadiusOfCloudIceParticle_A::executeNL(atlas::FieldSet & afieldset)
 
   const double T_freeze = 273.15;  // K
   const double T_cold = 233.15;    // -40C
-  const double r_min = 20.0e-6;    // minimum radius (m)
-  const double r_max = 100.0e-6;   // maximum radius (m)
+  const double r_min = 20.0;       // minimum radius (microns)
+  const double r_max = 100.0;      // maximum radius (microns)
 
   util::for_each_value(
       [=](const double temp,
@@ -98,8 +98,8 @@ void EffectiveRadiusOfCloudIceParticle_A::executeTL(
 
   const double T_freeze = 273.15;
   const double T_cold   = 233.15;
-  const double r_min    = 20.0e-6;
-  const double r_max    = 100.0e-6;
+  const double r_min    = 20.0;   // microns
+  const double r_max    = 100.0;  // microns
 
   util::for_each_value(
       [=](const double temp_traj,
@@ -126,8 +126,8 @@ void EffectiveRadiusOfCloudIceParticle_A::executeAD(
 
   const double T_freeze = 273.15;
   const double T_cold   = 233.15;
-  const double r_min    = 20.0e-6;
-  const double r_max    = 100.0e-6;
+  const double r_min    = 20.0;   // microns
+  const double r_max    = 100.0;  // microns
 
   util::for_each_value(
       [=](const double temp_traj,

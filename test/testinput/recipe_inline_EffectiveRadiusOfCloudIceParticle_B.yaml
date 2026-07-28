@@ -1,0 +1,24 @@
+recipe:
+  recipe name: EffectiveRadiusOfCloudIceParticle_B
+model data:
+  tice: 273.16
+  # rdry = runiv/airmw = 8314.47/28.965 ; zvir = rvap/rdry - 1, rvap = runiv/h2omw
+  rdry: 287.0412566890385
+  zvir: 0.6080131980863033
+columns:
+  air_temperature:                         [200.0,    229.0,    240.0,    250.0,    200.0  ]
+  cloud_liquid_ice:                        [1.0e-5,   5.0e-5,   1.0e-4,   5.0e-5,   1.0e-9 ]
+  air_pressure:                            [20000.0,  50000.0,  80000.0,  80000.0,  50000.0]
+  water_vapor_mixing_ratio_wrt_moist_air:  [1.0e-6,   1.0e-5,   1.0e-4,   1.0e-4,   1.0e-5 ]
+expected:
+  # rho_air = p / (rdry*T*(1 + zvir*max(q,0)))
+  # wcontent = real(qi*rho_air)            ! single precision intermediate (matches Fortran)
+  # tem2 = T - tice; piecewise power law on wcontent; out = max(5, reff)
+  # k=0: tem2=-73.16 (<-50)  -> (1250/9.917)*wcontent^0.109 -> 32.03418946230894
+  # k=1: tem2=-44.16 (<-40)  -> (1250/9.337)*wcontent^0.080 -> 59.30827056510956
+  # k=2: tem2=-33.16 (<-30)  -> (1250/9.208)*wcontent^0.055 -> 82.4735414658889
+  # k=3: tem2=-23.16 (else)  -> (1250/9.387)*wcontent^0.031 -> 98.2910155495092
+  # k=4: qi=1e-9 < min_qx   -> 0.0
+  effective_radius_of_cloud_ice_particle:
+    [32.03418946230894, 59.30827056510956, 82.4735414658889, 98.2910155495092, 0.0]
+nonlinear test tolerance: 1.e-12
