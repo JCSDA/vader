@@ -14,7 +14,7 @@ namespace mo {
 /// USED IN VARTRANSFORMS
 /// USED IN RECONFIGURESTATEGAUSS
 /// \brief function to evaluate the 'relative humidity':
-///   rh = q/qsat*100
+///   rh = q/qsat
 /// where ...
 ///   q  = specific humidity
 ///   qsat  = saturated specific humidity
@@ -27,7 +27,7 @@ void eval_relative_humidity_nl(atlas::FieldSet & stateFlds);
 /// USED IN RECIPE RelativeHumidity_A
 /// \details This calculates the relative humidity increment from the air
 ///          temperature and specific humidity increment as:
-///          rh' ~ (q'/qs - (q/qs) dlnesdT T')*100
+///          rh' ~ (q'/qs - (q/qs) dlnesdT T')
 ///          This assumes air pressure increments can be neglected (usual approximation)
 ///          Only part of this is the tangent linear of eval_relative_humidity_nl.
 ///          This neglects supersaturation.
@@ -39,6 +39,16 @@ void eval_relative_humidity_tl(atlas::FieldSet & incFlds,
 /// \brief Adjoint of eval_relative_humidity_tl
 void eval_relative_humidity_ad(atlas::FieldSet & hatFlds,
                                const atlas::FieldSet & stateFlds);
+
+/// \brief Convert 2m relative humidity from percentage to fraction.
+/// \details relative_humidity_at_2m = relative_humidity_at_2m_percentage / 100
+void eval_relative_humidity_at_2m_percentage_to_fraction_nl(atlas::FieldSet & stateFlds);
+
+/// \brief TL of eval_relative_humidity_at_2m_percentage_to_fraction_nl.
+void eval_relative_humidity_at_2m_percentage_to_fraction_tl(atlas::FieldSet & incFlds);
+
+/// \brief AD of eval_relative_humidity_at_2m_percentage_to_fraction_tl.
+void eval_relative_humidity_at_2m_percentage_to_fraction_ad(atlas::FieldSet & hatFlds);
 
 /// USED IN RECONFIGURE STATE GAUSS
 /// \details This calculates the relative humidity increment at 2 m from the atmospheric

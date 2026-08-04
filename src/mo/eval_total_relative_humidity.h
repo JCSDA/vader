@@ -14,7 +14,7 @@ namespace mo {
   /// USED IN RECONFIGURE STATE GAUSS
   /// USED IN RECIPE TotalRelativeHumidity_A
   /// \brief function to evaluate the 'total relative humidity':
-  ///   rh = (q+qcl+qci+qrain)/qsat*100
+  ///   rh = (q+qcl+qci+qrain)/qsat
   /// where ...
   ///   q  = specific humidity
   ///   qcl = specific cloud water

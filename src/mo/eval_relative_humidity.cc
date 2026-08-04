@@ -29,6 +29,9 @@ using ConstView = atlas::array::LocalView<const double, 1>;
 
 namespace {
   const char specific_humidity_mo[] = "water_vapor_mixing_ratio_wrt_moist_air_and_condensed_water";
+  const char relative_humidity_at_2m_percentage[] = "relative_humidity_at_2m_percentage";
+  const char relative_humidity_at_2m[] = "relative_humidity_at_2m";
+  constexpr double relative_humidity_percent_to_fraction = 0.01;
 }  // namespace
 
 namespace mo {
@@ -44,16 +47,15 @@ void eval_relative_humidity_nl(atlas::FieldSet & stateFlds) {
     stateFlds["relative_humidity"].metadata().get("cap_super_sat", cap_super_sat);
   }
 
-  // Warning! Relative humidity in saber, vader and ufo has units percents (from 0 to 100),
-  // while it should have units 1 (from 0 to 1) according to the CCPP convention.
+  // Relative humidity has units from 0 to 1 according to the ESM convention.
   const auto & ghost = stateFlds["relative_humidity"].functionspace().ghost();
   atlas::field::for_each_value_masked(ghost,
                                       stateFlds[specific_humidity_mo],
                                       stateFlds["qsat"],
                                       stateFlds["relative_humidity"],
                                       [&](const double q, const double qsat, double& rh) {
-      rh = fmax(q / qsat * 100.0, 0.0);
-      rh = (cap_super_sat && (rh > 100)) ? 100.0 : rh;
+      rh = fmax(q / qsat, 0.0);
+      rh = (cap_super_sat && (rh > 1.0)) ? 1.0 : rh;
   });
   stateFlds["relative_humidity"].set_dirty();
 
@@ -82,7 +84,7 @@ void eval_relative_humidity_tl(atlas::FieldSet & incFlds,
                                                       stateFlds["dlsvpdT"]),
           [](const double qInc, const double tInc, double& rhInc,
              const double q, const double qsat, const double dlsvpdT) {
-            rhInc = 100.0 * (qInc - q * dlsvpdT * tInc) / qsat;
+            rhInc = (qInc - q * dlsvpdT * tInc) / qsat;
           });
 
   incFlds["relative_humidity"].set_dirty();
@@ -106,8 +108,8 @@ void eval_relative_humidity_ad(atlas::FieldSet & hatFlds,
                                                       stateFlds["dlsvpdT"]),
           [](double& qHat, double& tHat, double& rhHat,
              const double q, const double qsat, const double dlsvpdT) {
-            qHat += 100 * rhHat / qsat;
-            tHat -= 100 * q * dlsvpdT * rhHat / qsat;
+            qHat += rhHat / qsat;
+            tHat -= q * dlsvpdT * rhHat / qsat;
             rhHat = 0.0;
           });
 
@@ -116,6 +118,70 @@ void eval_relative_humidity_ad(atlas::FieldSet & hatFlds,
   hatFlds["relative_humidity"].set_dirty();
 
   oops::Log::trace() << "[eval_relative_humidity_ad()] ... exit" << std::endl;
+}
+
+// --------------------------------------------------------------------------------------
+
+void eval_relative_humidity_at_2m_percentage_to_fraction_nl(atlas::FieldSet & stateFlds) {
+  oops::Log::trace() << "[eval_relative_humidity_at_2m_percentage_to_fraction_nl()] starting ..."
+                     << std::endl;
+
+  util::for_each_column(
+    [=] (ConstView rh2mPercentView,
+         View rh2mView) {
+      rh2mView(0) = rh2mPercentView(0) * relative_humidity_percent_to_fraction;
+    },
+    stateFlds[relative_humidity_at_2m_percentage],
+    stateFlds[relative_humidity_at_2m]);
+
+  stateFlds[relative_humidity_at_2m].set_dirty();
+
+  oops::Log::trace() << "[eval_relative_humidity_at_2m_percentage_to_fraction_nl()] ... exit"
+                     << std::endl;
+}
+
+
+// --------------------------------------------------------------------------------------
+
+void eval_relative_humidity_at_2m_percentage_to_fraction_tl(atlas::FieldSet & incFlds) {
+  oops::Log::trace() << "[eval_relative_humidity_at_2m_percentage_to_fraction_tl()] starting ..."
+                     << std::endl;
+
+  util::for_each_column(
+    [=] (ConstView rh2mPercentIncView,
+         View rh2mIncView) {
+      rh2mIncView(0) = rh2mPercentIncView(0) * relative_humidity_percent_to_fraction;
+    },
+    incFlds[relative_humidity_at_2m_percentage],
+    incFlds[relative_humidity_at_2m]);
+
+  incFlds[relative_humidity_at_2m].set_dirty();
+
+  oops::Log::trace() << "[eval_relative_humidity_at_2m_percentage_to_fraction_tl()] ... exit"
+                     << std::endl;
+}
+
+
+// --------------------------------------------------------------------------------------
+
+void eval_relative_humidity_at_2m_percentage_to_fraction_ad(atlas::FieldSet & hatFlds) {
+  oops::Log::trace() << "[eval_relative_humidity_at_2m_percentage_to_fraction_ad()] starting ..."
+                     << std::endl;
+
+  util::for_each_column(
+    [=] (View rh2mPercentHatView,
+         View rh2mHatView) {
+      rh2mPercentHatView(0) += rh2mHatView(0) * relative_humidity_percent_to_fraction;
+      rh2mHatView(0) = 0.0;
+    },
+    hatFlds[relative_humidity_at_2m_percentage],
+    hatFlds[relative_humidity_at_2m]);
+
+  hatFlds[relative_humidity_at_2m_percentage].set_dirty();
+  hatFlds[relative_humidity_at_2m].set_dirty();
+
+  oops::Log::trace() << "[eval_relative_humidity_at_2m_percentage_to_fraction_ad()] ... exit"
+                     << std::endl;
 }
 
 // --------------------------------------------------------------------------------------
@@ -166,8 +232,7 @@ void eval_relative_humidity_at_2m_nl(atlas::FieldSet & stateFlds) {
     stateFlds["relative_humidity_at_2m"].metadata().get("cap_super_sat", cap_super_sat);
   }
 
-  // Warning! Relative humidity in saber, vader and ufo has units percents (from 0 to 100),
-  // while it should have units 1 (from 0 to 1) according to the CCPP convention.
+  // Relative humidity has units from 0 to 1 according to the ESM convention.
   const idx_t sizeOwned =
     util::getSizeOwned(stateFlds["relative_humidity_at_2m"].functionspace());
 
@@ -176,8 +241,8 @@ void eval_relative_humidity_at_2m_nl(atlas::FieldSet & stateFlds) {
   auto rh2mView = make_view<double, 2>(stateFlds["relative_humidity_at_2m"]);
 
   for (atlas::idx_t jn = 0; jn < sizeOwned; ++jn) {
-    rh2mView(jn, 0) = fmax(qView(jn, 0) / qsatView(jn, 0) * 100.0, 0.0);
-    rh2mView(jn, 0) = (cap_super_sat && (rh2mView(jn, 0) > 100)) ? 100.0 : rh2mView(jn, 0);
+    rh2mView(jn, 0) = fmax(qView(jn, 0) / qsatView(jn, 0), 0.0);
+    rh2mView(jn, 0) = (cap_super_sat && (rh2mView(jn, 0) > 1.0)) ? 1.0 : rh2mView(jn, 0);
   }
 
   stateFlds["relative_humidity_at_2m"].set_dirty();
@@ -204,7 +269,7 @@ void eval_relative_humidity_at_2m_from_temp_tl(atlas::FieldSet & incFlds,
          ConstView qInc,
          ConstView tInc,
          View rh2mInc) {
-      rh2mInc(0) = 100.0 * (qInc(0) - q(0) * dlsvpdt(0) * tInc(0)) / qsat(0);
+      rh2mInc(0) = (qInc(0) - q(0) * dlsvpdt(0) * tInc(0)) / qsat(0);
     },
     stateFlds[specific_humidity_mo],
     stateFlds["qsat"],
@@ -233,8 +298,8 @@ void eval_relative_humidity_at_2m_from_temp_ad(atlas::FieldSet & hatFlds,
          View qHat,
          View tHat,
          View rh2mHat) {
-      qHat(0) += 100 * rh2mHat(0) / qsat(0);
-      tHat(0) -= 100 * q(0) * dlsvpdt(0) * rh2mHat(0) / qsat(0);
+      qHat(0) += rh2mHat(0) / qsat(0);
+      tHat(0) -= q(0) * dlsvpdt(0) * rh2mHat(0) / qsat(0);
       rh2mHat(0) = 0.0;
     },
     stateFlds[specific_humidity_mo],
@@ -250,7 +315,6 @@ void eval_relative_humidity_at_2m_from_temp_ad(atlas::FieldSet & hatFlds,
 
   oops::Log::trace()<< "[eval_relative_humidity_at_2m__from_temp_ad()] ... exit" << std::endl;
 }
-
 
 // --------------------------------------------------------------------------------------
 

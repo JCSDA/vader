@@ -198,6 +198,8 @@ vader/recipes/RainMixingRatio_A.cc
 vader/recipes/RelativeHumidity.h
 vader/recipes/RelativeHumidity_A.cc
 vader/recipes/RelativeHumidity_B.cc
+vader/recipes/RelativeHumidityAt2m.h
+vader/recipes/RelativeHumidityAt2m_A.cc
 vader/recipes/SaturationSpecificHumidity.h
 vader/recipes/SaturationSpecificHumidity_A.cc
 vader/recipes/SaturationSpecificHumidity_B.cc

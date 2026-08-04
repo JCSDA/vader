@@ -32,12 +32,12 @@ namespace constants {
   static constexpr std::size_t mioBins = 21;
   static constexpr std::size_t mioLevs = 40;
   static constexpr std::size_t mioLookUpLength = mioLevs * mioBins;
-  static constexpr double rHTBin = 5.0;     // done as a percentage!
+  static constexpr double rHTBin = 0.05;    // fraction units (= 5% per bin)
   static constexpr double MinRhRef = 0.0;
-  static constexpr double MaxRhRef = 150.0;
-  static constexpr double rHTLastBinLowerLimit = (mioBins - 1) * rHTBin;  // in percentage
+  static constexpr double MaxRhRef = 1.5;
+  static constexpr double rHTLastBinLowerLimit = (mioBins - 1) * rHTBin;  // fraction units
   static constexpr double TolMonotonicity = 1.0;
-  static constexpr double effectiveRNegative = 5.0;
+  static constexpr double effectiveRNegative = 0.05;  // fraction units (= 5%)
 
   // tolerance for avoiding division by zero in eval_mio_fields_nl
   static constexpr double tol = 1.0e-5;

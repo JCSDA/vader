@@ -68,6 +68,7 @@ testinput/recipe_RainMixingRatio_A.yaml
 testinput/recipe_RainWater_A.yaml
 testinput/recipe_RelativeHumidity_A.yaml
 testinput/recipe_RelativeHumidity_B.yaml
+testinput/recipe_RelativeHumidityAt2M_A.yaml
 testinput/recipe_SaturationSpecificHumidity_A.yaml
 testinput/recipe_SaturationSpecificHumidity_B.yaml
 testinput/recipe_SaturationVaporPressure_A.yaml
@@ -239,7 +240,6 @@ list( APPEND vader_testdata
   rrfs_sd_gauss_state_F12.nc
   dust_gauss_state_F12_lfric2um.nc
   dust_gauss_state_F12_um2lfric.nc
-  relative_humidity_A.nc
 )
 
 # Create data directory for test input and symlink all files
@@ -426,7 +426,7 @@ ecbuild_add_test( TARGET  vader_recipe_DustBin2MassConcentration_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "mo/testinput/recipe_DustBin2MassConcentration_A.yaml"
 		  LIBS    vader )
-		
+
 ecbuild_add_test( TARGET  vader_recipe_DustCoarseModeMassFraction_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "mo/testinput/recipe_DustCoarseModeMassFraction_A.yaml"
@@ -605,6 +605,11 @@ ecbuild_add_test( TARGET  vader_recipe_RelativeHumidity_A
 ecbuild_add_test( TARGET  vader_recipe_RelativeHumidity_B
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_RelativeHumidity_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_RelativeHumidityAt2M_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_RelativeHumidityAt2M_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_SaturationSpecificHumidity_A
@@ -1109,7 +1114,7 @@ ecbuild_add_test( TARGET  vader_vader_DustCoarseModeMassFraction_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
                   ARGS    "mo/testinput/vader_DustCoarseModeMassFraction_A.yaml"
                   LIBS    vader )
-                  
+
 ecbuild_add_test( TARGET  vader_vader_DustCoarseModeNumberFraction_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
                   ARGS    "mo/testinput/vader_DustCoarseModeNumberFraction_A.yaml"

@@ -38,7 +38,7 @@ void eval_total_relative_humidity_nl(atlas::FieldSet & fields) {
   atlas_omp_parallel_for(atlas::idx_t ih = 0; ih < sizeOwned; ih++) {
     for (atlas::idx_t ilev = 0; ilev < n_levels; ilev++) {
       rhtView(ih, ilev) = (qView(ih, ilev) + qclView(ih, ilev) + qciView(ih, ilev)
-                          + qrainView(ih, ilev)) / qsatView(ih, ilev) * 100.0;
+                          + qrainView(ih, ilev)) / qsatView(ih, ilev);
 
       if (rhtView(ih, ilev) < 0.0) rhtView(ih, ilev) = 0.0;
     }
