@@ -144,7 +144,6 @@ testinput/recipe_inline_WindSpeedAt10m_A.yaml
 testinput/recipe_inline_WindSpeedAt10m_B.yaml
 testinput/recipe_inline_WindFromDirectionAtSurface_A.yaml
 testinput/recipe_inline_WindToDirectionAtSurface_A.yaml
-testinput/recipe_inline_WindSpeedAtSurface_B.yaml
 testinput/recipe_inline_GeopotentialHeightLevels_B.yaml
 testinput/recipe_inline_GeopotentialHeight_B.yaml
 testinput/recipe_inline_GeopotentialHeight_B_bottomup.yaml
@@ -246,9 +245,9 @@ list( APPEND vader_testdata
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testinput)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mo/testinput)
 foreach(FILENAME ${vader_testinput})
-    execute_process( COMMAND ${CMAKE_COMMAND} -E create_symlink
+    file( CREATE_LINK
            ${CMAKE_CURRENT_SOURCE_DIR}/${FILENAME}
-           ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME} )
+           ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME} SYMBOLIC )
 endforeach(FILENAME)
 
 # Path to the vader test files
@@ -257,9 +256,9 @@ set (jedi_model_data_tier_1_vader "${CMAKE_SOURCE_DIR}/jedi-model-data/testinput
 # Create data directory for test data and symlink all files
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testdata)
 foreach(FILENAME ${vader_testdata})
-    execute_process( COMMAND ${CMAKE_COMMAND} -E create_symlink
+    file( CREATE_LINK
            ${jedi_model_data_tier_1_vader}/${FILENAME}
-           ${CMAKE_CURRENT_BINARY_DIR}/testdata/${FILENAME} )
+           ${CMAKE_CURRENT_BINARY_DIR}/testdata/${FILENAME} SYMBOLIC )
 endforeach(FILENAME)
 
 # Create test executables
