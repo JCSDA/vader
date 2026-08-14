@@ -338,6 +338,49 @@ oops::Log::trace() << "entering Vader::changeVarAD" << std::endl;
 }
 
 // ------------------------------------------------------------------------------------------------
+namespace {
+
+/*! \brief Planning State
+*
+* \details **PlanningState** records the "state" of the execution plan and the associated variables
+* before beginning an attempt to plan a new variable, so that the attempt
+* can be completely undone (including changes from all recursive calls) as a unit if the attempt
+* ultimately fails.
+*
+*/
+class PlanningState {
+ public:
+    PlanningState(const Vader::vaderPlanType & plan, const Vader::vaderPlanType & trajPlan,
+                  const oops::Variables & neededVars, const oops::Variables & ingredientVars,
+                  const oops::Variables & trajectoryVars) :
+        planSize_(plan.size()), trajPlanSize_(trajPlan.size()), neededVars_(neededVars),
+        ingredientVars_(ingredientVars), trajectoryVars_(trajectoryVars) {}
+
+    void restore(Vader::vaderPlanType & plan, Vader::vaderPlanType & trajPlan,
+                 oops::Variables & neededVars, oops::Variables & ingredientVars,
+                 oops::Variables & trajectoryVars) const {
+        while (plan.size() > planSize_) {
+            plan.pop_back();
+        }
+        while (trajPlan.size() > trajPlanSize_) {
+            trajPlan.pop_back();
+        }
+        neededVars = neededVars_;
+        ingredientVars = ingredientVars_;
+        trajectoryVars = trajectoryVars_;
+    }
+
+ private:
+    const size_t planSize_;
+    const size_t trajPlanSize_;
+    const oops::Variables neededVars_;
+    const oops::Variables ingredientVars_;
+    const oops::Variables trajectoryVars_;
+};
+
+}  // namespace
+
+// ------------------------------------------------------------------------------------------------
 /*! \brief Plan Variables
 *
 * \details **planVariables** This overload just calls the other overload of planVariables in
@@ -397,21 +440,16 @@ void Vader::planVariables(oops::Variables & ingredientVars,
             continue;
         }
         oops::Variables excludedVars;
-        auto initPlanSize = plan.size();
-        auto initTrajPlanSize = trajRecipeExecutionPlan.size();
+        // Save the variable lists and plan sizes so they can be restored if we can't plan this
+        // variable.
+        const PlanningState stateBeforeTarget(plan, trajRecipeExecutionPlan, neededVars,
+                                              ingredientVars, trajectoryVars);
         if (!planVariable(ingredientVars, neededVars, targetVariable, excludedVars, plan,
                           planTLAD, trajectoryVars, trajRecipeExecutionPlan)) {
-            // If we couldn't plan the variable, remove anything that might have been added to the
-            // plan through recursion while trying to plan this variable.
             oops::Log::debug() << "Removing any planned recipes for " << targetVariable <<
                 " since we couldn't plan it." << std::endl;
-            while (plan.size() > initPlanSize) {
-                plan.pop_back();
-            }
-            // Also clean up any trajectory plan entries that were added
-            while (trajRecipeExecutionPlan.size() > initTrajPlanSize) {
-                trajRecipeExecutionPlan.pop_back();
-            }
+            stateBeforeTarget.restore(plan, trajRecipeExecutionPlan, neededVars, ingredientVars,
+                                      trajectoryVars);
         }
     }
     oops::Log::trace() << "leaving Vader::planVariables" << std::endl;
@@ -497,6 +535,8 @@ bool Vader::planVariable(oops::Variables & ingredientVars,
             }
             oops::Log::debug() << "Checking to see if we have ingredients for recipe: " <<
                 recipe->name() << std::endl;
+            const PlanningState stateBeforeRecipe(plan, trajPlan, neededVars, ingredientVars,
+                                                  trajectoryVars);
             bool haveIngredient = false;
             for (const auto & ingredient : recipe->ingredients()) {
                 if (ingredient == targetVariable) {
@@ -520,21 +560,8 @@ bool Vader::planVariable(oops::Variables & ingredientVars,
                         // create it again as an ingredient at a lower level of recursion. Then
                         // call planVariable recursively.
                         excludedVars.push_back(targetVariable);
-                        // Track trajPlan size before recursive call in case we need to clean up
-                        auto trajPlanSizeBeforeIngredient = trajPlan.size();
                         haveIngredient = planVariable(ingredientVars, neededVars, ingredient,
                                             excludedVars, plan, planTLAD, trajectoryVars, trajPlan);
-                        // If the ingredient recipe failed, clean up any trajectory plan entries
-                        // that were added during the recursive call
-                        if (!haveIngredient && trajPlan.size() > trajPlanSizeBeforeIngredient) {
-                            oops::Log::debug() << "Ingredient recipe failed, removing "
-                                << (trajPlan.size() - trajPlanSizeBeforeIngredient)
-                                << " trajectory plan entries added during recursive call."
-                                << std::endl;
-                            while (trajPlan.size() > trajPlanSizeBeforeIngredient) {
-                                trajPlan.pop_back();
-                            }
-                        }
                         // Remove the ingredient from excludedVars since we're back to this level.
                         excludedVars -= targetVariable;
                     }
@@ -553,7 +580,6 @@ bool Vader::planVariable(oops::Variables & ingredientVars,
                 oops::Log::debug() <<
                     "Trajectory vars for recipe " << recipe->name() << " are: " << std::endl <<
                     trajNeededVars << std::endl;
-                auto trajPlanInitSize = trajPlan.size();
                 planVariables(trajectoryVars, trajNeededVars, trajPlan);
                 if (trajNeededVars.size() == 0) {
                     oops::Log::debug() <<
@@ -561,10 +587,6 @@ bool Vader::planVariable(oops::Variables & ingredientVars,
                 } else {
                     oops::Log::debug() << "Trajectory variables not available for recipe " <<
                         recipe->name() << std::endl;
-                    // Remove the trajectory plan entries that were added
-                    while (trajPlan.size() > trajPlanInitSize) {
-                        trajPlan.pop_back();
-                    }
                     haveTrajVars = false;
                 }
             }
@@ -580,6 +602,9 @@ bool Vader::planVariable(oops::Variables & ingredientVars,
             } else {
                 oops::Log::debug() <<
                     "Not adding recipe " << recipe->name() << " to plan." << std::endl;
+                // Undo everything this attempt did before trying the next recipe.
+                stateBeforeRecipe.restore(plan, trajPlan, neededVars, ingredientVars,
+                                          trajectoryVars);
             }
         }
     } else {

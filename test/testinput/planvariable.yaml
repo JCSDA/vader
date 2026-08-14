@@ -178,3 +178,45 @@ plan variable tests:
   expected planned products: []
   expected recipe plan: []
   expected traj recipe plan: []
+# A requested product that was planned as an intermediate of a failed top-level variable must
+# still be planned. TestVarA needs TestVarB and TestVarC. TestVarB is produced as an intermediate
+# (via TestVarE from TestVarF), then TestVarC turns out to be unproducible, so TestVarA fails and
+# its recipes are removed from the plan. TestVarB was also requested as a top-level product, and
+# it is producible on its own from the available TestVarF, so it must still be planned.
+- cookbook:
+    TestVarA: [Test_VarA_from_B_C]
+    TestVarB: [Test_VarB_from_E]
+    TestVarE: [Test_VarE_from_F]
+  ingredients: [TestVarF]
+  products: [TestVarA, TestVarB]
+  plan for TLAD: false
+  expected planned products: [TestVarE, TestVarB]
+  expected recipe plan: [Test_VarE_from_F, Test_VarB_from_E]
+# Same, but the top-level variable fails on its trajectory variables rather than its ingredients.
+# TestVarC's ingredients are both satisfied - TestVarE is planned as an intermediate - but its
+# trajectory var TestVarD cannot be produced from the available trajectory var TestVarF, so
+# TestVarC fails. TestVarE was also requested as a top-level product, and both its ingredient and
+# its trajectory var are available, so it must still be planned.
+- cookbook:
+    TestVarC: [Test_VarC_from_D_E]
+    TestVarE: [Test_VarE_from_F]
+  ingredients: [TestVarD, TestVarF]
+  products: [TestVarC, TestVarE]
+  trajectory variables: [TestVarF]
+  plan for TLAD: true
+  expected planned products: [TestVarE]
+  expected recipe plan: [Test_VarE_from_F]
+  expected traj recipe plan: []
+# A rejected recipe must not leave its intermediates behind for the fallback recipe to carry.
+# The first recipe for TestVarA plans TestVarC as an intermediate and then fails, because nothing
+# can produce TestVarD. The second recipe for TestVarA succeeds using the available TestVarB, and
+# it has no use for TestVarC, so no recipe for TestVarC belongs in the plan and TestVarC must not
+# be reported as produced.
+- cookbook:
+    TestVarA: [Test_VarA_from_C_D, Test_VarA_from_B]
+    TestVarC: [Test_VarC_from_F]
+  ingredients: [TestVarB, TestVarF]
+  products: [TestVarA]
+  plan for TLAD: false
+  expected planned products: [TestVarA]
+  expected recipe plan: [Test_VarA_from_B]
