@@ -262,16 +262,23 @@ foreach(FILENAME ${vader_testdata})
 endforeach(FILENAME)
 
 # Create test executables
+# TestUtils.cc is shared by the test executables; compile it once.
+add_library( vader_test_utils OBJECT vader/TestUtils.cc )
+target_link_libraries( vader_test_utils PRIVATE vader )
+
 ecbuild_add_executable( TARGET  test_recipe.x
-                        SOURCES vader/TestRecipe.cc vader/TestUtils.cc
+                        SOURCES vader/TestRecipe.cc
+                        OBJECTS vader_test_utils
                         LIBS    vader
                        )
 ecbuild_add_executable( TARGET  test_vader.x
-                        SOURCES vader/TestVader.cc vader/TestUtils.cc
+                        SOURCES vader/TestVader.cc
+                        OBJECTS vader_test_utils
                         LIBS    vader
                        )
 ecbuild_add_executable( TARGET  test_recipe_inline.x
-                        SOURCES vader/TestRecipeInline.cc vader/TestUtils.cc
+                        SOURCES vader/TestRecipeInline.cc
+                        OBJECTS vader_test_utils
                         LIBS    vader
                        )
 
