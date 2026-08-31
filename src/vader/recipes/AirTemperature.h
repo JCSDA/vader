@@ -87,6 +87,10 @@ class AirTemperature_A : public RecipeBase {
 // ------------------------------------------------------------------------------------------------
 /*! \brief AirTemperature_B class defines a recipe for temperature from virtual temperature
  *         and specific humidity.
+ *
+ *         NL air_temperature = virtual_temperature /
+ *                              (1 + epsilon_star * water_vapor_mixing_ratio_wrt_moist_air)
+ *            with epsilon_star = 1/epsilon - 1
  */
 class AirTemperature_B : public RecipeBase {
  public:
@@ -103,7 +107,11 @@ class AirTemperature_B : public RecipeBase {
     oops::Variables ingredients() const override;
     size_t productLevels(const atlas::FieldSet &) const override;
     atlas::FunctionSpace productFunctionSpace(const atlas::FieldSet &) const override;
+    bool hasTLAD() const override { return true; }
     void executeNL(atlas::FieldSet &) override;
+    void executeTL(atlas::FieldSet &, const atlas::FieldSet &) override;
+    void executeAD(atlas::FieldSet &, const atlas::FieldSet &) override;
+    oops::Variables trajectoryVars() const override;
 
  private:
     const VaderConfigVars & configVariables_;

@@ -1,0 +1,14 @@
+recipe:
+  recipe name: AirTemperature_B
+model data:
+  epsilon: 0.62198
+columns:
+  virtual_temperature:                    [300.0, 290.0, 280.0]
+  water_vapor_mixing_ratio_wrt_moist_air: [0.02,  0.005, 0.0]
+expected:
+  # epsilon_star = 1/epsilon - 1 = 0.607768738544648
+  # T[k] = Tv[k] / (1 + epsilon_star * q[k])
+  # 300.0/(1+0.607768738544648*0.02) ; 290.0/(1+0.607768738544648*0.005) ;
+  # 280.0/(1+0) -- dry level, T == Tv
+  air_temperature: [296.3971811817, 289.121405241251, 280.0]
+nonlinear test tolerance: 1.e-12

@@ -110,6 +110,7 @@ testinput/recipe_inline_AirPotentialTemperature_A.yaml
 testinput/recipe_inline_AirPotentialTemperature_B.yaml
 testinput/recipe_inline_AirPressureAtInterface_A.yaml
 testinput/recipe_inline_AirTemperature_A.yaml
+testinput/recipe_inline_AirTemperature_B.yaml
 testinput/recipe_inline_MassContentOfCloudLiquidWaterInAtmosphereLayer_B.yaml
 testinput/recipe_inline_MassContentOfCloudIceInAtmosphereLayer_B.yaml
 testinput/recipe_inline_EffectiveRadiusOfCloudLiquidWaterParticle_B.yaml
@@ -151,13 +152,13 @@ testinput/recipe_inline_GeopotentialHeight_B_standard_hypsometric.yaml
 testinput/recipe_inline_HeightAboveMeanSeaLevel_A.yaml
 testinput/recipe_inline_MoleFractionOfOzoneInAir_A.yaml
 
-testinput/vader_AirTemperature_A.yaml
 testinput/vader_AirPressure_A.yaml
 testinput/vader_AirPressure_A_bottomup.yaml
 testinput/vader_AirPressure_B.yaml
 testinput/vader_AirPressureAtInterface_D.yaml
 testinput/vader_AirPressureThickness_A.yaml
 testinput/vader_AirTemperature_A.yaml
+testinput/vader_AirTemperature_B.yaml
 testinput/vader_AirVirtualTemperature_A.yaml
 testinput/vader_CloudIceMixingRatioWrtDryAir_A.yaml
 testinput/vader_CloudIceMixingRatioWrtDryAir_B.yaml
@@ -819,6 +820,11 @@ ecbuild_add_test( TARGET  vader_recipe_inline_AirTemperature_A
                   ARGS    "testinput/recipe_inline_AirTemperature_A.yaml"
                   LIBS    vader )
 
+ecbuild_add_test( TARGET  vader_recipe_inline_AirTemperature_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_AirTemperature_B.yaml"
+                  LIBS    vader )
+
 ecbuild_add_test( TARGET  vader_recipe_inline_AverageSurfaceTemperatureWithinFieldOfView_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_AverageSurfaceTemperatureWithinFieldOfView_A.yaml"
@@ -1049,6 +1055,11 @@ ecbuild_add_test( TARGET  vader_vader_AirPressureThickness_A
 ecbuild_add_test( TARGET  vader_vader_AirTemperature_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
                   ARGS    "testinput/vader_AirTemperature_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_AirTemperature_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "testinput/vader_AirTemperature_B.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_vader_AirVirtualTemperature_A

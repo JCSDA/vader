@@ -1,0 +1,17 @@
+vader: {}
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+cookbook:
+  air_temperature: [AirTemperature_B]
+model data:
+  epsilon: 0.62198
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables:
+  - virtual_temperature
+  - water_vapor_mixing_ratio_wrt_moist_air
+ingredients:
+  - virtual_temperature
+  - water_vapor_mixing_ratio_wrt_moist_air
+products: [air_temperature]
+adjoint test tolerance: 1.e-12
