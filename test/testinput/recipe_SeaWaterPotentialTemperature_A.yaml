@@ -1,0 +1,8 @@
+recipe:
+  recipe name: SeaWaterPotentialTemperature_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+trajectory filename: testdata/gauss_ocean_F12.nc
+nonlinear test tolerance: 1.e-7
+run adjoint test: false

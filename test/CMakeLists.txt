@@ -242,6 +242,19 @@ list( APPEND vader_testdata
   dust_gauss_state_F12_um2lfric.nc
 )
 
+# Include gsw dependent tests
+if( gsw_FOUND )
+  list( APPEND vader_testdata
+  gauss_ocean_F12.nc
+  )
+
+  list( APPEND vader_testinput
+  testinput/recipe_SeaWaterPotentialTemperature_A.yaml
+  testinput/recipe_SeaWaterTemperature_A.yaml
+  testinput/recipe_SeaWaterTemperature_B.yaml
+  )
+endif( gsw_FOUND )
+
 # Create data directory for test input and symlink all files
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testinput)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mo/testinput)
@@ -633,6 +646,25 @@ ecbuild_add_test( TARGET  vader_recipe_SaturationVaporPressure_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_SaturationVaporPressure_A.yaml"
                   LIBS    vader )
+
+# Include gsw dependent tests
+if( gsw_FOUND )
+ecbuild_add_test( TARGET  vader_recipe_SeaWaterPotentialTemperature_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_SeaWaterPotentialTemperature_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_SeaWaterTemperature_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_SeaWaterTemperature_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_SeaWaterTemperature_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_SeaWaterTemperature_B.yaml"
+                  LIBS    vader )
+
+endif( gsw_FOUND )
 
 ecbuild_add_test( TARGET  vader_recipe_SaturationVaporPressure_B
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x

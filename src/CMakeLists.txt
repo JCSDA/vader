@@ -306,10 +306,11 @@ if( gsw_FOUND )
   list( APPEND vader_src_files
   OceanConversions/OceanConversions.interface.F90
   OceanConversions/OceanConversions.interface.h
-  vader/recipes/SeaWaterPotentialTemperature_A.cc
-  vader/recipes/SeaWaterPotentialTemperature.h
-  vader/recipes/SeaWaterTemperature_A.cc
-  vader/recipes/SeaWaterTemperature.h
+  vader/betaNames_CRTMRecipes/SeaWaterPotentialTemperature_A.cc
+  vader/betaNames_CRTMRecipes/SeaWaterPotentialTemperature.h
+  vader/betaNames_CRTMRecipes/SeaWaterTemperature_A.cc
+  vader/betaNames_CRTMRecipes/SeaWaterTemperature_B.cc
+  vader/betaNames_CRTMRecipes/SeaWaterTemperature.h
   )
 endif( gsw_FOUND )
 
