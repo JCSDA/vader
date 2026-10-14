@@ -190,6 +190,8 @@ vader/recipes/MoleFractionOfOzoneInAir.h
 vader/recipes/MoleFractionOfOzoneInAir_A.cc
 vader/recipes/NorthwardWindAt10m_A.cc
 vader/recipes/NorthwardWindAt10m.h
+vader/recipes/OzoneMassMixingRatio.h
+vader/recipes/OzoneMassMixingRatio_A.cc
 vader/recipes/ParticulateMatter2p5.h
 vader/recipes/ParticulateMatter2p5_A.cc
 vader/recipes/ParticulateMatter2p5_B.cc
