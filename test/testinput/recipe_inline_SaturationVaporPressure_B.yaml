@@ -1,0 +1,11 @@
+recipe:
+  recipe name: SaturationVaporPressure_B
+columns:
+  # Levels 0-1 use the liquid branch (T >= 273.15 K), levels 2-3 the ice branch
+  air_temperature: [300.0, 273.15, 260.0, 220.0]
+expected:
+  # svp[k] = exp(A/T + B + C*T + D*T^2 + F*ln(T))  (Murphy & Koop 2005)
+  #   liquid: A=-6096.9385, B=21.2409642, C=-2.711193e-2,  D=1.673952e-5,   F=2.433502
+  #   ice:    A=-6024.5282, B=29.32707,   C=1.0613868e-2,  D=-1.3198825e-5, F=-0.49382577
+  svp: [3536.80736997542, 611.212840046435, 195.813938333114, 2.65266942433691]
+nonlinear test tolerance: 1.e-12

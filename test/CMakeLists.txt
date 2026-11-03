@@ -151,6 +151,7 @@ testinput/recipe_inline_GeopotentialHeight_B_bottomup.yaml
 testinput/recipe_inline_GeopotentialHeight_B_standard_hypsometric.yaml
 testinput/recipe_inline_HeightAboveMeanSeaLevel_A.yaml
 testinput/recipe_inline_MoleFractionOfOzoneInAir_A.yaml
+testinput/recipe_inline_SaturationVaporPressure_B.yaml
 testinput/recipe_inline_OzoneMassMixingRatio_A.yaml
 
 testinput/vader_AirPressure_A.yaml
@@ -1063,6 +1064,12 @@ ecbuild_add_test( TARGET  vader_recipe_inline_EffectiveRadiusOfSnowParticle_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_EffectiveRadiusOfSnowParticle_A.yaml"
                   LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_SaturationVaporPressure_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_SaturationVaporPressure_B.yaml"
+                  LIBS    vader )
+
 
 # Test vader calling recipes
 ecbuild_add_test( TARGET  vader_vader_AirPressure_A
