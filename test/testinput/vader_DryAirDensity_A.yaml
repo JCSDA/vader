@@ -1,4 +1,7 @@
 vader: {}
+model data:
+  gas_constant_of_dry_air: 287.05
+  epsilon: 0.62198
 trajectory grid:
   type : regular_gaussian
   N : 12
@@ -6,8 +9,10 @@ trajectory filename: testdata/gauss_state_F12.nc
 trajectory variables:
   - air_pressure
   - air_temperature
+  - water_vapor_mixing_ratio_wrt_moist_air
 ingredients:
   - air_pressure
   - air_temperature
+  - water_vapor_mixing_ratio_wrt_moist_air
 products: [dry_air_density]
 adjoint test tolerance: 1.e-12

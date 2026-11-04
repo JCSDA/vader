@@ -111,6 +111,7 @@ testinput/recipe_inline_AirPotentialTemperature_B.yaml
 testinput/recipe_inline_AirPressureAtInterface_A.yaml
 testinput/recipe_inline_AirTemperature_A.yaml
 testinput/recipe_inline_AirTemperature_B.yaml
+testinput/recipe_inline_DryAirDensity_A.yaml
 testinput/recipe_inline_MassContentOfCloudLiquidWaterInAtmosphereLayer_B.yaml
 testinput/recipe_inline_MassContentOfCloudIceInAtmosphereLayer_B.yaml
 testinput/recipe_inline_EffectiveRadiusOfCloudLiquidWaterParticle_B.yaml
@@ -862,6 +863,11 @@ ecbuild_add_test( TARGET  vader_recipe_inline_AirTemperature_B
 ecbuild_add_test( TARGET  vader_recipe_inline_AverageSurfaceTemperatureWithinFieldOfView_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_AverageSurfaceTemperatureWithinFieldOfView_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_DryAirDensity_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_DryAirDensity_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_inline_GeopotentialLevels_A

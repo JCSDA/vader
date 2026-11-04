@@ -24,8 +24,11 @@ namespace vader {
 /* \brief DryAirDensity_A class defines a recipe for dry air density
  *
  *  \details This instantiation of RecipeBase produces dry_air_density
- *           using air_temperature and air_pressure
- *           as inputs.
+ *           using air_temperature, air_pressure and
+ *           water_vapor_mixing_ratio_wrt_moist_air as inputs. The humidity is
+ *           required because the product is the density of the dry air alone,
+ *           not the total (moist) air density: rho_dry = p (1 - q) / (Rd T (1 + eps* q)).
+ *           Requires the config variables "gas_constant_of_dry_air" and "epsilon".
  */
 
 // ------------------------------------------------------------------------------------------------

@@ -5,6 +5,9 @@ trajectory grid:
   N : 12
 trajectory filename: testdata/gauss_state_F12.nc
 adjoint test tolerance: 1.e-12
-run nonlinear test: false
+nonlinear test tolerance: 1.e-12
+# The reference dry_air_density in gauss_state_F12.nc was regenerated with these
+# constants, so they must not be changed independently of the test data.
 model data:
-  gas_constant_of_dry_air: 287.58
+  gas_constant_of_dry_air: 287.05
+  epsilon: 0.62198

@@ -1,0 +1,19 @@
+recipe:
+  recipe name: DryAirDensity_A
+model data:
+  gas_constant_of_dry_air: 287.05
+  epsilon: 0.62198
+columns:
+  air_pressure:                           [100000.0, 50000.0, 20000.0]
+  air_temperature:                        [300.0,    270.0,   230.0]
+  # A moist boundary layer, the mid-troposphere, and an exactly dry level so that
+  # the top level also checks the q = 0 limit, rho_dry = p / (Rd T).
+  water_vapor_mixing_ratio_wrt_moist_air: [0.02,     0.005,   0.0]
+expected:
+  # eps_star = 1/0.62198 - 1 = 0.6077687385446477
+  # rho_dry  = p (1 - q) / (Rd T (1 + eps_star q))
+  #   100000*0.98  / (287.05*300*(1 + 0.6077687385446477*0.02 )) = 1.1243462716834705
+  #    50000*0.995 / (287.05*270*(1 + 0.6077687385446477*0.005)) = 0.63996175081535822
+  #    20000*1.0   / (287.05*230)                                = 0.30293162075990399
+  dry_air_density: [1.1243462716834705, 0.63996175081535822, 0.30293162075990399]
+nonlinear test tolerance: 1.e-12
