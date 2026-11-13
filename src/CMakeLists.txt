@@ -115,8 +115,6 @@ vader/recipes/AirPressureAtInterface_B.cc
 vader/recipes/AirPressureAtInterface_C.cc
 vader/recipes/AirPressureAtInterface_D.cc
 vader/recipes/AirPressureAtInterface.h
-vader/recipes/WindReductionFactorAt10m.h
-vader/recipes/WindReductionFactorAt10m_A.cc
 vader/recipes/AirPressure.h
 vader/recipes/AirPressure_A.cc
 vader/recipes/AirPressure_B.cc
@@ -197,6 +195,8 @@ vader/recipes/ParticulateMatter2p5_A.cc
 vader/recipes/ParticulateMatter2p5_B.cc
 vader/recipes/RainMixingRatio.h
 vader/recipes/RainMixingRatio_A.cc
+vader/recipes/RatioOfWindSurfaceAdjacentTo10m.h
+vader/recipes/RatioOfWindSurfaceAdjacentTo10m_A.cc
 vader/recipes/RelativeHumidity.h
 vader/recipes/RelativeHumidity_A.cc
 vader/recipes/RelativeHumidity_B.cc

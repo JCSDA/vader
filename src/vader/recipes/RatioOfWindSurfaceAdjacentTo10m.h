@@ -22,28 +22,31 @@ namespace vader
 
 // -------------------------------------------------------------------------------------------------
 
-class WindReductionFactorAt10m_AParameters : public RecipeParametersBase {
-  OOPS_CONCRETE_PARAMETERS(WindReductionFactorAt10m_AParameters, RecipeParametersBase)
+class RatioOfWindSurfaceAdjacentTo10m_AParameters : public RecipeParametersBase {
+  OOPS_CONCRETE_PARAMETERS(RatioOfWindSurfaceAdjacentTo10m_AParameters, RecipeParametersBase)
 
  public:
     oops::RequiredParameter<std::string> name{"recipe name", this};
 };
 
-/*! \brief WindReductionFactorAt10m_A class defines a recipe to calculate surface wind
+/*! \brief RatioOfWindSurfaceAdjacentTo10m_A class defines a recipe to calculate surface wind
  * reduction factor
  *
  *  \details This recipe uses model provided u10/v10 to calculate a ratio against
  *  the winds at the lowest model level for use with the "VertInterp" operator.
+ *
+ *  \warning The ratio is 10m wind over surface-adjacent wind, the inverse of the name of
+ *  the recipe and of the product variable.
  */
-class WindReductionFactorAt10m_A : public RecipeBase
+class RatioOfWindSurfaceAdjacentTo10m_A : public RecipeBase
 {
  public:
     static const char Name[];
     static const oops::Variables Ingredients;
 
-    typedef WindReductionFactorAt10m_AParameters Parameters_;
+    typedef RatioOfWindSurfaceAdjacentTo10m_AParameters Parameters_;
 
-    WindReductionFactorAt10m_A(const Parameters_ &, const VaderConfigVars &);
+    RatioOfWindSurfaceAdjacentTo10m_A(const Parameters_ &, const VaderConfigVars &);
 
     std::string name() const override;
     oops::Variable product() const override;

@@ -66,6 +66,7 @@ testinput/recipe_ParticulateMatter2p5_A.yaml
 testinput/recipe_ParticulateMatter2p5_B.yaml
 testinput/recipe_RainMixingRatio_A.yaml
 testinput/recipe_RainWater_A.yaml
+testinput/recipe_RatioOfWindSurfaceAdjacentTo10m_A.yaml
 testinput/recipe_RelativeHumidity_A.yaml
 testinput/recipe_RelativeHumidity_B.yaml
 testinput/recipe_RelativeHumidityAt2M_A.yaml
@@ -103,7 +104,6 @@ testinput/recipe_WaterVaporMixingRatioWrtMoistAir_A.yaml
 testinput/recipe_WaterVaporMixingRatioWrtWetAir_A.yaml
 testinput/recipe_WaterVaporMixingRatioWrtWetAir2m_A.yaml
 testinput/recipe_WindFromDirectionAtSurface_A.yaml
-testinput/recipe_WindReductionFactorAt10m_A.yaml
 testinput/recipe_WindSpeedAtSurface_A.yaml
 
 testinput/recipe_inline_AirPotentialTemperature_A.yaml
@@ -620,6 +620,11 @@ ecbuild_add_test( TARGET  vader_recipe_RainWater_A
                   ARGS    "testinput/recipe_RainWater_A.yaml"
                   LIBS    vader )
 
+ecbuild_add_test( TARGET  vader_recipe_RatioOfWindSurfaceAdjacentTo10m_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_RatioOfWindSurfaceAdjacentTo10m_A.yaml"
+                  LIBS    vader )
+
 ecbuild_add_test( TARGET  vader_recipe_RelativeHumidity_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_RelativeHumidity_A.yaml"
@@ -822,11 +827,6 @@ ecbuild_add_test( TARGET  vader_recipe_WaterVaporMixingRatioWrtWetAir2m_A
 ecbuild_add_test( TARGET  vader_recipe_WindFromDirectionAtSurface_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_WindFromDirectionAtSurface_A.yaml"
-                  LIBS    vader )
-
-ecbuild_add_test( TARGET  vader_recipe_WindReductionFactorAt10m_A
-                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_WindReductionFactorAt10m_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_WindSpeedAtSurface_A

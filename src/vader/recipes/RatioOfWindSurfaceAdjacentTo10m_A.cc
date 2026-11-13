@@ -11,79 +11,79 @@
 
 #include "oops/util/for_each.h"
 #include "oops/util/Logger.h"
-#include "vader/recipes/WindReductionFactorAt10m.h"
+#include "vader/recipes/RatioOfWindSurfaceAdjacentTo10m.h"
 
 namespace vader {
 
 // -------------------------------------------------------------------------------------------------
 
 // Static attribute initialization
-const char WindReductionFactorAt10m_A::Name[] = "WindReductionFactorAt10m_A";
-const oops::Variables WindReductionFactorAt10m_A::Ingredients{
-      std::vector<std::string>{"eastward_wind_at_surface",
-                               "northward_wind_at_surface",
+const char RatioOfWindSurfaceAdjacentTo10m_A::Name[] = "RatioOfWindSurfaceAdjacentTo10m_A";
+const oops::Variables RatioOfWindSurfaceAdjacentTo10m_A::Ingredients{
+      std::vector<std::string>{"eastward_wind_at_10m",
+                               "northward_wind_at_10m",
                                "eastward_wind",
                                "northward_wind"}};
 
 // -------------------------------------------------------------------------------------------------
 
 // Register the maker
-static RecipeMaker<WindReductionFactorAt10m_A>
-       makerWindReductionFactorAt10m_A_(WindReductionFactorAt10m_A::Name);
+static RecipeMaker<RatioOfWindSurfaceAdjacentTo10m_A>
+       makerRatioOfWindSurfaceAdjacentTo10m_A_(RatioOfWindSurfaceAdjacentTo10m_A::Name);
 
 // -------------------------------------------------------------------------------------------------
 
-WindReductionFactorAt10m_A::WindReductionFactorAt10m_A(
-                            const WindReductionFactorAt10m_AParameters & params,
+RatioOfWindSurfaceAdjacentTo10m_A::RatioOfWindSurfaceAdjacentTo10m_A(
+                            const RatioOfWindSurfaceAdjacentTo10m_AParameters & params,
                             const VaderConfigVars & configVariables):
                             configVariables_{configVariables}
 {
-    oops::Log::trace() << "WindReductionFactorAt10m_A::WindReductionFactorAt10m_A Starting"
-                       << std::endl;
-    oops::Log::trace() << "WindReductionFactorAt10m_A::WindReductionFactorAt10m_A Done"
-                       << std::endl;
+    oops::Log::trace() << "RatioOfWindSurfaceAdjacentTo10m_A::RatioOfWindSurfaceAdjacentTo10m_A"
+                       << " Starting" << std::endl;
+    oops::Log::trace() << "RatioOfWindSurfaceAdjacentTo10m_A::RatioOfWindSurfaceAdjacentTo10m_A"
+                       << " Done" << std::endl;
 }
 
 // -------------------------------------------------------------------------------------------------
 
-std::string WindReductionFactorAt10m_A::name() const {
-    return WindReductionFactorAt10m_A::Name;
+std::string RatioOfWindSurfaceAdjacentTo10m_A::name() const {
+    return RatioOfWindSurfaceAdjacentTo10m_A::Name;
 }
 
 // -------------------------------------------------------------------------------------------------
 
     // variable name used in yaml file
-oops::Variable WindReductionFactorAt10m_A::product() const {
-    return oops::Variable("wind_reduction_factor_at_10m");
+oops::Variable RatioOfWindSurfaceAdjacentTo10m_A::product() const {
+    return oops::Variable("ratio_of_wind_at_surface_adjacent_layer_to_wind_at_10m");
 }
 
 // -------------------------------------------------------------------------------------------------
 
-oops::Variables WindReductionFactorAt10m_A::ingredients() const {
-    return WindReductionFactorAt10m_A::Ingredients;
+oops::Variables RatioOfWindSurfaceAdjacentTo10m_A::ingredients() const {
+    return RatioOfWindSurfaceAdjacentTo10m_A::Ingredients;
 }
 
 // -------------------------------------------------------------------------------------------------
 
-size_t WindReductionFactorAt10m_A::productLevels(const atlas::FieldSet & afieldset) const {
-    return afieldset.field("eastward_wind_at_surface").shape(1);
+size_t RatioOfWindSurfaceAdjacentTo10m_A::productLevels(const atlas::FieldSet & afieldset) const {
+    return afieldset.field("eastward_wind_at_10m").shape(1);
 }
 
 // -------------------------------------------------------------------------------------------------
 
-atlas::FunctionSpace WindReductionFactorAt10m_A::productFunctionSpace(const atlas::FieldSet
+atlas::FunctionSpace RatioOfWindSurfaceAdjacentTo10m_A::productFunctionSpace(const atlas::FieldSet
 & afieldset) const {
-    return afieldset.field("eastward_wind_at_surface").functionspace();
+    return afieldset.field("eastward_wind_at_10m").functionspace();
 }
 
 // -------------------------------------------------------------------------------------------------
 
-void WindReductionFactorAt10m_A::executeNL(atlas::FieldSet & afieldset)
+void RatioOfWindSurfaceAdjacentTo10m_A::executeNL(atlas::FieldSet & afieldset)
 {
-    oops::Log::trace() << "WindReductionFactorAt10m_A::executeNL Starting" << std::endl;
+    oops::Log::trace() << "RatioOfWindSurfaceAdjacentTo10m_A::executeNL Starting" << std::endl;
 
     // output:
-    atlas::Field f10m = afieldset.field("wind_reduction_factor_at_10m");
+    atlas::Field f10m = afieldset.field("ratio_of_wind_at_surface_adjacent_layer_to_wind_at_10m");
     f10m.metadata().set("units", "none");
 
     const bool topDown = configVariables_.getBool("levels_are_top_down");
@@ -103,13 +103,13 @@ void WindReductionFactorAt10m_A::executeNL(atlas::FieldSet & afieldset)
             f10m_col(0) = 1.0;
         }
       },
-      afieldset["eastward_wind_at_surface"],
-      afieldset["northward_wind_at_surface"],
+      afieldset["eastward_wind_at_10m"],
+      afieldset["northward_wind_at_10m"],
       afieldset["eastward_wind"],
       afieldset["northward_wind"],
       f10m);
 
-    oops::Log::trace() << "WindReductionFactorAt10m_A::executeNL Done" << std::endl;
+    oops::Log::trace() << "RatioOfWindSurfaceAdjacentTo10m_A::executeNL Done" << std::endl;
 }
 
 // -------------------------------------------------------------------------------------------------

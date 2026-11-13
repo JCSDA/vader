@@ -1,5 +1,5 @@
 recipe:
-  recipe name: WindReductionFactorAt10m_A
+  recipe name: RatioOfWindSurfaceAdjacentTo10m_A
 trajectory grid:
   type : regular_gaussian
   N : 12
