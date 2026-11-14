@@ -34,7 +34,7 @@ class EffectiveRadiusOfGraupelParticle_AParameters : public RecipeParametersBase
  *  \details This instantiation of RecipeBase produces effective radius
  *           using a simplified diagnostic approximation with fixed value,
  *           based on Martin et al. (1994, J. Atmos. Sci., 51, 1823-1842)
- *           Output units: m
+ *           Output units: um
  */
 class EffectiveRadiusOfGraupelParticle_A : public RecipeBase
 {

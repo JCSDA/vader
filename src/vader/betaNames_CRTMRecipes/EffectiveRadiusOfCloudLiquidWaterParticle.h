@@ -36,7 +36,7 @@ class EffectiveRadiusOfCloudLiquidWaterParticle_AParameters : public RecipeParam
  *           using a simplified diagnostic approximation with temperature-dependent
  *           relationship, based on Martin et al. (1994, J. Atmos. Sci., 51, 1823-1842)
  *           Inputs: air_temperature
- *           Output units: m
+ *           Output units: um
  */
 class EffectiveRadiusOfCloudLiquidWaterParticle_A : public RecipeBase
 {
