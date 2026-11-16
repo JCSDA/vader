@@ -25,13 +25,13 @@ const char SeaWaterTemperature_B::Name[] = "SeaWaterTemperature_B";
 const oops::Variables SeaWaterTemperature_B::Ingredients{
                                    std::vector<std::string>{"sea_water_potential_temperature",
                                                             // CF standard name would be
-                                                            // "sea_water_absolute_salinity".
+                                                            // "sea_water_practical_salinity".
                                                             "sea_water_salinity"}};
 
 const oops::Variables SeaWaterTemperature_B::TrajectoryVars{
                                    std::vector<std::string>{"sea_water_potential_temperature",
                                                             // CF standard name would be
-                                                            // "sea_water_absolute_salinity".
+                                                            // "sea_water_practical_salinity".
                                                             "sea_water_salinity",
                                                             "latitude",
                                                             "longitude",
@@ -72,7 +72,7 @@ oops::Variables SeaWaterTemperature_B::trajectoryVars() const
 
 size_t SeaWaterTemperature_B::productLevels(const atlas::FieldSet & afieldset) const
 {
-    // CF standard name would be "sea_water_absolute_salinity".
+    // CF standard name would be "sea_water_practical_salinity".
     return afieldset.field("sea_water_salinity").shape(1);
 }
 
@@ -89,7 +89,7 @@ void SeaWaterTemperature_B::computeJac(const atlas::FieldSet & afieldset)
 
     // Get fields
     atlas::Field potential_temperature = afieldset.field("sea_water_potential_temperature");
-    // CF standard name would be "sea_water_absolute_salinity".
+    // CF standard name would be "sea_water_practical_salinity".
     atlas::Field salinity = afieldset.field("sea_water_salinity");
     atlas::Field depth = afieldset.field("sea_water_depth");
     atlas::Field latitude = afieldset.field("latitude");
@@ -205,7 +205,7 @@ void SeaWaterTemperature_B::executeTL(atlas::FieldSet & afieldsetTL,
 
     // Get fields
     atlas::Field tl_potential_temp = afieldsetTL.field("sea_water_potential_temperature");
-    // CF standard name would be "sea_water_absolute_salinity".
+    // CF standard name would be "sea_water_practical_salinity".
     atlas::Field tl_salinity = afieldsetTL.field("sea_water_salinity");
     atlas::Field tl_insitu_temperature = afieldsetTL.field("sea_water_temperature");
 
@@ -247,7 +247,7 @@ void SeaWaterTemperature_B::executeAD(atlas::FieldSet & afieldsetAD,
 
     // Get fields
     atlas::Field ad_potential_temp = afieldsetAD.field("sea_water_potential_temperature");
-    // CF standard name would be "sea_water_absolute_salinity".
+    // CF standard name would be "sea_water_practical_salinity".
     atlas::Field ad_salinity = afieldsetAD.field("sea_water_salinity");
     atlas::Field ad_insitu_temperature = afieldsetAD.field("sea_water_temperature");
 

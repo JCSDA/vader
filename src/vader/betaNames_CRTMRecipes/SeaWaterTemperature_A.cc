@@ -22,7 +22,7 @@ const char SeaWaterTemperature_A::Name[] = "SeaWaterTemperature_A";
 const oops::Variables SeaWaterTemperature_A::Ingredients{
                                    std::vector<std::string>{"sea_water_potential_temperature",
                                                             // CF standard name would be
-                                                            // "sea_water_absolute_salinity".
+                                                            // "sea_water_practical_salinity".
                                                             "sea_water_salinity",
                                                             "latitude",
                                                             "longitude",
@@ -56,7 +56,7 @@ oops::Variables SeaWaterTemperature_A::ingredients() const
 
 size_t SeaWaterTemperature_A::productLevels(const atlas::FieldSet & afieldset) const
 {
-    // CF standard name would be "sea_water_absolute_salinity".
+    // CF standard name would be "sea_water_practical_salinity".
     return afieldset.field("sea_water_salinity").shape(1);
 }
 
@@ -75,7 +75,7 @@ void SeaWaterTemperature_A::executeNL(atlas::FieldSet & afieldset)
 
     // Get fields
     atlas::Field potential_temperature = afieldset.field("sea_water_potential_temperature");
-    // CF standard name would be "sea_water_absolute_salinity".
+    // CF standard name would be "sea_water_practical_salinity".
     atlas::Field salinity = afieldset.field("sea_water_salinity");
     atlas::Field depth = afieldset.field("sea_water_depth");
     atlas::Field latitude = afieldset.field("latitude");
