@@ -77,6 +77,7 @@ void GeopotentialHeightLevels_B::executeNL(atlas::FieldSet & afieldset)
     const double rdry = configVariables_.getDouble("gas_constant_of_dry_air");
     const double grav = configVariables_.getDouble("standard_gravitational_acceleration");
     const double rovg = rdry/grav;
+    const bool levelsAreTopDown = configVariables_.getBool("levels_are_top_down");
 
     atlas::Field z_surf = afieldset.field("geopotential_height_at_surface");
     atlas::Field tv = afieldset.field("virtual_temperature");
@@ -101,17 +102,23 @@ void GeopotentialHeightLevels_B::executeNL(atlas::FieldSet & afieldset)
               "must be one more than the number of full levels");
     }
 
+    const int step = levelsAreTopDown ? -1 : 1;
+    const int surfaceInterface = levelsAreTopDown ? nint - 1 : 0;
+    const int firstLevel = levelsAreTopDown ? nlev - 1 : 0;
+
     util::for_each_column(
     [&](const auto z_surf_col,
         const auto tv_col,
         const auto ln_p_int_col,
         auto z_int_col) {
-        // Index 0 is the surface interface; integrate upward with increasing index.
-        z_int_col(0) = z_surf_col(0);
+        z_int_col(surfaceInterface) = z_surf_col(0);
 
-        for (int k = 0; k < nint-1; ++k) {
-            double dln = ln_p_int_col(k+1) - ln_p_int_col(k);
-            z_int_col(k + 1) = z_int_col(k) - rovg * tv_col(k) * dln;
+        for (int offset = 0; offset < nlev; ++offset) {
+            const int level = firstLevel + offset * step;
+            const int lowerInterface = surfaceInterface + offset * step;
+            const int upperInterface = lowerInterface + step;
+            const double dln = ln_p_int_col(upperInterface) - ln_p_int_col(lowerInterface);
+            z_int_col(upperInterface) = z_int_col(lowerInterface) - rovg * tv_col(level) * dln;
         }
     },
     z_surf,

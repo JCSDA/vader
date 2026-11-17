@@ -1,6 +1,7 @@
 recipe:
   recipe name: GeopotentialHeightLevels_B
 model data:
+  levels_are_top_down: false
   gas_constant_of_dry_air: 287.052
   standard_gravitational_acceleration: 9.80665
 columns:

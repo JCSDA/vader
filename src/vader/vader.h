@@ -82,6 +82,10 @@ class Vader  : public util::Printable {
     oops::Variables changeVarTL(atlas::FieldSet &, vaderPlanType &) const;
     oops::Variables changeVarAD(atlas::FieldSet &, vaderPlanType &) const;
 
+    void planVariables(oops::Variables &,
+                       oops::Variables &,
+                       vaderPlanType &) const;
+
  private:
     std::map<oops::Variable, std::vector<std::unique_ptr<RecipeBase>>> cookbook_;
     mutable vaderPlanType recipeExecutionPlan_;  // mutable due to being set in const changeVarTL/AD
@@ -105,10 +109,6 @@ class Vader  : public util::Printable {
                       const bool,
                       oops::Variables &,
                       vaderPlanType &) const;
-
-    void planVariables(oops::Variables &,
-                       oops::Variables &,
-                       vaderPlanType &) const;
 
     void planVariables(oops::Variables &,
                        oops::Variables &,

@@ -8,5 +8,6 @@ nonlinear test tolerance: 1.e-2
 run tangent linear test: false
 run adjoint test: false
 model data:
+  levels_are_top_down: false
   standard_gravitational_acceleration: 9.80665
   gas_constant_of_dry_air: 287.05
