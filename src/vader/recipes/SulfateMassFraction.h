@@ -29,9 +29,11 @@ class SulfateMassFraction_AParameters : public RecipeParametersBase {
 };
 
 // ------------------------------------------------------------------------------------------------
-/*! \brief SulfateMassFraction_A class defines a recipe for sulfate mixing ratio
+/*! \brief SulfateMassFraction_A class defines a recipe for sulfate mass fraction
  *
- *  \details This recipe produces sulfate mass fraction in ug/kg from sulfate in ppmv
+ *  \details This recipe produces mass_fraction_of_sulfate_in_air in kg/kg from sulfate
+ *           in ppmv. UFO CRTM expects aerosol GeoVaLs times "model units coeff" in ug/kg,
+ *           so use "model units coeff: 1e9" with this product.
  *
  */
 class SulfateMassFraction_A : public RecipeBase {

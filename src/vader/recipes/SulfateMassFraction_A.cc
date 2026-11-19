@@ -67,8 +67,10 @@ void SulfateMassFraction_A::executeNL(atlas::FieldSet & afieldset)
 
     util::for_each_value(
         [&](const double sulf_ppmv,
-            double& sulf_ugkg) {
-            sulf_ugkg = sulf_ppmv * sulfmw / airmw * 1e3;
+            double& sulf_kgkg) {
+            // ppmv -> mol/mol (1e-6), then times the molar-mass ratio -> kg/kg.
+            // The molecular-weight units cancel.
+            sulf_kgkg = sulf_ppmv * 1.0e-6 * sulfmw / airmw;
         },
         afieldset["sulfate_ppmv"],
         afieldset["mass_fraction_of_sulfate_in_air"]);
