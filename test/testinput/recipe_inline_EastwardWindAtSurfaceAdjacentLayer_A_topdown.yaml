@@ -1,0 +1,10 @@
+recipe:
+  recipe name: EastwardWindAtSurfaceAdjacentLayer_A
+model data:
+  levels_are_top_down: true
+columns:
+  # Top-down levels: the lowest model level is the last one (3.0).
+  eastward_wind: [5.0, 7.0, 3.0]
+expected:
+  eastward_wind_at_surface_adjacent_layer: [3.0]
+nonlinear test tolerance: 1.e-12

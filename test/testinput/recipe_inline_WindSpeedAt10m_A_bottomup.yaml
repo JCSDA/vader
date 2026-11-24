@@ -1,0 +1,14 @@
+recipe:
+  recipe name: WindSpeedAt10m_A
+model data:
+  levels_are_top_down: false
+columns:
+  # Bottom-up levels: the lowest model level is the first one (3-4-5 triangle).
+  # Upper levels differ so that picking the wrong level fails the test.
+  eastward_wind:  [3.0, 7.0, 9.0]
+  northward_wind: [4.0, 1.0, 2.0]
+  ratio_of_wind_at_10m_to_wind_at_surface_adjacent_layer: [0.5]
+expected:
+  # spd = ratio * sqrt(u^2 + v^2) = 0.5 * 5
+  wind_speed_at_10m: [2.5]
+nonlinear test tolerance: 1.e-12

@@ -1,0 +1,14 @@
+recipe:
+  recipe name: RatioOfWind10mToSurfaceAdjacent_A
+model data:
+  levels_are_top_down: false
+columns:
+  # Calm wind at the lowest model level (first, bottom-up) under a non-calm 10 m wind:
+  # the ratio would divide by zero, so the recipe falls back to a ratio of 1.
+  eastward_wind_at_10m: [3.0]
+  northward_wind_at_10m: [4.0]
+  eastward_wind: [0.0, 6.0, 9.0]
+  northward_wind: [0.0, 8.0, 1.0]
+expected:
+  ratio_of_wind_at_10m_to_wind_at_surface_adjacent_layer: [1.0]
+nonlinear test tolerance: 1.e-12

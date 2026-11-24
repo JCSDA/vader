@@ -1,0 +1,14 @@
+vader: {}
+cookbook:
+  eastward_wind_at_10m: [EastwardWindAt10m_A, EastwardWindAt10m_B]
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+model data:
+  levels_are_top_down: false
+  nLevels: 70
+trajectory filename: testdata/gauss_state_F12.nc
+trajectory variables: [ratio_of_wind_at_10m_to_wind_at_surface_adjacent_layer]
+ingredients: [eastward_wind]
+products: [eastward_wind_at_10m]
+adjoint test tolerance: 1.e-12

@@ -34,6 +34,9 @@ mo/testinput/recipe_DustBin1MassConcentration_A.yaml
 mo/testinput/recipe_DustBin2MassConcentration_A.yaml
 mo/testinput/recipe_DustCoarseModeMassFraction_A.yaml
 mo/testinput/recipe_DustCoarseModeNumberFraction_A.yaml
+testinput/recipe_EastwardWindAt10m_A.yaml
+testinput/recipe_EastwardWindAt10m_B.yaml
+testinput/recipe_EastwardWindAtSurfaceAdjacentLayer_A.yaml
 testinput/recipe_EffectiveRadiusOfCloudIceParticle_A.yaml
 testinput/recipe_EffectiveRadiusOfCloudLiquidWaterParticle_A.yaml
 testinput/recipe_EffectiveRadiusOfGraupelParticle_A.yaml
@@ -62,11 +65,14 @@ testinput/recipe_MassContentOfGraupelInAtmosphereLayer_A.yaml
 testinput/recipe_MassContentOfHailInAtmosphereLayer_A.yaml
 testinput/recipe_MassContentOfRainInAtmosphereLayer_A.yaml
 testinput/recipe_MassContentOfSnowInAtmosphereLayer_A.yaml
+testinput/recipe_NorthwardWindAt10m_A.yaml
+testinput/recipe_NorthwardWindAt10m_B.yaml
+testinput/recipe_NorthwardWindAtSurfaceAdjacentLayer_A.yaml
 testinput/recipe_ParticulateMatter2p5_A.yaml
 testinput/recipe_ParticulateMatter2p5_B.yaml
 testinput/recipe_RainMixingRatio_A.yaml
 testinput/recipe_RainWater_A.yaml
-testinput/recipe_RatioOfWindSurfaceAdjacentTo10m_A.yaml
+testinput/recipe_RatioOfWind10mToSurfaceAdjacent_A.yaml
 testinput/recipe_RelativeHumidity_A.yaml
 testinput/recipe_RelativeHumidity_B.yaml
 testinput/recipe_RelativeHumidityAt2M_A.yaml
@@ -88,14 +94,8 @@ testinput/recipe_TotalWater_A.yaml
 testinput/recipe_TotalWaterMixingRatioWrtDryAir_A.yaml
 testinput/recipe_TotalWaterMixingRatioWrtWetAir_A.yaml
 testinput/recipe_TropopausePressure_A.yaml
-testinput/recipe_uwind_at_10m_A.yaml
-testinput/recipe_uwind_at_10m_A_topdown.yaml
-testinput/recipe_uwind_at_surface_A.yaml
 testinput/recipe_VirtualPotentialTemperature_A.yaml
 testinput/recipe_VirtualPotentialTemperature_B.yaml
-testinput/recipe_vwind_at_10m_A.yaml
-testinput/recipe_vwind_at_10m_A_topdown.yaml
-testinput/recipe_vwind_at_surface_A.yaml
 testinput/recipe_WaterAreaFraction_A.yaml
 testinput/recipe_WaterVaporMixingRatioWrtDryAir_A.yaml
 testinput/recipe_WaterVaporMixingRatioWrtDryAir_B.yaml
@@ -103,8 +103,8 @@ testinput/recipe_WaterVaporMixingRatioWrtDryAir_C.yaml
 testinput/recipe_WaterVaporMixingRatioWrtMoistAir_A.yaml
 testinput/recipe_WaterVaporMixingRatioWrtWetAir_A.yaml
 testinput/recipe_WaterVaporMixingRatioWrtWetAir2m_A.yaml
-testinput/recipe_WindFromDirectionAtSurface_A.yaml
-testinput/recipe_WindSpeedAtSurface_A.yaml
+testinput/recipe_WindFromDirectionAtSurfaceAdjacentLayer_A.yaml
+testinput/recipe_WindSpeedAtSurfaceAdjacentLayer_A.yaml
 
 testinput/recipe_inline_AirPotentialTemperature_A.yaml
 testinput/recipe_inline_AirPotentialTemperature_B.yaml
@@ -123,6 +123,8 @@ testinput/recipe_inline_EffectiveRadiusOfHailParticle_A.yaml
 testinput/recipe_inline_EffectiveRadiusOfRainParticle_A.yaml
 testinput/recipe_inline_EffectiveRadiusOfSnowParticle_A.yaml
 testinput/recipe_inline_AverageSurfaceTemperatureWithinFieldOfView_A.yaml
+testinput/recipe_inline_EastwardWindAt10m_A_topdown.yaml
+testinput/recipe_inline_EastwardWindAtSurfaceAdjacentLayer_A_topdown.yaml
 testinput/recipe_inline_GeopotentialLevels_A.yaml
 testinput/recipe_inline_GsiSnowWaterEquivalent_A.yaml
 testinput/recipe_inline_GsiSurfaceTypeIndex_A.yaml
@@ -142,10 +144,16 @@ testinput/recipe_inline_VegetationAreaFraction_A.yaml
 testinput/recipe_inline_VegetationTypeIndex_A.yaml
 testinput/recipe_inline_VolumeFractionOfCondensedWaterInSoil_A.yaml
 testinput/recipe_inline_WaterAreaFraction_B.yaml
+testinput/recipe_inline_WindFromDirectionAtSurfaceAdjacentLayer_A.yaml
+testinput/recipe_inline_WindFromDirectionAtSurfaceAdjacentLayer_A_wrap.yaml
 testinput/recipe_inline_WindSpeedAt10m_A.yaml
+testinput/recipe_inline_WindSpeedAt10m_A_bottomup.yaml
 testinput/recipe_inline_WindSpeedAt10m_B.yaml
-testinput/recipe_inline_WindFromDirectionAtSurface_A.yaml
-testinput/recipe_inline_WindToDirectionAtSurface_A.yaml
+testinput/recipe_inline_WindSpeedAt10m_C.yaml
+testinput/recipe_inline_WindToDirectionAt10m_A.yaml
+testinput/recipe_inline_WindToDirectionAt10m_A_nowrap.yaml
+testinput/recipe_inline_WindToDirectionAtSurfaceAdjacentLayer_A.yaml
+testinput/recipe_inline_WindToDirectionAtSurfaceAdjacentLayer_A_nowrap.yaml
 testinput/recipe_inline_GeopotentialHeightLevels_B.yaml
 testinput/recipe_inline_GeopotentialHeightLevels_B_topdown.yaml
 testinput/recipe_inline_GeopotentialHeight_B.yaml
@@ -153,8 +161,13 @@ testinput/recipe_inline_GeopotentialHeight_B_bottomup.yaml
 testinput/recipe_inline_GeopotentialHeight_B_standard_hypsometric.yaml
 testinput/recipe_inline_HeightAboveMeanSeaLevel_A.yaml
 testinput/recipe_inline_MoleFractionOfOzoneInAir_A.yaml
+testinput/recipe_inline_NorthwardWindAt10m_A_topdown.yaml
+testinput/recipe_inline_NorthwardWindAtSurfaceAdjacentLayer_A_topdown.yaml
 testinput/recipe_inline_SaturationVaporPressure_B.yaml
 testinput/recipe_inline_OzoneMassMixingRatio_A.yaml
+testinput/recipe_inline_RatioOfWind10mToSurfaceAdjacent_A_calm.yaml
+testinput/recipe_inline_RatioOfWind10mToSurfaceAdjacent_A_calmlowest.yaml
+testinput/recipe_inline_RatioOfWind10mToSurfaceAdjacent_A_topdown.yaml
 
 testinput/vader_AirPressure_A.yaml
 testinput/vader_AirPressure_A_bottomup.yaml
@@ -178,7 +191,8 @@ mo/testinput/vader_DustAccumulationModeMassFraction_A.yaml
 mo/testinput/vader_DustAccumulationModeNumberFraction_A.yaml
 mo/testinput/vader_DustCoarseModeMassFraction_A.yaml
 mo/testinput/vader_DustCoarseModeNumberFraction_A.yaml
-testinput/vader_EastwardWindAtSurface_A.yaml
+testinput/vader_EastwardWindAt10m_A.yaml
+testinput/vader_EastwardWindAtSurfaceAdjacentLayer_A.yaml
 testinput/vader_EffectiveRadiusOfCloudIceParticle_A.yaml
 testinput/vader_EffectiveRadiusOfCloudLiquidWaterParticle_A.yaml
 testinput/vader_EffectiveRadiusOfGraupelParticle_A.yaml
@@ -203,7 +217,8 @@ testinput/vader_MassContentOfGraupelInAtmosphereLayer_A.yaml
 testinput/vader_MassContentOfHailInAtmosphereLayer_A.yaml
 testinput/vader_MassContentOfRainInAtmosphereLayer_A.yaml
 testinput/vader_MassContentOfSnowInAtmosphereLayer_A.yaml
-testinput/vader_NorthwardWindAtSurface_A.yaml
+testinput/vader_NorthwardWindAt10m_A.yaml
+testinput/vader_NorthwardWindAtSurfaceAdjacentLayer_A.yaml
 testinput/vader_ParticulateMatter2p5_A.yaml
 testinput/vader_ParticulateMatter2p5_B.yaml
 testinput/vader_RainMixingRatio_A.yaml
@@ -218,24 +233,22 @@ testinput/vader_SurfaceAirPressure_A.yaml
 testinput/vader_SurfaceSnowAreaFraction_A.yaml
 testinput/vader_TotalWater_A.yaml
 testinput/vader_TropopausePressure_A.yaml
-testinput/vader_uwind_at_10m_A.yaml
 testinput/vader_VirtualPotentialTemperature_A.yaml
 testinput/vader_VirtualPotentialTemperature_B.yaml
-testinput/vader_vwind_at_10m_A.yaml
 testinput/vader_WaterAreaFraction_A.yaml
 testinput/vader_WaterVaporMixingRatioWrtDryAir_A.yaml
 testinput/vader_WaterVaporMixingRatioWrtDryAir_B.yaml
 testinput/vader_WaterVaporMixingRatioWrtMoistAir_A.yaml
 testinput/vader_WaterVaporMixingRatioWrtWetAir_A.yaml
 testinput/vader_WaterVaporMixingRatioWrtWetAir2m_A.yaml
-testinput/vader_WindFromDirectionAtSurface_A.yaml
-testinput/vader_WindToDirectionAtSurface_A.yaml
-testinput/vader_WindSpeedAtSurface_A.yaml
+testinput/vader_WindFromDirectionAtSurfaceAdjacentLayer_A.yaml
+testinput/vader_WindSpeedAt10m_C.yaml
+testinput/vader_WindSpeedAtSurfaceAdjacentLayer_A.yaml
+testinput/vader_WindToDirectionAt10m_A.yaml
+testinput/vader_WindToDirectionAtSurfaceAdjacentLayer_A.yaml
 )
 
 list( APPEND vader_testdata
-  wind_at_10m_A.nc
-  wind_at_10m_A_flipped.nc
   gauss_state_F12.nc
   air_density_levels_minus_one_A.nc
   air_density_levels_minus_one_B.nc
@@ -461,6 +474,21 @@ ecbuild_add_test( TARGET  vader_recipe_DustCoarseModeNumberFraction_A
                   ARGS    "mo/testinput/recipe_DustCoarseModeNumberFraction_A.yaml"
                   LIBS    vader )
 
+ecbuild_add_test( TARGET  vader_recipe_EastwardWindAt10m_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_EastwardWindAt10m_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_EastwardWindAt10m_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_EastwardWindAt10m_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_EastwardWindAtSurfaceAdjacentLayer_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_EastwardWindAtSurfaceAdjacentLayer_A.yaml"
+                  LIBS    vader )
+
 ecbuild_add_test( TARGET  vader_recipe_EffectiveRadiusOfCloudIceParticle_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_EffectiveRadiusOfCloudIceParticle_A.yaml"
@@ -601,6 +629,21 @@ ecbuild_add_test( TARGET  vader_recipe_MassContentOfSnowInAtmosphereLayer_A
                   ARGS    "testinput/recipe_MassContentOfSnowInAtmosphereLayer_A.yaml"
                   LIBS    vader )
 
+ecbuild_add_test( TARGET  vader_recipe_NorthwardWindAt10m_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_NorthwardWindAt10m_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_NorthwardWindAt10m_B
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_NorthwardWindAt10m_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_NorthwardWindAtSurfaceAdjacentLayer_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
+                  ARGS    "testinput/recipe_NorthwardWindAtSurfaceAdjacentLayer_A.yaml"
+                  LIBS    vader )
+
 ecbuild_add_test( TARGET  vader_recipe_ParticulateMatter2p5_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_ParticulateMatter2p5_A.yaml"
@@ -621,9 +664,9 @@ ecbuild_add_test( TARGET  vader_recipe_RainWater_A
                   ARGS    "testinput/recipe_RainWater_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_recipe_RatioOfWindSurfaceAdjacentTo10m_A
+ecbuild_add_test( TARGET  vader_recipe_RatioOfWind10mToSurfaceAdjacent_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_RatioOfWindSurfaceAdjacentTo10m_A.yaml"
+                  ARGS    "testinput/recipe_RatioOfWind10mToSurfaceAdjacent_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_RelativeHumidity_A
@@ -750,21 +793,6 @@ ecbuild_add_test( TARGET  vader_recipe_TropopausePressure_A
                   ARGS    "testinput/recipe_TropopausePressure_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_recipe_uwind_at_10m_A
-                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_uwind_at_10m_A.yaml"
-                  LIBS    vader )
-
-ecbuild_add_test( TARGET  vader_recipe_uwind_at_10m_A_topdown
-                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_uwind_at_10m_A_topdown.yaml"
-                  LIBS    vader )
-
-ecbuild_add_test( TARGET  vader_recipe_uwind_at_surface_A
-                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_uwind_at_surface_A.yaml"
-                  LIBS    vader )
-
 ecbuild_add_test( TARGET  vader_recipe_VirtualPotentialTemperature_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_VirtualPotentialTemperature_A.yaml"
@@ -773,21 +801,6 @@ ecbuild_add_test( TARGET  vader_recipe_VirtualPotentialTemperature_A
 ecbuild_add_test( TARGET  vader_recipe_VirtualPotentialTemperature_B
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
                   ARGS    "testinput/recipe_VirtualPotentialTemperature_B.yaml"
-                  LIBS    vader )
-
-ecbuild_add_test( TARGET  vader_recipe_vwind_at_10m_A
-                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_vwind_at_10m_A.yaml"
-                  LIBS    vader )
-
-ecbuild_add_test( TARGET  vader_recipe_vwind_at_10m_A_topdown
-                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_vwind_at_10m_A_topdown.yaml"
-                  LIBS    vader )
-
-ecbuild_add_test( TARGET  vader_recipe_vwind_at_surface_A
-                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_vwind_at_surface_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_WaterAreaFraction_A
@@ -825,14 +838,14 @@ ecbuild_add_test( TARGET  vader_recipe_WaterVaporMixingRatioWrtWetAir2m_A
                   ARGS    "testinput/recipe_WaterVaporMixingRatioWrtWetAir2m_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_recipe_WindFromDirectionAtSurface_A
+ecbuild_add_test( TARGET  vader_recipe_WindFromDirectionAtSurfaceAdjacentLayer_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_WindFromDirectionAtSurface_A.yaml"
+                  ARGS    "testinput/recipe_WindFromDirectionAtSurfaceAdjacentLayer_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_recipe_WindSpeedAtSurface_A
+ecbuild_add_test( TARGET  vader_recipe_WindSpeedAtSurfaceAdjacentLayer_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe.x
-                  ARGS    "testinput/recipe_WindSpeedAtSurface_A.yaml"
+                  ARGS    "testinput/recipe_WindSpeedAtSurfaceAdjacentLayer_A.yaml"
                   LIBS    vader )
 
 # Test recipes (inline yaml data)
@@ -976,14 +989,14 @@ ecbuild_add_test( TARGET  vader_recipe_inline_WaterAreaFraction_B
                   ARGS    "testinput/recipe_inline_WaterAreaFraction_B.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_recipe_inline_WindFromDirectionAtSurface_A
+ecbuild_add_test( TARGET  vader_recipe_inline_WindFromDirectionAtSurfaceAdjacentLayer_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
-                  ARGS    "testinput/recipe_inline_WindFromDirectionAtSurface_A.yaml"
+                  ARGS    "testinput/recipe_inline_WindFromDirectionAtSurfaceAdjacentLayer_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_recipe_inline_WindToDirectionAtSurface_A
+ecbuild_add_test( TARGET  vader_recipe_inline_WindFromDirectionAtSurfaceAdjacentLayer_A_wrap
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
-                  ARGS    "testinput/recipe_inline_WindToDirectionAtSurface_A.yaml"
+                  ARGS    "testinput/recipe_inline_WindFromDirectionAtSurfaceAdjacentLayer_A_wrap.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_recipe_inline_WindSpeedAt10m_A
@@ -991,9 +1004,39 @@ ecbuild_add_test( TARGET  vader_recipe_inline_WindSpeedAt10m_A
                   ARGS    "testinput/recipe_inline_WindSpeedAt10m_A.yaml"
                   LIBS    vader )
 
+ecbuild_add_test( TARGET  vader_recipe_inline_WindSpeedAt10m_A_bottomup
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_WindSpeedAt10m_A_bottomup.yaml"
+                  LIBS    vader )
+
 ecbuild_add_test( TARGET  vader_recipe_inline_WindSpeedAt10m_B
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_WindSpeedAt10m_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_WindSpeedAt10m_C
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_WindSpeedAt10m_C.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_WindToDirectionAt10m_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_WindToDirectionAt10m_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_WindToDirectionAt10m_A_nowrap
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_WindToDirectionAt10m_A_nowrap.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_WindToDirectionAtSurfaceAdjacentLayer_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_WindToDirectionAtSurfaceAdjacentLayer_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_WindToDirectionAtSurfaceAdjacentLayer_A_nowrap
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_WindToDirectionAtSurfaceAdjacentLayer_A_nowrap.yaml"
                   LIBS    vader )
 
 
@@ -1080,6 +1123,41 @@ ecbuild_add_test( TARGET  vader_recipe_inline_EffectiveRadiusOfSnowParticle_A
 ecbuild_add_test( TARGET  vader_recipe_inline_SaturationVaporPressure_B
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
                   ARGS    "testinput/recipe_inline_SaturationVaporPressure_B.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_EastwardWindAt10m_A_topdown
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_EastwardWindAt10m_A_topdown.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_NorthwardWindAt10m_A_topdown
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_NorthwardWindAt10m_A_topdown.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_EastwardWindAtSurfaceAdjacentLayer_A_topdown
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_EastwardWindAtSurfaceAdjacentLayer_A_topdown.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_NorthwardWindAtSurfaceAdjacentLayer_A_topdown
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_NorthwardWindAtSurfaceAdjacentLayer_A_topdown.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_RatioOfWind10mToSurfaceAdjacent_A_calm
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_RatioOfWind10mToSurfaceAdjacent_A_calm.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_RatioOfWind10mToSurfaceAdjacent_A_calmlowest
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_RatioOfWind10mToSurfaceAdjacent_A_calmlowest.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_recipe_inline_RatioOfWind10mToSurfaceAdjacent_A_topdown
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_recipe_inline.x
+                  ARGS    "testinput/recipe_inline_RatioOfWind10mToSurfaceAdjacent_A_topdown.yaml"
                   LIBS    vader )
 
 
@@ -1194,9 +1272,14 @@ ecbuild_add_test( TARGET  vader_vader_DustCoarseModeNumberFraction_A
                   ARGS    "mo/testinput/vader_DustCoarseModeNumberFraction_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_vader_EastwardWindAtSurface_A
+ecbuild_add_test( TARGET  vader_vader_EastwardWindAt10m_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
-                  ARGS    "testinput/vader_EastwardWindAtSurface_A.yaml"
+                  ARGS    "testinput/vader_EastwardWindAt10m_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_EastwardWindAtSurfaceAdjacentLayer_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "testinput/vader_EastwardWindAtSurfaceAdjacentLayer_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_vader_EffectiveRadiusOfCloudIceParticle_A
@@ -1319,9 +1402,14 @@ ecbuild_add_test( TARGET  vader_vader_MassContentOfSnowInAtmosphereLayer_A
                   ARGS    "testinput/vader_MassContentOfSnowInAtmosphereLayer_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_vader_NorthwardWindAtSurface_A
+ecbuild_add_test( TARGET  vader_vader_NorthwardWindAt10m_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
-                  ARGS    "testinput/vader_NorthwardWindAtSurface_A.yaml"
+                  ARGS    "testinput/vader_NorthwardWindAt10m_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_NorthwardWindAtSurfaceAdjacentLayer_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "testinput/vader_NorthwardWindAtSurfaceAdjacentLayer_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_vader_ParticulateMatter2p5_A
@@ -1394,11 +1482,6 @@ ecbuild_add_test( TARGET  vader_vader_TropopausePressure_A
                   ARGS    "testinput/vader_TropopausePressure_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_vader_uwind_at_10m_A
-                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
-                  ARGS    "testinput/vader_uwind_at_10m_A.yaml"
-                  LIBS    vader )
-
 ecbuild_add_test( TARGET  vader_vader_VirtualPotentialTemperature_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
                   ARGS    "testinput/vader_VirtualPotentialTemperature_A.yaml"
@@ -1407,11 +1490,6 @@ ecbuild_add_test( TARGET  vader_vader_VirtualPotentialTemperature_A
 ecbuild_add_test( TARGET  vader_vader_VirtualPotentialTemperature_B
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
                   ARGS    "testinput/vader_VirtualPotentialTemperature_B.yaml"
-                  LIBS    vader )
-
-ecbuild_add_test( TARGET  vader_vader_vwind_at_10m_A
-                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
-                  ARGS    "testinput/vader_vwind_at_10m_A.yaml"
                   LIBS    vader )
 
 ecbuild_add_test( TARGET  vader_vader_WaterAreaFraction_A
@@ -1444,19 +1522,29 @@ ecbuild_add_test( TARGET  vader_vader_WaterVaporMixingRatioWrtWetAir2m_A
                   ARGS    "testinput/vader_WaterVaporMixingRatioWrtWetAir2m_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_vader_WindFromDirectionAtSurface_A
+ecbuild_add_test( TARGET  vader_vader_WindFromDirectionAtSurfaceAdjacentLayer_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
-                  ARGS    "testinput/vader_WindFromDirectionAtSurface_A.yaml"
+                  ARGS    "testinput/vader_WindFromDirectionAtSurfaceAdjacentLayer_A.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_vader_WindToDirectionAtSurface_A
+ecbuild_add_test( TARGET  vader_vader_WindSpeedAt10m_C
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
-                  ARGS    "testinput/vader_WindToDirectionAtSurface_A.yaml"
+                  ARGS    "testinput/vader_WindSpeedAt10m_C.yaml"
                   LIBS    vader )
 
-ecbuild_add_test( TARGET  vader_vader_WindSpeedAtSurface_A
+ecbuild_add_test( TARGET  vader_vader_WindSpeedAtSurfaceAdjacentLayer_A
                   COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
-                  ARGS    "testinput/vader_WindSpeedAtSurface_A.yaml"
+                  ARGS    "testinput/vader_WindSpeedAtSurfaceAdjacentLayer_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_WindToDirectionAt10m_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "testinput/vader_WindToDirectionAt10m_A.yaml"
+                  LIBS    vader )
+
+ecbuild_add_test( TARGET  vader_vader_WindToDirectionAtSurfaceAdjacentLayer_A
+                  COMMAND ${CMAKE_BINARY_DIR}/bin/test_vader.x
+                  ARGS    "testinput/vader_WindToDirectionAtSurfaceAdjacentLayer_A.yaml"
                   LIBS    vader )
 
 # Test planVariable algorithm

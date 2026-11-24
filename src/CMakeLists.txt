@@ -11,8 +11,6 @@ vader/betaNames_CRTMRecipes/CloudLiquidWater.h
 vader/betaNames_CRTMRecipes/CloudLiquidWater_A.cc
 vader/betaNames_CRTMRecipes/CloudLiquidIce.h
 vader/betaNames_CRTMRecipes/CloudLiquidIce_A.cc
-vader/betaNames_CRTMRecipes/EastwardWindAtSurface.h
-vader/betaNames_CRTMRecipes/EastwardWindAtSurface_A.cc
 vader/betaNames_CRTMRecipes/GSI_Specific/GsiSnowWaterEquivalent.h
 vader/betaNames_CRTMRecipes/GSI_Specific/GsiSnowWaterEquivalent_A.cc
 vader/betaNames_CRTMRecipes/GSI_Specific/GsiSurfaceTypeIndex.h
@@ -73,8 +71,6 @@ vader/betaNames_CRTMRecipes/MassContentOfRainInAtmosphereLayer.h
 vader/betaNames_CRTMRecipes/MassContentOfRainInAtmosphereLayer_A.cc
 vader/betaNames_CRTMRecipes/MassContentOfSnowInAtmosphereLayer.h
 vader/betaNames_CRTMRecipes/MassContentOfSnowInAtmosphereLayer_A.cc
-vader/betaNames_CRTMRecipes/NorthwardWindAtSurface.h
-vader/betaNames_CRTMRecipes/NorthwardWindAtSurface_A.cc
 vader/betaNames_CRTMRecipes/RainWater.h
 vader/betaNames_CRTMRecipes/RainWater_A.cc
 vader/betaNames_CRTMRecipes/SkinTemperatureAtSurface.h
@@ -97,15 +93,6 @@ vader/betaNames_CRTMRecipes/TropopausePressure_A.cc
 vader/betaNames_CRTMRecipes/WaterAreaFraction.h
 vader/betaNames_CRTMRecipes/WaterAreaFraction_A.cc
 vader/betaNames_CRTMRecipes/GSI_Specific/WaterAreaFraction_B.cc
-vader/betaNames_CRTMRecipes/WindFromDirectionAtSurface.h
-vader/betaNames_CRTMRecipes/WindFromDirectionAtSurface_A.cc
-vader/betaNames_CRTMRecipes/WindToDirectionAtSurface.h
-vader/betaNames_CRTMRecipes/WindToDirectionAtSurface_A.cc
-vader/betaNames_CRTMRecipes/WindSpeedAt10m.h
-vader/betaNames_CRTMRecipes/WindSpeedAt10m_A.cc
-vader/betaNames_CRTMRecipes/WindSpeedAt10m_B.cc
-vader/betaNames_CRTMRecipes/WindSpeedAtSurface.h
-vader/betaNames_CRTMRecipes/WindSpeedAtSurface_A.cc
 
 vader/recipes/AirPotentialTemperature_A.cc
 vader/recipes/AirPotentialTemperature_B.cc
@@ -160,6 +147,8 @@ mo/recipes/DustCoarseModeNumberFraction.h
 mo/recipes/DustCoarseModeNumberFraction_A.cc
 vader/recipes/EastwardWindAt10m_A.cc
 vader/recipes/EastwardWindAt10m.h
+vader/recipes/EastwardWindAtSurfaceAdjacentLayer.h
+vader/recipes/EastwardWindAtSurfaceAdjacentLayer_A.cc
 vader/recipes/GeopotentialLevels_A.cc
 vader/recipes/GeopotentialLevels.h
 vader/recipes/GeopotentialHeight_A.cc
@@ -188,6 +177,8 @@ vader/recipes/MoleFractionOfOzoneInAir.h
 vader/recipes/MoleFractionOfOzoneInAir_A.cc
 vader/recipes/NorthwardWindAt10m_A.cc
 vader/recipes/NorthwardWindAt10m.h
+vader/recipes/NorthwardWindAtSurfaceAdjacentLayer.h
+vader/recipes/NorthwardWindAtSurfaceAdjacentLayer_A.cc
 vader/recipes/OzoneMassMixingRatio.h
 vader/recipes/OzoneMassMixingRatio_A.cc
 vader/recipes/ParticulateMatter2p5.h
@@ -195,8 +186,8 @@ vader/recipes/ParticulateMatter2p5_A.cc
 vader/recipes/ParticulateMatter2p5_B.cc
 vader/recipes/RainMixingRatio.h
 vader/recipes/RainMixingRatio_A.cc
-vader/recipes/RatioOfWindSurfaceAdjacentTo10m.h
-vader/recipes/RatioOfWindSurfaceAdjacentTo10m_A.cc
+vader/recipes/RatioOfWind10mToSurfaceAdjacent.h
+vader/recipes/RatioOfWind10mToSurfaceAdjacent_A.cc
 vader/recipes/RelativeHumidity.h
 vader/recipes/RelativeHumidity_A.cc
 vader/recipes/RelativeHumidity_B.cc
@@ -235,6 +226,20 @@ vader/recipes/WaterVaporMixingRatioWrtWetAir.h
 vader/recipes/WaterVaporMixingRatioWrtWetAir_A.cc
 vader/recipes/WaterVaporMixingRatioWrtWetAir2m.h
 vader/recipes/WaterVaporMixingRatioWrtWetAir2m_A.cc
+vader/recipes/WindFromComponents.cc
+vader/recipes/WindFromComponents.h
+vader/recipes/WindFromDirectionAtSurfaceAdjacentLayer.h
+vader/recipes/WindFromDirectionAtSurfaceAdjacentLayer_A.cc
+vader/recipes/WindSpeedAt10m.h
+vader/recipes/WindSpeedAt10m_A.cc
+vader/recipes/WindSpeedAt10m_B.cc
+vader/recipes/WindSpeedAt10m_C.cc
+vader/recipes/WindSpeedAtSurfaceAdjacentLayer.h
+vader/recipes/WindSpeedAtSurfaceAdjacentLayer_A.cc
+vader/recipes/WindToDirectionAt10m.h
+vader/recipes/WindToDirectionAt10m_A.cc
+vader/recipes/WindToDirectionAtSurfaceAdjacentLayer.h
+vader/recipes/WindToDirectionAtSurfaceAdjacentLayer_A.cc
 
 vader/vader.cc
 vader/vader.h

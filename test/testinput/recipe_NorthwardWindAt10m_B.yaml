@@ -1,0 +1,12 @@
+recipe:
+  recipe name: NorthwardWindAt10m_B
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+# TL/AD only (no nonlinear method); the ratio comes from the trajectory.
+trajectory filename: testdata/gauss_state_F12.nc
+run nonlinear test: false
+adjoint test tolerance: 1.e-12
+model data:
+  levels_are_top_down: false
+  nLevels: 70

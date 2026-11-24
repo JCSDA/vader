@@ -5,8 +5,7 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-#include <cmath>
-#include <iostream>
+#include <string>
 #include <vector>
 
 #include "oops/util/for_each.h"
@@ -15,117 +14,171 @@
 
 namespace vader
 {
+
+namespace {
+// Index of the lowest model level.
+int lowestLevel(const VaderConfigVars & configVariables) {
+    const bool topDown = configVariables.getBool("levels_are_top_down");
+    return topDown ? configVariables.getInt("nLevels") - 1 : 0;
+}
+const char ratioName[] = "ratio_of_wind_at_10m_to_wind_at_surface_adjacent_layer";
+}  // namespace
+
+// ------------------------------------------------------------------------------------------------
+// EastwardWindAt10m_A (nonlinear)
 // ------------------------------------------------------------------------------------------------
 
 // Static attribute initialization
-const char uwind_at_10m_A::Name[] = "uwind_at_10m_A";
-const oops::Variables uwind_at_10m_A::Ingredients{std::vector<std::string>{"eastward_wind"}};
+const char EastwardWindAt10m_A::Name[] = "EastwardWindAt10m_A";
+const oops::Variables EastwardWindAt10m_A::Ingredients{std::vector<std::string>{
+    "eastward_wind", ratioName}};
 
 // Register the maker
-static RecipeMaker<uwind_at_10m_A> makeruwind_at_10m_A_(uwind_at_10m_A::Name);
+static RecipeMaker<EastwardWindAt10m_A> makerEastwardWindAt10m_A_(EastwardWindAt10m_A::Name);
 
-uwind_at_10m_A::uwind_at_10m_A(const Parameters_ & params,
+EastwardWindAt10m_A::EastwardWindAt10m_A(const Parameters_ & params,
                                const VaderConfigVars & configVariables) :
     configVariables_(configVariables)
 {
-    oops::Log::trace() << "uwind_at_10m_A::uwind_at_10m_A(params)" << std::endl;
+    oops::Log::trace() << "EastwardWindAt10m_A::EastwardWindAt10m_A(params)" << std::endl;
 }
 
-std::string uwind_at_10m_A::name() const
+std::string EastwardWindAt10m_A::name() const
 {
-    return uwind_at_10m_A::Name;
+    return EastwardWindAt10m_A::Name;
 }
 
-oops::Variable uwind_at_10m_A::product() const
+oops::Variable EastwardWindAt10m_A::product() const
 {
     return oops::Variable{"eastward_wind_at_10m"};
 }
 
-oops::Variables uwind_at_10m_A::ingredients() const
+oops::Variables EastwardWindAt10m_A::ingredients() const
 {
-    return uwind_at_10m_A::Ingredients;
+    return EastwardWindAt10m_A::Ingredients;
 }
 
-oops::Variables uwind_at_10m_A::trajectoryVars() const
-{
-    return oops::Variables{};
-}
-
-size_t uwind_at_10m_A::productLevels(const atlas::FieldSet & afieldset) const
+size_t EastwardWindAt10m_A::productLevels(const atlas::FieldSet & afieldset) const
 {
     return 1;
 }
 
-atlas::FunctionSpace uwind_at_10m_A::productFunctionSpace(const atlas::FieldSet
+atlas::FunctionSpace EastwardWindAt10m_A::productFunctionSpace(const atlas::FieldSet
                                                                  & afieldset) const
 {
     return afieldset["eastward_wind"].functionspace();
 }
 
-// -------------------------------------------------------------------------------------------------
-
-void uwind_at_10m_A::executeNL(atlas::FieldSet & afieldset)
+void EastwardWindAt10m_A::executeNL(atlas::FieldSet & afieldset)
 {
-    oops::Log::trace() << "entering uwind_at_10m_A::executeNL function"
+    oops::Log::trace() << "entering EastwardWindAt10m_A::executeNL function"
       << std::endl;
 
-    const bool topDown = configVariables_.getBool("levels_are_top_down");
-    const int surfLevel = topDown ? configVariables_.getInt("nLevels") - 1 : 0;
+    const int surfLevel = lowestLevel(configVariables_);
 
     util::for_each_column(
         [surfLevel](const auto eastward_wind_col,
-           auto uwind_at_10m_A_col) {
-           uwind_at_10m_A_col(0) = eastward_wind_col(surfLevel);
+           const auto ratio_col,
+           auto eastward_wind_at_10m_col) {
+           eastward_wind_at_10m_col(0) = ratio_col(0) * eastward_wind_col(surfLevel);
         },
         afieldset["eastward_wind"],
+        afieldset[ratioName],
         afieldset["eastward_wind_at_10m"]);
 
-    oops::Log::trace() << "leaving uwind_at_10m_A::executeNL function" << std::endl;
+    oops::Log::trace() << "leaving EastwardWindAt10m_A::executeNL function" << std::endl;
 }
 
-// -------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
+// EastwardWindAt10m_B (TL/AD of EastwardWindAt10m_A)
+// ------------------------------------------------------------------------------------------------
 
-void uwind_at_10m_A::executeTL(atlas::FieldSet & afieldsetTL,
-                                      const atlas::FieldSet & /*afieldsetTraj*/)
+// Static attribute initialization
+const char EastwardWindAt10m_B::Name[] = "EastwardWindAt10m_B";
+const oops::Variables EastwardWindAt10m_B::Ingredients{std::vector<std::string>{"eastward_wind"}};
+
+// Register the maker
+static RecipeMaker<EastwardWindAt10m_B> makerEastwardWindAt10m_B_(EastwardWindAt10m_B::Name);
+
+EastwardWindAt10m_B::EastwardWindAt10m_B(const Parameters_ & params,
+                               const VaderConfigVars & configVariables) :
+    configVariables_(configVariables)
 {
-    oops::Log::trace() << "entering uwind_at_10m_A::executeTL function"
+    oops::Log::trace() << "EastwardWindAt10m_B::EastwardWindAt10m_B(params)" << std::endl;
+}
+
+std::string EastwardWindAt10m_B::name() const
+{
+    return EastwardWindAt10m_B::Name;
+}
+
+oops::Variable EastwardWindAt10m_B::product() const
+{
+    return oops::Variable{"eastward_wind_at_10m"};
+}
+
+oops::Variables EastwardWindAt10m_B::ingredients() const
+{
+    return EastwardWindAt10m_B::Ingredients;
+}
+
+oops::Variables EastwardWindAt10m_B::trajectoryVars() const
+{
+    return oops::Variables{std::vector<std::string>{ratioName}};
+}
+
+size_t EastwardWindAt10m_B::productLevels(const atlas::FieldSet & afieldset) const
+{
+    return 1;
+}
+
+atlas::FunctionSpace EastwardWindAt10m_B::productFunctionSpace(const atlas::FieldSet
+                                                                 & afieldset) const
+{
+    return afieldset["eastward_wind"].functionspace();
+}
+
+void EastwardWindAt10m_B::executeTL(atlas::FieldSet & afieldsetTL,
+                               const atlas::FieldSet & afieldsetTraj)
+{
+    oops::Log::trace() << "entering EastwardWindAt10m_B::executeTL function"
         << std::endl;
 
-    const bool topDown = configVariables_.getBool("levels_are_top_down");
-    const int surfLevel = topDown ? configVariables_.getInt("nLevels") - 1 : 0;
+    const int surfLevel = lowestLevel(configVariables_);
 
     util::for_each_column(
-        [surfLevel](const auto tl_eastward_wind_col,
-           auto tl_uwind_at_10m_A_col) {
-           tl_uwind_at_10m_A_col(0) = tl_eastward_wind_col(surfLevel);
+        [surfLevel](const auto ratio_col,
+           const auto tl_eastward_wind_col,
+           auto tl_eastward_wind_at_10m_col) {
+           tl_eastward_wind_at_10m_col(0) = ratio_col(0) * tl_eastward_wind_col(surfLevel);
         },
+        afieldsetTraj[ratioName],
         afieldsetTL["eastward_wind"],
         afieldsetTL["eastward_wind_at_10m"]);
 
-    oops::Log::trace() << "leaving uwind_at_10m_A::executeTL function" << std::endl;
+    oops::Log::trace() << "leaving EastwardWindAt10m_B::executeTL function" << std::endl;
 }
 
-// -------------------------------------------------------------------------------------------------
-
-void uwind_at_10m_A::executeAD(atlas::FieldSet & afieldsetAD,
-                                      const atlas::FieldSet & /*afieldsetTraj*/)
+void EastwardWindAt10m_B::executeAD(atlas::FieldSet & afieldsetAD,
+                               const atlas::FieldSet & afieldsetTraj)
 {
-    oops::Log::trace() << "entering uwind_at_10m_A::executeAD function"
+    oops::Log::trace() << "entering EastwardWindAt10m_B::executeAD function"
         << std::endl;
 
-    const bool topDown = configVariables_.getBool("levels_are_top_down");
-    const int surfLevel = topDown ? configVariables_.getInt("nLevels") - 1 : 0;
+    const int surfLevel = lowestLevel(configVariables_);
 
     util::for_each_column(
-        [surfLevel](auto ad_uwind_at_10m_A_col,
+        [surfLevel](const auto ratio_col,
+           auto ad_eastward_wind_at_10m_col,
            auto ad_eastward_wind_col) {
-           ad_eastward_wind_col(surfLevel) += ad_uwind_at_10m_A_col(0);
-           ad_uwind_at_10m_A_col(0) = 0.0;
+           ad_eastward_wind_col(surfLevel) += ratio_col(0) * ad_eastward_wind_at_10m_col(0);
+           ad_eastward_wind_at_10m_col(0) = 0.0;
         },
+        afieldsetTraj[ratioName],
         afieldsetAD["eastward_wind_at_10m"],
         afieldsetAD["eastward_wind"]);
 
-    oops::Log::trace() << "leaving uwind_at_10m_A::executeAD function" << std::endl;
+    oops::Log::trace() << "leaving EastwardWindAt10m_B::executeAD function" << std::endl;
 }
 
 }  // namespace vader

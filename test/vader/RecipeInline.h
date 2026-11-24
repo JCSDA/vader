@@ -154,15 +154,19 @@ void testRecipeNonlinearInline() {
   recipe->executeNL(vader_computed);
 
   // Compute relative norm of the difference between expected and computed.
+  // When the expected product is all zero the relative norm is undefined,
+  // so compare the absolute norm instead.
   util::subtractFieldSets(vader_computed, reference);
   const double norm = util::normField(vader_computed[productVar.name()],
                                       oops::mpi::world());
   const double refNorm = util::normField(reference[productVar.name()],
                                          oops::mpi::world());
-  oops::Log::info() << "Relative norm of (computed - expected): "
-                    << norm / refNorm << std::endl;
+  const bool relative = refNorm > 0.0;
+  const double diff = relative ? norm / refNorm : norm;
+  oops::Log::info() << (relative ? "Relative" : "Absolute (expected is zero)")
+                    << " norm of (computed - expected): " << diff << std::endl;
   const double tol = params.nlTolerance;
-  EXPECT(oops::is_close_absolute(norm / refNorm, 0.0, tol));
+  EXPECT(oops::is_close_absolute(diff, 0.0, tol));
 }
 
 // -----------------------------------------------------------------------------

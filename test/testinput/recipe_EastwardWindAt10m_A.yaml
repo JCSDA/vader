@@ -1,0 +1,13 @@
+recipe:
+  recipe name: EastwardWindAt10m_A
+trajectory grid:
+  type : regular_gaussian
+  N : 12
+# eastward_wind_at_10m in this file is the lowest-level wind times the ratio, so the recipe
+# reproduces it exactly. This recipe is nonlinear only; its TL/AD is EastwardWindAt10m_B.
+trajectory filename: testdata/gauss_state_F12.nc
+run adjoint test: false
+run tangent linear test: false
+model data:
+  levels_are_top_down: false
+  nLevels: 70

@@ -1,0 +1,16 @@
+recipe:
+  recipe name: RatioOfWind10mToSurfaceAdjacent_A
+model data:
+  levels_are_top_down: true
+  nLevels: 3
+columns:
+  # 10 m wind is a 3-4-5 triangle scaled by 0.5; the lowest model level (last, top-down)
+  # is the unscaled 3-4-5 triangle. Upper levels differ so a wrong level fails.
+  eastward_wind_at_10m: [1.5]
+  northward_wind_at_10m: [2.0]
+  eastward_wind: [9.0, 6.0, 3.0]
+  northward_wind: [1.0, 8.0, 4.0]
+expected:
+  # ratio = |V(10m)| / |V(lowest level)| = 2.5 / 5.0
+  ratio_of_wind_at_10m_to_wind_at_surface_adjacent_layer: [0.5]
+nonlinear test tolerance: 1.e-12

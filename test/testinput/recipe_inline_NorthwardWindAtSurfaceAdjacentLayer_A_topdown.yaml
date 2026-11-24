@@ -1,0 +1,10 @@
+recipe:
+  recipe name: NorthwardWindAtSurfaceAdjacentLayer_A
+model data:
+  levels_are_top_down: true
+columns:
+  # Top-down levels: the lowest model level is the last one (4.0).
+  northward_wind: [-6.0, -2.0, 4.0]
+expected:
+  northward_wind_at_surface_adjacent_layer: [4.0]
+nonlinear test tolerance: 1.e-12
